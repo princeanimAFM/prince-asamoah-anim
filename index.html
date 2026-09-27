@@ -94,6 +94,9 @@
   .btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; padding: 11px 18px; border-radius: 10px; text-decoration: none; border: 1px solid var(--ink); color: var(--ink); background: transparent; }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .stack { font-family: var(--mono); font-size: 13px; color: var(--ink-3); margin-top: 16px; }
+  .shot { align-self: center; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(16,42,51,.12); display: block; }
+  .shot img { display: block; width: 100%; }
+  .projects { display: grid; gap: 22px; }
   .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; align-self: start; }
   .metric { background: #fff; padding: 20px; }
   .metric b { display: block; font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -304,7 +307,8 @@
   </section>
 
   <section id="work">
-    <div class="sh"><h2>Selected work</h2><span class="eyebrow">Live · September 2026</span></div>
+    <div class="sh"><h2>Selected work</h2><span class="eyebrow">Live projects</span></div>
+    <div class="projects">
     <article class="project">
       <div>
         <div class="eyebrow">Mobile &amp; web app</div>
@@ -328,6 +332,24 @@
         <div class="metric"><b>10</b><span>features at launch</span></div>
       </div>
     </article>
+    <article class="project">
+      <div>
+        <div class="eyebrow">Website · live September 2026</div>
+        <h3>The AFM Church website</h3>
+        <p>A full website for Alleluia Faith Mission Global Assembly and the AFM Family Network, on its own domain. It shares one database with The AFM HUB app, so anything the ministry posts or edits in the app appears on the website automatically.</p>
+        <ul>
+          <li>Weekly services, the Zoom prayer meeting with automatic local times, biography, handbook, books and giving</li>
+          <li>Live announcements, e-book library, perfume catalogue and newsletter sign-up, all fed from the app</li>
+          <li>Custom domain with HTTPS, registered with Google Search Console, with structured church data for search</li>
+        </ul>
+        <div class="links">
+          <a class="btn primary" href="https://theafmchurch.org" target="_blank" rel="noopener">Visit theafmchurch.org ↗</a>
+        </div>
+        <div class="stack">HTML · CSS · JavaScript · Supabase · GitHub Pages · DNS</div>
+      </div>
+      <a class="shot" href="https://theafmchurch.org" target="_blank" rel="noopener"><img src="work-afm-site.jpg" alt="Home page of theafmchurch.org"></a>
+    </article>
+    </div>
   </section>
 
   <section id="design">
@@ -384,6 +406,7 @@
 <script>
   // Learning log — newest first. To add an entry, add one line here.
   const LOG = [
+    { date: 'Sep 2026', kind: 'data', title: 'Launched theafmchurch.org', text: 'Built and published the church website on its own domain, connected live to the app’s database, and registered it with Google Search Console.' },
     { date: 'Sep 2026', kind: 'data', title: 'Launched The AFM HUB', text: 'Shipped a live Android and web app with Google sign-in, 500+ sermons and live services, and fixed a sign-in bug found during testing.' },
     { date: 'Sep 2026', kind: 'data', title: 'Designed the launch campaign', text: 'Created launch and features flyers, branded QR codes and Google Play store images for the app.' },
     { date: 'Jul 2026', kind: 'care', title: 'Joined Walton House Care Home', text: 'Started a new role as Registered Nurse in residential nursing care.' },
