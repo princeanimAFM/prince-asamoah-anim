@@ -99,6 +99,21 @@ Sources: [KDP Builder: best coloring book niches](https://kdpbuilder.com/blog/be
 6. Review takes 3-7 days. When the book is live, order one **author copy** at print cost to
    check print quality.
 
+**Publishing from the UK:** choose **Amazon.co.uk** as the primary marketplace and let KDP fill
+in the other marketplaces from your UK price. Printed books have 0% VAT in the UK. The
+UK print cost for black & white is a flat £1.93 up to 108 pages, then £0.85 + £0.01 per page.
+Suggested UK prices and royalty (60% of price minus print cost):
+
+| Books | UK print cost | UK price | Royalty per sale |
+|---|---|---|---|
+| 2, 3, 6 (56-64 pages) | £1.93 | £6.99 | ~£2.26 |
+| 4, 7, 8 (70-106 pages) | £1.93 | £7.99 | ~£2.86 |
+| 1, 5 (122 pages) | £2.07 | £7.99 | ~£2.72 |
+| 9, 12 (seniors) | £1.93 | £8.99 | ~£3.46 |
+| 10 (sudoku, 120 pages) | £2.05 | £8.99 | ~£3.34 |
+| 11 (dementia) | £1.93 | £10.99 | ~£4.66 |
+| 13 (cookbook, color) | shown in KDP | £12.99 | check in KDP |
+
 **Suggested order:** Halloween (it's already late in the season) → Christmas (publish this
 week to catch the holiday rush) → Dementia Activity Book → Good Old Days → Sudoku → the rest.
 
