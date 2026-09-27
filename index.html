@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Prince Asamoah Anim: UK Registered Nurse and certified Master Data Scientist. Experience, projects, certificates and learning log.">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Prince Asamoah Anim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #FFFFFF;
+    --tint: #F3FAFA;
+    --surface: #FFFFFF;
+    --ink: #1D3B47;
+    --ink-2: #4F6772;
+    --ink-3: #7A8E96;
+    --line: #E4EEEE;
+    --accent: #0E9AA3;
+    --accent-soft: #E0F4F4;
+    --pulse: #EF5B5F;
+    --chip: #E6F6F6;
+    --gold: #E08A1E;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.6; padding: 0 20px; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  h1, h2, h3 { text-wrap: balance; }
+
+  /* Top bar */
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; }
+  .mark { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .01em; }
+  .mono-badge { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); background: #fff; display: grid; place-items: center; font-family: var(--serif); font-style: italic; font-size: 18px; }
+  .nav { display: flex; gap: 22px; font-size: 15px; flex-wrap: wrap; }
+  .nav a { color: var(--ink-2); text-decoration: none; }
+  .nav a:hover { color: var(--ink); }
+
+  /* Hero */
+  .hero { padding-block: 40px 20px; }
+  .glow { position: absolute; inset: 0 0 auto 0; height: 760px; background: radial-gradient(60% 70% at 85% 10%, #CFF0F0 0%, rgba(207,240,240,0) 72%), radial-gradient(50% 60% at 5% 30%, #FFE3DF 0%, rgba(255,227,223,0) 72%), linear-gradient(180deg, #F3FBFB 0%, #FFFFFF 100%); z-index: -1; pointer-events: none; }
+  body { position: relative; isolation: isolate; }
+  .eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 8vw, 92px); line-height: 1.02; letter-spacing: -.02em; margin: 14px 0 0; }
+  .hero h1 em { color: var(--accent); font-weight: 500; }
+  .hero p.lede { font-size: clamp(18px, 2.2vw, 21px); color: var(--ink-2); max-width: 60ch; margin: 22px 0 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .tag { font-size: 14px; font-weight: 600; padding: 7px 14px; border-radius: 999px; background: var(--chip); color: var(--ink); display: inline-flex; align-items: center; gap: 8px; }
+  .tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .tag.care i { background: var(--pulse); }
+
+  /* Trace */
+  .trace { margin-top: 38px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+  .trace canvas { display: block; width: 100%; height: 150px; }
+  .trace .lbl { position: absolute; top: 10px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; color: var(--ink-3); text-transform: uppercase; }
+  .trace .l1 { left: 0; } .trace .l2 { right: 0; text-align: right; }
+
+  /* Sections */
+  section { padding-block: 64px 8px; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 26px; flex-wrap: wrap; }
+  .sh h2 { color: var(--accent); font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4vw, 42px); margin: 0; letter-spacing: -.01em; }
+  .sh .eyebrow { margin-left: auto; }
+
+  .about { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; }
+  .about p { margin: 0 0 16px; max-width: 62ch; color: var(--ink-2); }
+  .about p:first-child { color: var(--ink); font-size: 19px; }
+  .facts { display: grid; gap: 0; border-top: 1px solid var(--line); align-self: start; }
+  .fact { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding-block: 14px; border-bottom: 1px solid var(--line); font-size: 15.5px; }
+  .fact dt { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding-top: 3px; }
+  .fact dd { margin: 0; }
+
+  /* Two tracks */
+  .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .track { background: var(--tint); border: 1px solid var(--line); border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .track h3 { font-family: var(--serif); font-weight: 600; font-size: 26px; margin: 0; }
+  .track .k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--pulse); }
+  .track.data .k { color: var(--accent); }
+  .track p { margin: 0; color: var(--ink-2); }
+  .skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .skills span { font-size: 14px; padding: 5px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); }
+
+  /* Project */
+  .project { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; background: var(--tint); border: 1px solid var(--line); border-radius: 18px; padding: 34px; }
+  .project h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4vw, 40px); margin: 6px 0 12px; line-height: 1.1; }
+  .project p { margin: 0 0 14px; color: var(--ink-2); }
+  .project ul { margin: 0 0 18px; padding-left: 20px; color: var(--ink-2); }
+  .project li { margin-bottom: 6px; }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; padding: 11px 18px; border-radius: 10px; text-decoration: none; border: 1px solid var(--ink); color: var(--ink); background: transparent; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .stack { font-family: var(--mono); font-size: 13px; color: var(--ink-3); margin-top: 16px; }
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; align-self: start; }
+  .metric { background: #fff; padding: 20px; }
+  .metric b { display: block; font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .metric span { font-size: 14px; color: var(--ink-3); }
+
+  /* Experience */
+  .exp { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .job { display: grid; grid-template-columns: 190px 1fr; gap: 28px; padding-block: 26px; border-bottom: 1px solid var(--line); }
+  .job .when { font-family: var(--mono); font-size: 13px; color: var(--ink-3); letter-spacing: .03em; padding-top: 4px; }
+  .job .when b { display: block; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pulse); margin-top: 6px; }
+  .job h3 { margin: 0; font-size: 21px; font-weight: 700; }
+  .job .org { color: var(--accent); font-weight: 600; margin: 2px 0 10px; }
+  .job ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+  .job li { margin-bottom: 5px; }
+  .training { margin-top: 26px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; padding: 0; list-style: none; }
+  .training li { display: flex; justify-content: space-between; gap: 16px; padding-block: 10px; border-bottom: 1px dashed var(--line); font-size: 15.5px; }
+  .training li span:last-child { font-family: var(--mono); font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+
+  /* Design work */
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .gallery a { display: block; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--tint); box-shadow: 0 8px 24px rgba(16,42,51,.06); transition: transform .2s ease; }
+  .gallery a:hover { transform: translateY(-3px); }
+  .gallery img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .gallery .wide { grid-column: 1 / -1; }
+  .gallery .wide img { aspect-ratio: 16 / 9; }
+  .gcap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; font-size: 14.5px; color: var(--ink-2); }
+  .work-intro { color: var(--ink-2); max-width: 64ch; margin: -8px 0 22px; }
+  @media (prefers-reduced-motion: reduce) { .gallery a, .gallery a:hover { transition: none; transform: none; } }
+
+  /* Certificates */
+  .certs { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; }
+  .cert { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; text-decoration: none; color: inherit; box-shadow: 0 10px 30px rgba(16,42,51,.06); transition: transform .2s ease, box-shadow .2s ease; }
+  .cert:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(16,42,51,.1); }
+  .cert .img { background: var(--tint); display: flex; align-items: center; justify-content: center; padding: 18px; flex: 1; }
+  .cert img { display: block; width: 100%; max-height: 360px; object-fit: contain; border-radius: 6px; box-shadow: 0 4px 14px rgba(16,42,51,.12); }
+  .cert .cap { padding: 18px 20px 20px; display: grid; gap: 4px; }
+  .cert .cap b { font-size: 18px; }
+  .cert .cap span { font-size: 14.5px; color: var(--ink-2); }
+  .cert .cap small { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: .03em; }
+  @media (prefers-reduced-motion: reduce) { .cert, .cert:hover { transition: none; transform: none; } }
+
+  /* Learning log */
+  .log { list-style: none; margin: 0; padding: 0; border-left: 1.5px solid var(--line); margin-left: 6px; }
+  .entry { position: relative; padding: 0 0 30px 30px; }
+  .entry::before { content: ''; position: absolute; left: -7.5px; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .entry.care::before { border-color: var(--pulse); }
+  .entry .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); letter-spacing: .04em; }
+  .entry .kind { text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+  .entry.care .kind { background: color-mix(in srgb, var(--pulse) 14%, transparent); color: var(--pulse); }
+  .entry h4 { font-size: 19px; margin: 8px 0 4px; font-weight: 600; }
+  .entry p { margin: 0; color: var(--ink-2); max-width: 64ch; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+  .filters button { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+  .filters button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Contact */
+  .contact { display: grid; grid-template-columns: 1.2fr 1fr; gap: 36px; align-items: end; border-top: 1px solid var(--line); padding-top: 40px; }
+  .contact h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 5vw, 52px); line-height: 1.05; margin: 0; }
+  .contact p { color: var(--ink-2); margin: 14px 0 0; max-width: 52ch; }
+  .reach { display: grid; gap: 12px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .row small { display: block; font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .row span { font-weight: 600; word-break: break-all; user-select: all; }
+  .row button, .row a.go { font: inherit; font-size: 13.5px; font-weight: 600; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; text-decoration: none; white-space: nowrap; }
+  footer { padding-block: 40px 48px; font-size: 14px; color: var(--ink-3); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; padding: 0 16px; }
+    .nav { display: none; }
+    .about, .tracks, .project, .contact, .certs { grid-template-columns: 1fr; gap: 24px; }
+    .gallery { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .job { grid-template-columns: 1fr; gap: 8px; }
+    .training { grid-template-columns: 1fr; }
+    .project { padding: 22px; }
+    .fact { grid-template-columns: 100px 1fr; }
+    .sh .eyebrow { margin-left: 0; width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head><body>
+
+<div class="glow" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="bar">
+    <div class="mark"><span class="mono-badge">PA</span><span>Prince Asamoah Anim</span></div>
+    <nav class="nav">
+      <a href="#about">About</a><a href="#experience">Experience</a><a href="#work">Work</a><a href="#design">Design</a><a href="#certificates">Certificates</a><a href="#log">Learning log</a><a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">UK Registered Nurse · Master Data Scientist</div>
+    <h1>Where <em>care</em> meets <em>data</em>.</h1>
+    <p class="lede">I’m a UK Registered Nurse with experience across emergency, acute and long-term care in Ghana and Scotland, and a certified Master Data Scientist. This page is my working record: the care I give, the courses I finish and the things I build.</p>
+    <div class="tags">
+      <span class="tag care"><i></i>UK Registered Nurse (NMC)</span>
+      <span class="tag care"><i></i>Basic Life Support trainer</span>
+      <span class="tag"><i></i>Master Data Scientist, 10Alytics</span>
+      <span class="tag"><i></i>Built and shipped a live app</span>
+    </div>
+
+    <div class="trace" aria-hidden="true">
+      <span class="lbl l1">Patient rhythm</span>
+      <span class="lbl l2">Insight</span>
+      <canvas id="trace"></canvas>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="sh"><h2>About</h2><span class="eyebrow">Two disciplines, one habit: paying attention</span></div>
+    <div class="about">
+      <div>
+        <p>Nursing taught me to read people and numbers at the same time: observations, trends, the small change that matters before it becomes a big one.</p>
+        <p>I began in a busy Accident &amp; Emergency unit in Ghana, doing triage, ECGs and IV therapy under pressure, then brought that experience to the UK, where I now care for residents in regulated nursing homes in Scotland.</p>
+        <p>Data science gives me the tools to do that at scale. In January 2026 I completed the 10Alytics Master Data Scientist programme, covering statistics, Excel, Tableau, SQL, Python, exploratory data analysis, machine learning and computer vision.</p>
+        <p>I’m most interested in where the two meet: clearer dashboards for clinical teams, better use of routine data, and technology that gives people back time to care.</p>
+      </div>
+      <dl class="facts">
+        <div class="fact"><dt>Now</dt><dd>Registered Nurse, Walton House Care Home</dd></div>
+        <div class="fact"><dt>Registered</dt><dd>NMC (United Kingdom) and N&amp;MC (Ghana)</dd></div>
+        <div class="fact"><dt>Based</dt><dd>Scotland, United Kingdom</dd></div>
+        <div class="fact"><dt>Certified</dt><dd>Master Data Scientist, 10Alytics (Jan 2026)</dd></div>
+        <div class="fact"><dt>Trainer</dt><dd>Basic Life Support Train the Trainer (Feb 2025)</dd></div>
+        <div class="fact"><dt>Built</dt><dd>The AFM HUB, a live Android and web app</dd></div>
+        <div class="fact"><dt>Interests</dt><dd>Health data, analytics, dashboards, practical apps</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sh"><h2>Nursing experience</h2><span class="eyebrow">Ghana → Scotland</span></div>
+    <div class="exp">
+      <article class="job">
+        <div class="when">Jul 2026 – present<b>Current</b></div>
+        <div>
+          <h3>Registered Nurse</h3>
+          <div class="org">Walton House Care Home · Scotland</div>
+          <ul>
+            <li>Regulated residential nursing care with accurate clinical, safeguarding and medication records</li>
+            <li>Safe medication administration, health monitoring and timely escalation of risk</li>
+            <li>Person-centred care plans and compassionate day-to-day clinical care</li>
+          </ul>
+        </div>
+      </article>
+      <article class="job">
+        <div class="when">Jul 2023 – Jul 2026</div>
+        <div>
+          <h3>Registered Nurse</h3>
+          <div class="org">Earlsferry House Care Home · Leven, Scotland</div>
+          <ul>
+            <li>Care delivered in full compliance with Care Inspectorate standards</li>
+            <li>Medication administration, wound care and catheterisation with zero safety incidents</li>
+            <li>Led documentation and care planning with 100% audit readiness</li>
+            <li>Recognised for clinical leadership and interviewed for a Clinical Lead role</li>
+          </ul>
+        </div>
+      </article>
+      <article class="job">
+        <div class="when">Apr 2022 – Jul 2023</div>
+        <div>
+          <h3>Registered Nurse, Accident &amp; Emergency</h3>
+          <div class="org">Holy Family Hospital · Techiman, Ghana</div>
+          <ul>
+            <li>Emergency nursing care and triage in a high-volume A&amp;E unit</li>
+            <li>ECGs, intravenous therapy, rapid wound management and emergency observations</li>
+            <li>Worked with doctors and multidisciplinary teams to stabilise patients quickly</li>
+          </ul>
+        </div>
+      </article>
+      <article class="job">
+        <div class="when">Apr 2020 – Mar 2021</div>
+        <div>
+          <h3>Clinical Nurse Intern</h3>
+          <div class="org">Holy Family Hospital · Berekum, Ghana</div>
+          <ul>
+            <li>Rotations through medical, surgical and paediatric wards</li>
+            <li>Patient assessment, medication administration, post-operative care and discharge planning</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+    <ul class="training" aria-label="Further clinical training">
+      <li><span>Infection Prevention Study Day, NHS Education for Scotland</span><span>Aug 2025</span></li>
+      <li><span>Basic Life Support: Train the Trainer, Caring for Care</span><span>Feb 2025</span></li>
+      <li><span>ECG Interpretation, Holy Family Hospital</span><span>2022</span></li>
+      <li><span>Oxygen Therapy &amp; Diabetic Emergencies</span><span>2022</span></li>
+      <li><span>Shock &amp; DKA Simulation</span><span>2022</span></li>
+      <li><span>Asthma Management, AstraZeneca</span><span>2022</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sh"><h2>What I bring</h2></div>
+    <div class="tracks">
+      <article class="track care">
+        <div class="k">Clinical practice</div>
+        <h3>UK Registered Nurse</h3>
+        <p>Emergency, acute and long-term care across two health systems, with a focus on safety, accurate records and person-centred care. Qualified to teach Basic Life Support.</p>
+        <div class="skills"><span>Clinical triage</span><span>Emergency response</span><span>ECG interpretation</span><span>Oxygen therapy</span><span>Wound management</span><span>Catheterisation</span><span>Medication administration</span><span>Safeguarding</span><span>Infection control</span><span>Care planning &amp; audit</span><span>BLS trainer</span></div>
+      </article>
+      <article class="track data">
+        <div class="k">Data &amp; technology</div>
+        <h3>Data Science</h3>
+        <p>Certified Master Data Scientist (10Alytics), and applied by building a real product used by a community of members.</p>
+        <div class="skills"><span>Python</span><span>SQL</span><span>Excel</span><span>Tableau</span><span>Statistics</span><span>Exploratory data analysis</span><span>Data visualisation</span><span>Machine learning</span><span>Computer vision</span><span>React Native</span><span>Supabase</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="sh"><h2>Selected work</h2><span class="eyebrow">Live · September 2026</span></div>
+    <article class="project">
+      <div>
+        <div class="eyebrow">Mobile &amp; web app</div>
+        <h3>The AFM HUB</h3>
+        <p>The official app for a faith community with members across Ghana, the UK and beyond. I planned, built and launched it end to end, from sign-in and content to publishing and launch materials.</p>
+        <ul>
+          <li>500+ audio sermons pulled in automatically from a podcast feed</li>
+          <li>Live services, a daily quote, prayer requests and announcements</li>
+          <li>Accounts with Google, email or phone sign-in</li>
+          <li>Released as an Android app and a website, with Google Play in progress</li>
+        </ul>
+        <div class="links">
+          <a class="btn primary" href="https://afm-hub.expo.app" target="_blank" rel="noopener">Open the app ↗</a>
+        </div>
+        <div class="stack">Expo · React Native · TypeScript · Supabase · EAS</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><b>500+</b><span>sermons available</span></div>
+        <div class="metric"><b>2</b><span>platforms: Android and web</span></div>
+        <div class="metric"><b>3</b><span>ways to sign in</span></div>
+        <div class="metric"><b>10</b><span>features at launch</span></div>
+      </div>
+    </article>
+  </section>
+
+  <section id="design">
+    <div class="sh"><h2>Design work</h2><span class="eyebrow">Launch campaign · September 2026</span></div>
+    <p class="work-intro">The launch materials for The AFM HUB: flyers, a branded QR code that downloads the app, and the Google Play store header. Tap any image to view it full size.</p>
+    <div class="gallery">
+      <a href="work-launch.jpg" target="_blank" rel="noopener"><img src="work-launch.jpg" alt="Official app launch flyer for The AFM HUB"></a>
+      <a href="work-features.jpg" target="_blank" rel="noopener"><img src="work-features.jpg" alt="Flyer listing everything in The AFM HUB app"></a>
+      <a href="work-qr.jpg" target="_blank" rel="noopener"><img src="work-qr.jpg" alt="Branded QR code poster to download the app"></a>
+      <a class="wide" href="work-header.jpg" target="_blank" rel="noopener"><img src="work-header.jpg" alt="Google Play developer page header image"></a>
+    </div>
+  </section>
+
+  <section id="certificates">
+    <div class="sh"><h2>Certificates</h2><span class="eyebrow">Tap to view full size</span></div>
+    <div class="certs">
+      <a class="cert" href="cert-mds.jpg" target="_blank" rel="noopener">
+        <div class="img"><img src="cert-mds.jpg" alt="10Alytics Master Data Scientist certificate awarded to Prince Asamoah Anim"></div>
+        <div class="cap"><b>Master Data Scientist</b><span>10Alytics · accredited by the American Council of Training &amp; Development</span><small>16 Jan 2026 · MDS/C25-07/3589</small></div>
+      </a>
+      <a class="cert" href="cert-bls.jpg" target="_blank" rel="noopener">
+        <div class="img"><img src="cert-bls.jpg" alt="Caring for Care certificate: Basic Life Support Train the Trainer, Prince Asamoah Anim"></div>
+        <div class="cap"><b>Basic Life Support: Train the Trainer</b><span>Caring for Care Ltd</span><small>20 Feb 2025 · valid 3 years</small></div>
+      </a>
+    </div>
+  </section>
+
+  <section id="log">
+    <div class="sh"><h2>Learning log</h2><span class="eyebrow">Updated as I go</span></div>
+    <div class="filters" role="group" aria-label="Filter the learning log">
+      <button type="button" id="f-all" data-f="all" aria-pressed="true">All</button>
+      <button type="button" id="f-data" data-f="data" aria-pressed="false">Data &amp; tech</button>
+      <button type="button" id="f-care" data-f="care" aria-pressed="false">Nursing</button>
+    </div>
+    <ol class="log" id="logList"></ol>
+  </section>
+
+  <section id="contact">
+    <div class="contact">
+      <div>
+        <h2>Let’s keep in touch.</h2>
+        <p>I’m always glad to talk about health data, analytics and building useful tools. Future roles are welcome for a conversation when my circumstances allow.</p>
+      </div>
+      <div class="reach">
+        <div class="row"><div><small>Email</small><span id="email">princeanim88@gmail.com</span></div><button type="button" id="copyEmail">Copy</button></div>
+        <div class="row"><div><small>GitHub</small><span>github.com/princeanimafm</span></div><a class="go" href="https://github.com/princeanimafm" target="_blank" rel="noopener">Open ↗</a></div>
+      </div>
+    </div>
+  </section>
+
+  <footer><span>© 2026 Prince Asamoah Anim</span><span>UK Registered Nurse · Master Data Scientist</span></footer>
+</div>
+
+<script>
+  // Learning log — newest first. To add an entry, add one line here.
+  const LOG = [
+    { date: 'Sep 2026', kind: 'data', title: 'Launched The AFM HUB', text: 'Shipped a live Android and web app with Google sign-in, 500+ sermons and live services, and fixed a sign-in bug found during testing.' },
+    { date: 'Sep 2026', kind: 'data', title: 'Designed the launch campaign', text: 'Created launch and features flyers, branded QR codes and Google Play store images for the app.' },
+    { date: 'Jul 2026', kind: 'care', title: 'Joined Walton House Care Home', text: 'Started a new role as Registered Nurse in residential nursing care.' },
+    { date: 'Jan 2026', kind: 'data', title: 'Certified Master Data Scientist, 10Alytics', text: 'Completed the programme: statistics, Excel, Tableau, SQL, Python, exploratory data analysis, data visualisation, machine learning and computer vision.' },
+    { date: 'Aug 2025', kind: 'care', title: 'Infection Prevention Study Day, NHS Education for Scotland', text: 'Full-day training covering health promotion, infection control and preventing adverse health outcomes (NHS KSF HWB1 and HWB3).' },
+    { date: 'Feb 2025', kind: 'care', title: 'Basic Life Support: Train the Trainer', text: 'Qualified to plan and deliver BLS training: CPR (DRSABC), recovery position, bleeding, shock, choking and head injuries, plus giving learners constructive feedback.' },
+    { date: 'Jul 2023', kind: 'care', title: 'Moved to the UK as a Registered Nurse', text: 'Joined Earlsferry House Care Home in Leven, Scotland, after registering with the NMC.' },
+    { date: 'Apr 2022', kind: 'care', title: 'Registered Nurse, Accident & Emergency', text: 'Began emergency nursing at Holy Family Hospital, Techiman, Ghana, alongside ECG, oxygen therapy, shock and DKA training.' },
+  ];
+
+  const list = document.getElementById('logList');
+  function renderLog(filter) {
+    list.innerHTML = '';
+    LOG.filter(e => filter === 'all' || e.kind === filter).forEach(e => {
+      const li = document.createElement('li');
+      li.className = 'entry ' + e.kind;
+      const meta = document.createElement('div'); meta.className = 'meta';
+      const d = document.createElement('span'); d.textContent = e.date;
+      const k = document.createElement('span'); k.className = 'kind'; k.textContent = e.kind === 'care' ? 'Nursing' : 'Data & tech';
+      meta.append(d, k);
+      const h = document.createElement('h4'); h.textContent = e.title;
+      const p = document.createElement('p'); p.textContent = e.text;
+      li.append(meta, h, p);
+      list.append(li);
+    });
+  }
+  renderLog('all');
+  document.querySelectorAll('.filters button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    renderLog(b.dataset.f);
+  }));
+
+  document.getElementById('copyEmail').addEventListener('click', (ev) => {
+    const btn = ev.currentTarget, text = document.getElementById('email').textContent;
+    const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy', 1600); };
+    try {
+      navigator.clipboard.writeText(text).then(done, () => selectEmail());
+    } catch (e) { selectEmail(); }
+    function selectEmail() { const r = document.createRange(); r.selectNodeContents(document.getElementById('email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; }
+  });
+
+  // Trace: a heartbeat on the left that becomes a rising data line on the right.
+  const cv = document.getElementById('trace'), ctx = cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0, pts = [];
+  function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+  function build() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pts = [];
+    const mid = H * 0.62, split = W * 0.52, beat = Math.max(120, W / 7);
+    for (let x = 0; x <= W; x += 2) {
+      let y;
+      if (x < split) {
+        const t = (x % beat) / beat;
+        y = mid;
+        if (t > .30 && t < .36) y = mid - Math.sin((t - .30) / .06 * Math.PI) * 8;          // P wave
+        else if (t > .42 && t < .45) y = mid + (t - .42) / .03 * 10;                          // Q
+        else if (t >= .45 && t < .49) y = mid + 10 - (t - .45) / .04 * (H * .5 + 10);         // R up
+        else if (t >= .49 && t < .53) y = mid - H * .5 + (t - .49) / .04 * (H * .5 + 18);     // S down
+        else if (t >= .53 && t < .56) y = mid + 18 - (t - .53) / .03 * 18;
+        else if (t > .64 && t < .76) y = mid - Math.sin((t - .64) / .12 * Math.PI) * 12;      // T wave
+      } else {
+        const u = (x - split) / (W - split);
+        const trend = mid - u * H * .42;
+        y = trend + Math.sin(u * 22) * 7 * (1 - u) + Math.sin(u * 9 + 1) * 4;
+      }
+      pts.push([x, y]);
+    }
+  }
+  function draw(head) {
+    ctx.clearRect(0, 0, W, H);
+    const split = W * 0.52;
+    // faint grid, like ECG paper
+    ctx.strokeStyle = css('--line'); ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 24) { ctx.beginPath(); ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 24) { ctx.beginPath(); ctx.moveTo(0, y + .5); ctx.lineTo(W, y + .5); ctx.stroke(); }
+    const g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, css('--pulse')); g.addColorStop(.46, css('--pulse')); g.addColorStop(.6, css('--accent')); g.addColorStop(1, css('--accent'));
+    ctx.strokeStyle = g; ctx.lineWidth = 2.2; ctx.lineJoin = 'round';
+    ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+    // data points on the insight side
+    ctx.fillStyle = css('--accent');
+    pts.forEach(([x, y], i) => { if (x > split + 20 && i % 18 === 0) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); } });
+    // moving pulse dot
+    if (head != null) {
+      const p = pts[head]; if (p) {
+        ctx.fillStyle = p[0] < split ? css('--pulse') : css('--accent');
+        ctx.beginPath(); ctx.arc(p[0], p[1], 5, 0, 7); ctx.fill();
+        ctx.globalAlpha = .25; ctx.beginPath(); ctx.arc(p[0], p[1], 11, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      }
+    }
+  }
+  build(); draw(reduce ? null : 0);
+  let i = 0;
+  function tick() { i = (i + 2) % pts.length; draw(i); requestAnimationFrame(tick); }
+  if (!reduce) requestAnimationFrame(tick);
+  addEventListener('resize', () => { build(); draw(reduce ? null : i); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => draw(reduce ? null : i));
+</script>
+
+</body></html>
