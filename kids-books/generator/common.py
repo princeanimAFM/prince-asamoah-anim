@@ -13,7 +13,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas as rl_canvas
 
 # ---- Publisher settings: change these before uploading -----------------------
-AUTHOR = "Prince Asamoah"
+AUTHOR = "Doris Sarpong"
 YEAR = 2026
 
 # ---- KDP print specs (US, 8.5 x 11 in, white paper, no interior bleed) --------

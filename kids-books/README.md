@@ -81,7 +81,7 @@ Sources: [KDP Builder: best coloring book niches](https://kdpbuilder.com/blog/be
    both are complete.
 2. Click **Create → Paperback**.
 3. **Details page:** copy the title, subtitle, description and keywords for the book from
-   the listing kit below. Author: your name.
+   the listing kit below. Author: **Doris Sarpong** (it must match the name on the covers).
    Reading age: use the book's age range for kids' books. Leave it blank for the senior books.
 4. **Content page:**
    - ISBN: **Get a free KDP ISBN**.
@@ -102,7 +102,7 @@ Sources: [KDP Builder: best coloring book niches](https://kdpbuilder.com/blog/be
 **Suggested order:** Halloween (it's already late in the season) → Christmas (publish this
 week to catch the holiday rush) → Dementia Activity Book → Good Old Days → Sudoku → the rest.
 
-**Before you publish:** the covers and copyright pages say "Prince Asamoah". To use a
+**Before you publish:** the covers and copyright pages say "Doris Sarpong". To use a
 different pen name, change `AUTHOR` in `generator/common.py` and rebuild
 (`pip install reportlab pypdfium2 pillow && python generator/build.py`).
 
