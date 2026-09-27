@@ -21,6 +21,7 @@ TRIM_W, TRIM_H = 8.5 * inch, 11 * inch
 MARGIN = 0.6 * inch            # safely above KDP's 0.375" gutter / 0.25" outside minimum
 COVER_BLEED = 0.125 * inch
 SPINE_PER_PAGE_WHITE = 0.002252 * inch
+SPINE_PER_PAGE_COLOR = 0.002347 * inch  # standard color paper
 MIN_PAGES_FOR_SPINE_TEXT = 79
 
 FONT_DIR = "/usr/share/fonts/truetype/"
@@ -119,7 +120,7 @@ def title_page(c, title_lines, subtitle):
     c.showPage()
 
 
-def copyright_page(c, title):
+def copyright_page(c, title, extra=()):
     lines = [
         title,
         "",
@@ -131,6 +132,7 @@ def copyright_page(c, title):
         "classroom use.",
         "",
         "All puzzles and illustrations in this book are original works.",
+        *extra,
     ]
     y = MARGIN + 3.2 * inch
     for line in lines:
@@ -182,15 +184,16 @@ def pad_to_even(c, page_count):
 
 # ---- Covers -------------------------------------------------------------------
 
-def cover_size(page_count):
-    spine = page_count * SPINE_PER_PAGE_WHITE
+def cover_size(page_count, per_page=SPINE_PER_PAGE_WHITE):
+    spine = page_count * per_page
     return 2 * COVER_BLEED + 2 * TRIM_W + spine, 2 * COVER_BLEED + TRIM_H, spine
 
 
 def make_cover(path, page_count, *, title_lines, subtitle, badge, blurb, bullets,
-               bg, accent, title_fill, art, seed=1):
+               bg, accent, title_fill, art, seed=1, confetti=True,
+               spine_per_page=SPINE_PER_PAGE_WHITE):
     """Full-wrap paperback cover (back | spine | front) with bleed, per KDP template."""
-    W, H, spine = cover_size(page_count)
+    W, H, spine = cover_size(page_count, spine_per_page)
     c = rl_canvas.Canvas(path, pagesize=(W, H))
     c.setTitle(" ".join(title_lines))
     c.setAuthor(AUTHOR)
@@ -204,7 +207,7 @@ def make_cover(path, page_count, *, title_lines, subtitle, badge, blurb, bullets
     c.saveState()
     c.setFillColor(white)
     c.setFillAlpha(0.18)
-    for _ in range(90):
+    for _ in range(90 if confetti else 0):
         x, y = rnd.uniform(0, W), rnd.uniform(0, H)
         r = rnd.uniform(6, 18)
         if rnd.random() < 0.5:
@@ -298,3 +301,23 @@ def make_cover(path, page_count, *, title_lines, subtitle, badge, blurb, bullets
     c.showPage()
     c.save()
     return W, H, spine
+
+
+class BookSpec:
+    """Title, cover settings and preview page for one book; subclasses add build_interior()."""
+
+    def __init__(self, title, subtitle, full_title, sample_page, cover):
+        self.title, self.subtitle, self.full_title = title, subtitle, full_title
+        self.sample_page, self.cover = sample_page, cover
+
+    def build_cover(self, path, pages):
+        return make_cover(path, pages, title_lines=self.title, subtitle=self.subtitle, **self.cover)
+
+
+def front_matter(c, title_lines, subtitle, full_title, kids=True, extra=()):
+    """Title page, copyright page and (for kids) a 'this book belongs to' page. Returns pages used."""
+    title_page(c, title_lines, subtitle)
+    copyright_page(c, full_title, extra)
+    if kids:
+        belongs_to_page(c)
+    return 3 if kids else 2

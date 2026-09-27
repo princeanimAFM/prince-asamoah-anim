@@ -67,15 +67,16 @@ def motif_path(c, kind, cx, cy, r_in, r_out, angle, half_w):
     return p
 
 
-def draw_mandala(c, cx, cy, R, rnd, colored=False, line_w=2.4):
+def draw_mandala(c, cx, cy, R, rnd, colored=False, line_w=2.4, simple=False):
+    """simple=True gives fewer, larger spaces (for seniors and early learners)."""
     c.setLineJoin(1)
     c.setStrokeColor(cm.INK)
     c.setLineWidth(line_w)
-    n = rnd.choice([8, 10, 12, 12, 16])
+    n = rnd.choice([6, 8]) if simple else rnd.choice([8, 10, 12, 12, 16])
     radii = [R]
-    ring_count = rnd.randint(5, 7)
+    ring_count = rnd.randint(2, 3) if simple else rnd.randint(5, 7)
     for _ in range(ring_count):
-        radii.append(radii[-1] * rnd.uniform(0.7, 0.82))
+        radii.append(radii[-1] * (rnd.uniform(0.55, 0.65) if simple else rnd.uniform(0.7, 0.82)))
     colors = PALETTE[:]
     rnd.shuffle(colors)
 

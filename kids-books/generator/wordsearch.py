@@ -6,12 +6,6 @@ from reportlab.lib.units import inch
 
 import common as cm
 
-TITLE = ["Word Search", "for Kids Ages 6-8"]
-SUBTITLE = "50 Large-Print Puzzles to Boost Spelling & Vocabulary"
-SAMPLE_PAGE = 6  # page shown in sample-page.png (0-based)
-FULL_TITLE = ("Word Search for Kids Ages 6-8: 50 Large-Print Puzzles to Boost "
-              "Spelling & Vocabulary")
-
 THEMES = [
     ("Farm Animals", "COW PIG HORSE SHEEP GOAT DUCK HEN LAMB BARN PONY"),
     ("Ocean Life", "FISH WHALE CRAB SHARK SEAL OCTOPUS SQUID CORAL SHELL STARFISH"),
@@ -111,16 +105,21 @@ def has_blocked(grid, words):
     return any(b in l for l in lines for b in blocked)
 
 
-def build_puzzles(seed=68):
+def kids_rule(i):
+    if i < 25:
+        return 12, [(1, 0), (0, 1)], "Easy: words go across and down"
+    return 13, [(1, 0), (0, 1), (1, 1)], "Harder: across, down & diagonal"
+
+
+def build_puzzles(themes, seed, rule=kids_rule):
+    """rule(index) -> (grid size, directions, level caption)."""
     rnd = random.Random(seed)
     out = []
-    for i, (theme, words) in enumerate(THEMES):
+    for i, (theme, words) in enumerate(themes):
         words = words.split()
         assert len(words) == len(set(words)), theme
-        if i < 25:
-            size, dirs, level = 12, [(1, 0), (0, 1)], "Easy: words go across and down"
-        else:
-            size, dirs, level = 13, [(1, 0), (0, 1), (1, 1)], "Harder: across, down & diagonal"
+        size, dirs, level = rule(i)
+        assert max(map(len, words)) <= size, theme
         grid, placed = place_words(words, size, dirs, rnd)
         out.append((theme, level, words, grid, placed))
     return out
@@ -146,12 +145,16 @@ def draw_grid(c, grid, x0, y_top, cell, font_size, placed=None, hi=None):
             c.drawCentredString(x0 + (x + 0.5) * cell, y_top - (y + 0.5) * cell - font_size * 0.36, grid[y][x])
 
 
-def puzzle_page(c, number, theme, level, words, grid):
+KIDS_STYLE = dict(grid_w=cm.TRIM_W - 2 * cm.MARGIN - 0.5 * inch, bank_font=17, bank_cols=3, bank_row=0.38 * inch,
+                  title_size=32)
+
+
+def puzzle_page(c, number, theme, level, words, grid, style=KIDS_STYLE):
     top = cm.TRIM_H - cm.MARGIN
-    cm.centered(c, f"#{number}  {theme}", top - 30, size=32, max_width=cm.TRIM_W - 2 * cm.MARGIN)
+    cm.centered(c, f"#{number}  {theme}", top - 30, size=style["title_size"], max_width=cm.TRIM_W - 2 * cm.MARGIN)
     cm.centered(c, level, top - 58, font="Regular", size=14)
     n = len(grid)
-    cell = (cm.TRIM_W - 2 * cm.MARGIN - 0.5 * inch) / n
+    cell = style["grid_w"] / n
     x0 = (cm.TRIM_W - n * cell) / 2
     y_top = top - 1.15 * inch
     c.setStrokeColor(cm.INK)
@@ -160,25 +163,26 @@ def puzzle_page(c, number, theme, level, words, grid):
     draw_grid(c, grid, x0, y_top, cell, cell * 0.62)
     # Word bank with tick boxes
     wy = y_top - n * cell - 0.5 * inch
-    cols = 3
+    cols = style["bank_cols"]
     col_w = (cm.TRIM_W - 2 * cm.MARGIN) / cols
-    c.setFont("Bold", 17)
+    fs = style["bank_font"]
+    c.setFont("Bold", fs)
     for i, w in enumerate(words):
         cx = cm.MARGIN + (i % cols) * col_w + 0.25 * inch
-        cy = wy - (i // cols) * 0.38 * inch
+        cy = wy - (i // cols) * style["bank_row"]
         c.setLineWidth(1.5)
-        c.rect(cx, cy - 2, 13, 13, stroke=1, fill=0)
-        c.drawString(cx + 22, cy, w)
+        c.rect(cx, cy - 2, fs * 0.8, fs * 0.8, stroke=1, fill=0)
+        c.drawString(cx + fs * 1.3, cy, w)
     c.showPage()
 
 
-def solutions_pages(c, puzzles):
+def solutions_pages(c, puzzles, heading="Answers", first_number=1):
     per_page = 6
     box_w = (cm.TRIM_W - 2 * cm.MARGIN) / 2
     box_h = (cm.TRIM_H - 2 * cm.MARGIN - 0.6 * inch) / 3
     pages = 0
     for start in range(0, len(puzzles), per_page):
-        cm.centered(c, "Answers", cm.TRIM_H - cm.MARGIN - 20, size=24)
+        cm.centered(c, heading, cm.TRIM_H - cm.MARGIN - 20, size=24)
         for i, (theme, _, _, grid, placed) in enumerate(puzzles[start:start + per_page]):
             col, row = i % 2, i // 2
             bx = cm.MARGIN + col * box_w
@@ -188,47 +192,45 @@ def solutions_pages(c, puzzles):
             x0 = bx + (box_w - n * cell) / 2
             c.setFont("Bold", 12)
             c.setFillColor(cm.INK)
-            c.drawCentredString(bx + box_w / 2, by_top - 14, f"#{start + i + 1}  {theme}")
+            c.drawCentredString(bx + box_w / 2, by_top - 14, f"#{first_number + start + i}  {theme}")
             draw_grid(c, grid, x0, by_top - 24, cell, cell * 0.6, placed, HexColor("#cfcfcf"))
         c.showPage()
         pages += 1
     return pages
 
 
-def build_interior(path):
-    puzzles = build_puzzles()
-    c = cm.new_interior(path, FULL_TITLE)
-    cm.title_page(c, TITLE, SUBTITLE)
-    cm.copyright_page(c, FULL_TITLE)
-    cm.belongs_to_page(c)
-    pages = 3
-    cm.frame(c)
-    cm.centered(c, "How to Play", cm.TRIM_H - 2 * inch, size=40)
-    for i, line in enumerate([
-        "Find every word from the list in the grid.",
-        "Circle it, then tick its box in the list.",
-        "Puzzles 1-25: words go across or down.",
-        "Puzzles 26-50: words can also go diagonally!",
-        "Answers are at the back of the book.",
-    ]):
-        cm.centered(c, line, cm.TRIM_H - 3.2 * inch - i * 44, font="Regular", size=19)
-    c.showPage()
-    pages += 1
-    for n, (theme, level, words, grid, _) in enumerate(puzzles, 1):
-        puzzle_page(c, n, theme, level, words, grid)
+class WordSearchBook(cm.BookSpec):
+    def __init__(self, themes, seed, how_to, rule=kids_rule, style=KIDS_STYLE, certificate=None, kids=True,
+                 extra_copyright=(), **kw):
+        super().__init__(**kw)
+        self.themes, self.seed, self.how_to, self.rule, self.style = themes, seed, how_to, rule, style
+        self.certificate, self.kids, self.extra_copyright = certificate, kids, extra_copyright
+
+    def build_interior(self, path):
+        puzzles = build_puzzles(self.themes, self.seed, self.rule)
+        c = cm.new_interior(path, self.full_title)
+        pages = cm.front_matter(c, self.title, self.subtitle, self.full_title, self.kids, self.extra_copyright)
+        cm.frame(c)
+        cm.centered(c, "How to Play", cm.TRIM_H - 2 * inch, size=40)
+        for i, line in enumerate(self.how_to):
+            cm.centered(c, line, cm.TRIM_H - 3.2 * inch - i * 44, font="Regular", size=19)
+        c.showPage()
         pages += 1
-    cm.certificate_page(c, "is a Word Search Champion!", "for finding all the words in 50 puzzles")
-    pages += 1
-    pages += solutions_pages(c, puzzles)
-    pages = cm.pad_to_even(c, pages)
-    c.save()
-    return pages
+        for n, (theme, level, words, grid, _) in enumerate(puzzles, 1):
+            puzzle_page(c, n, theme, level, words, grid, self.style)
+            pages += 1
+        if self.certificate:
+            cm.certificate_page(c, *self.certificate)
+            pages += 1
+        pages += solutions_pages(c, puzzles)
+        pages = cm.pad_to_even(c, pages)
+        c.save()
+        return pages
 
 
-def cover_art(c, x, y, w, h, accent):
-    rnd = random.Random(3)
-    words = ["FUN", "READ", "SPELL", "FIND", "WORDS", "PLAY"]
-    grid, placed = place_words(words, 8, [(1, 0), (0, 1), (1, 1)], rnd)
+def cover_art(c, x, y, w, h, accent, words=("FUN", "READ", "SPELL", "FIND", "WORDS", "PLAY"), seed=3):
+    rnd = random.Random(seed)
+    grid, placed = place_words(list(words), 8, [(1, 0), (0, 1), (1, 1)], rnd)
     size = min(w, h) * 0.9
     cell = size / 8
     x0, y_top = x + (w - size) / 2, y + (h + size) / 2
@@ -239,14 +241,20 @@ def cover_art(c, x, y, w, h, accent):
     draw_grid(c, grid, x0, y_top, cell, cell * 0.6, placed, accent)
 
 
-def build_cover(path, pages):
-    return cm.make_cover(
-        path, pages, title_lines=TITLE, subtitle=SUBTITLE, badge=["AGES", "6-8"],
-        blurb=["50 themed puzzles with big, easy-to-read letters.",
-               "From farm animals to outer space, kids hunt for",
-               "words while building spelling, reading, and focus",
-               "skills. Perfect for home, school, and road trips!"],
-        bullets=["50 fun themes, 500 words to find", "Large-print 12x12 & 13x13 grids",
-                 "Easy first, then diagonal challenges", "Tick-box word lists",
-                 "Full answer key", "Certificate of achievement"],
-        bg="#8e24aa", accent="#ffd54f", title_fill="#ffd54f", art=cover_art, seed=31)
+BOOK = WordSearchBook(
+    THEMES, seed=68, certificate=("is a Word Search Champion!", "for finding all the words in 50 puzzles"),
+    how_to=["Find every word from the list in the grid.", "Circle it, then tick its box in the list.",
+            "Puzzles 1-25: words go across or down.", "Puzzles 26-50: words can also go diagonally!",
+            "Answers are at the back of the book."],
+    title=["Word Search", "for Kids Ages 6-8"], subtitle="50 Large-Print Puzzles to Boost Spelling & Vocabulary",
+    full_title="Word Search for Kids Ages 6-8: 50 Large-Print Puzzles to Boost Spelling & Vocabulary",
+    sample_page=6,
+    cover=dict(badge=["AGES", "6-8"],
+               blurb=["50 themed puzzles with big, easy-to-read letters.",
+                      "From farm animals to outer space, kids hunt for",
+                      "words while building spelling, reading, and focus",
+                      "skills. Perfect for home, school, and road trips!"],
+               bullets=["50 fun themes, 500 words to find", "Large-print 12x12 & 13x13 grids",
+                        "Easy first, then diagonal challenges", "Tick-box word lists",
+                        "Full answer key", "Certificate of achievement"],
+               bg="#8e24aa", accent="#ffd54f", title_fill="#ffd54f", art=cover_art, seed=31))
