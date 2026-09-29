@@ -1,0 +1,1 @@
+ALTER TABLE "settings" ADD COLUMN "tax_region" text DEFAULT 'scotland' NOT NULL;

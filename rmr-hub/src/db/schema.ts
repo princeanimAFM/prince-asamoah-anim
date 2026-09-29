@@ -21,6 +21,8 @@ export const settings = pgTable("settings", {
   weeklyHourLimit: integer("weekly_hour_limit").notNull().default(20),
   /** Expected PAYE salary for the tax year, used by the tax estimate. */
   salary: integer("salary").notNull().default(0),
+  /** scotland | rest_of_uk: Scotland has its own income tax bands. */
+  taxRegion: text("tax_region").notNull().default("scotland"),
 });
 
 export const clients = pgTable("clients", {

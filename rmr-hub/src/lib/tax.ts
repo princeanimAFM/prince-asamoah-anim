@@ -1,25 +1,34 @@
 /**
  * UK self-employment tax estimate for a sole trader who also has a PAYE salary.
  *
- * Rates are for England, Wales and Northern Ireland. Scotland has different income
- * tax bands and is not modelled here. All amounts are in pence.
+ * Income tax bands differ in Scotland; National Insurance is the same across the UK.
+ * All amounts are in pence.
  *
  * This is a planning estimate, not tax advice: it ignores pension contributions,
- * student loans, other income, reliefs and the salary tax already collected by PAYE
- * being wrong. The number that counts is the one on the Self Assessment return.
+ * student loans, other income and reliefs. The number that counts is the one on the
+ * Self Assessment return.
  */
+
+export type TaxRegion = "scotland" | "rest_of_uk";
+
+export const REGIONS: Record<TaxRegion, string> = {
+  scotland: "Scotland",
+  rest_of_uk: "England, Wales or Northern Ireland",
+};
+
+export interface Band {
+  /** Top of the band, measured in taxable income (after the personal allowance). */
+  upTo: number;
+  rate: number;
+}
 
 export interface TaxRates {
   label: string;
+  region: TaxRegion;
   personalAllowance: number;
   /** Income above this reduces the personal allowance by £1 for every £2. */
   allowanceTaperStart: number;
-  basicBand: number;
-  /** Taxable income above this is charged at the additional rate. */
-  additionalThreshold: number;
-  basicRate: number;
-  higherRate: number;
-  additionalRate: number;
+  bands: Band[];
   class4LowerLimit: number;
   class4UpperLimit: number;
   class4MainRate: number;
@@ -29,30 +38,53 @@ export interface TaxRates {
 
 const p = (pounds: number) => Math.round(pounds * 100);
 
-export const RATES: Record<string, TaxRates> = {
-  "2025-26": {
-    label: "2025-26",
-    personalAllowance: p(12_570),
-    allowanceTaperStart: p(100_000),
-    basicBand: p(37_700),
-    additionalThreshold: p(125_140),
-    basicRate: 0.2,
-    higherRate: 0.4,
-    additionalRate: 0.45,
-    class4LowerLimit: p(12_570),
-    class4UpperLimit: p(50_270),
-    class4MainRate: 0.06,
-    class4UpperRate: 0.02,
-    tradingAllowance: p(1_000),
+const shared = {
+  personalAllowance: p(12_570),
+  allowanceTaperStart: p(100_000),
+  class4LowerLimit: p(12_570),
+  class4UpperLimit: p(50_270),
+  class4MainRate: 0.06,
+  class4UpperRate: 0.02,
+  tradingAllowance: p(1_000),
+};
+
+const RATES: Record<TaxRegion, Record<string, TaxRates>> = {
+  rest_of_uk: {
+    "2025-26": {
+      label: "2025-26",
+      region: "rest_of_uk",
+      ...shared,
+      bands: [
+        { upTo: p(37_700), rate: 0.2 },
+        { upTo: p(125_140), rate: 0.4 },
+        { upTo: Infinity, rate: 0.45 },
+      ],
+    },
+  },
+  scotland: {
+    "2025-26": {
+      label: "2025-26",
+      region: "scotland",
+      ...shared,
+      bands: [
+        { upTo: p(2_827), rate: 0.19 }, // starter
+        { upTo: p(14_921), rate: 0.2 }, // basic
+        { upTo: p(31_092), rate: 0.21 }, // intermediate
+        { upTo: p(62_430), rate: 0.42 }, // higher
+        { upTo: p(125_140), rate: 0.45 }, // advanced
+        { upTo: Infinity, rate: 0.48 }, // top
+      ],
+    },
   },
 };
-// Thresholds are frozen until April 2028, so later years reuse the same figures
-// until they are confirmed. Update this table when HMRC publishes new rates.
-RATES["2026-27"] = { ...RATES["2025-26"], label: "2026-27" };
-RATES["2027-28"] = { ...RATES["2025-26"], label: "2027-28" };
 
-export function ratesFor(taxYear: string): TaxRates {
-  return RATES[taxYear] ?? RATES["2025-26"];
+// Later years reuse the latest confirmed figures until they are added here.
+const LATEST = "2025-26";
+
+export function ratesFor(taxYear: string, region: TaxRegion = "rest_of_uk"): TaxRates & { confirmed: boolean } {
+  const table = RATES[region] ?? RATES.rest_of_uk;
+  const r = table[taxYear];
+  return r ? { ...r, confirmed: true } : { ...table[LATEST], label: taxYear, confirmed: false };
 }
 
 export function personalAllowance(totalIncome: number, r: TaxRates): number {
@@ -63,10 +95,14 @@ export function personalAllowance(totalIncome: number, r: TaxRates): number {
 /** Income tax on a year's total income (salary + trading profit). */
 export function incomeTax(totalIncome: number, r: TaxRates): number {
   const taxable = Math.max(0, totalIncome - personalAllowance(totalIncome, r));
-  const basic = Math.min(taxable, r.basicBand);
-  const higher = Math.max(0, Math.min(taxable, r.additionalThreshold) - r.basicBand);
-  const additional = Math.max(0, taxable - r.additionalThreshold);
-  return Math.round(basic * r.basicRate + higher * r.higherRate + additional * r.additionalRate);
+  let tax = 0;
+  let floor = 0;
+  for (const band of r.bands) {
+    if (taxable <= floor) break;
+    tax += (Math.min(taxable, band.upTo) - floor) * band.rate;
+    floor = band.upTo;
+  }
+  return Math.round(tax);
 }
 
 /** Class 4 National Insurance on self-employed profit (salary does not count). */
@@ -78,13 +114,14 @@ export function class4(profit: number, r: TaxRates): number {
 
 export interface TaxInput {
   taxYear: string;
+  region?: TaxRegion;
   salary: number;
   income: number;
   expenses: number;
 }
 
 export interface TaxEstimate {
-  rates: TaxRates;
+  rates: TaxRates & { confirmed: boolean };
   income: number;
   /** Expenses claimed, or the trading allowance if that is higher. */
   deduction: number;
@@ -100,8 +137,8 @@ export interface TaxEstimate {
   marginalRate: number;
 }
 
-export function estimate({ taxYear, salary, income, expenses }: TaxInput): TaxEstimate {
-  const r = ratesFor(taxYear);
+export function estimate({ taxYear, region = "rest_of_uk", salary, income, expenses }: TaxInput): TaxEstimate {
+  const r = ratesFor(taxYear, region);
   const coveredByTradingAllowance = income <= r.tradingAllowance;
   const usesTradingAllowance = r.tradingAllowance > expenses;
   const deduction = coveredByTradingAllowance ? income : Math.max(expenses, r.tradingAllowance);

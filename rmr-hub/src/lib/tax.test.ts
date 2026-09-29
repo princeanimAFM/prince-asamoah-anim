@@ -19,6 +19,29 @@ describe("incomeTax", () => {
   });
 });
 
+describe("Scottish income tax", () => {
+  const s = ratesFor("2025-26", "scotland");
+  it("uses the starter, basic and intermediate bands", () => {
+    // 2,827 @19% + 12,094 @20% + 10,509 @21%
+    expect(incomeTax(gbp(38_000), s)).toBe(gbp(5_162.82));
+  });
+  it("charges 42% above £43,662", () => {
+    expect(incomeTax(gbp(48_000), s)).toBe(gbp(8_173.8));
+  });
+  it("adds side profit at Scottish rates, with the same Class 4 NI", () => {
+    const e = estimate({ taxYear: "2025-26", region: "scotland", salary: gbp(38_000), income: gbp(11_000), expenses: gbp(500) });
+    expect(e.profit).toBe(gbp(10_000));
+    expect(e.extraIncomeTax).toBe(gbp(3_010.98));
+    expect(e.class4).toBe(0);
+    expect(e.marginalRate).toBeCloseTo(0.42, 5);
+  });
+  it("falls back to the latest rates for years not yet confirmed", () => {
+    const later = ratesFor("2027-28", "scotland");
+    expect(later.confirmed).toBe(false);
+    expect(later.bands[0].rate).toBe(0.19);
+  });
+});
+
 describe("class4", () => {
   it("is zero below the lower profits limit", () => {
     expect(class4(gbp(12_000), r)).toBe(0);

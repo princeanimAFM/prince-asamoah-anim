@@ -4,6 +4,7 @@ import { SubmitButton } from "@/components/buttons";
 import { Notice, PageHeader } from "@/components/ui";
 import { getSettings } from "@/lib/data";
 import { driveStatus } from "@/lib/google";
+import { REGIONS } from "@/lib/tax";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -87,6 +88,16 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           <label className="field">
             Weekly hour limit (visa)
             <input name="weeklyHourLimit" type="number" min="1" defaultValue={s.weeklyHourLimit} className="input" />
+          </label>
+          <label className="field">
+            Where you live (for income tax)
+            <select name="taxRegion" defaultValue={s.taxRegion} className="input">
+              {Object.entries(REGIONS).map(([k, label]) => (
+                <option key={k} value={k}>
+                  {label}
+                </option>
+              ))}
+            </select>
           </label>
           <label className="field sm:col-span-2">
             Expected nursing salary this tax year £ (before tax)

@@ -7,6 +7,7 @@ import { taxSummary } from "@/lib/data";
 import { formatDate, selfAssessmentDates, taxYearOf, todayISO } from "@/lib/dates";
 import { driveStatus } from "@/lib/google";
 import { formatGBP, percent } from "@/lib/money";
+import { REGIONS } from "@/lib/tax";
 
 export const metadata: Metadata = { title: "Tax" };
 
@@ -94,8 +95,9 @@ export default async function TaxPage({ searchParams }: { searchParams: Promise<
             <dd className="border-t border-line pt-2 text-right font-extrabold">{formatGBP(e.total)}</dd>
           </dl>
           <p className="mt-3 text-xs text-grey">
-            Estimate for England, Wales and Northern Ireland using {e.rates.label} rates, on money actually received (cash
-            basis). It doesn't include student loan repayments, pension contributions or other income. Your Self
+            Estimate using {REGIONS[t.region]} income tax bands (change this in Settings)
+            {e.rates.confirmed ? ` for ${e.rates.label}` : `. ${year} rates aren't in the app yet, so it uses the latest confirmed rates`}
+            , on money actually received (cash basis). National Insurance is the same across the UK. It doesn't include student loan repayments, pension contributions or other income. Your Self
             Assessment return is the final figure. If your bill is over £1,000, HMRC may also ask for payments on account
             towards next year.
           </p>

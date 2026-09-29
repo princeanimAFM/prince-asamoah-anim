@@ -52,6 +52,7 @@ export async function saveSettings(f: FormData) {
       invoicePrefix: (str(f, "invoicePrefix") || "RMR").replace(/[^A-Za-z0-9]/g, "").toUpperCase(),
       weeklyHourLimit: Math.max(1, Math.round(num(f, "weeklyHourLimit")) || 20),
       salary: parsePence(str(f, "salary")) ?? 0,
+      taxRegion: str(f, "taxRegion") === "rest_of_uk" ? "rest_of_uk" : "scotland",
     })
     .where(eq(schema.settings.id, 1));
   refresh();

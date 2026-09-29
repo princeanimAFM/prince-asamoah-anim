@@ -16,7 +16,7 @@ RMR Dev Works/
   Tax/2026-27/Hours log 2026-27.csv
 ```
 
-The tax figures are planning estimates for England, Wales and Northern Ireland. Your Self Assessment return is the real figure.
+The tax figures are planning estimates using Scottish or rest-of-UK income tax bands (choose in Settings). Your Self Assessment return is the real figure. Rates are in `src/lib/tax.ts`; add each new tax year's bands there when they're announced.
 
 ## Try it on your computer
 

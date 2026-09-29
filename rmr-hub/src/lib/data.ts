@@ -3,7 +3,7 @@ import { and, asc, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import type { Invoice, InvoiceItem, Settings } from "@/db/schema";
 import { addDays, taxYearOf, taxYearRange, todayISO, weekStart } from "@/lib/dates";
-import { estimate } from "@/lib/tax";
+import { estimate, type TaxRegion } from "@/lib/tax";
 
 export async function getSettings(): Promise<Settings> {
   const db = await getDb();
@@ -136,6 +136,7 @@ export async function taxSummary(taxYear = taxYearOf(todayISO())) {
   const expenses = Math.abs(sum("expense"));
   const saved = Math.abs(sum("tax_saving"));
   const paid = Math.abs(sum("tax_payment"));
-  const est = estimate({ taxYear, salary: settings.salary, income, expenses });
-  return { taxYear, start, end, income, expenses, saved, paid, estimate: est, salary: settings.salary };
+  const region: TaxRegion = settings.taxRegion === "rest_of_uk" ? "rest_of_uk" : "scotland";
+  const est = estimate({ taxYear, region, salary: settings.salary, income, expenses });
+  return { taxYear, start, end, income, expenses, saved, paid, estimate: est, salary: settings.salary, region };
 }
