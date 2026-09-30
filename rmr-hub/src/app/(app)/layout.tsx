@@ -32,6 +32,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           <div className="flex items-center gap-1">
+            <Link href="/contracts" className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-grey" aria-label="Contracts">
+              <Icon name="pen" size={22} />
+            </Link>
             <Link href="/clients" className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-grey" aria-label="Clients">
               <Icon name="users" size={22} />
             </Link>

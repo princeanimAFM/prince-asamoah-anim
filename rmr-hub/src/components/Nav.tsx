@@ -11,6 +11,7 @@ const items: { href: string; label: string; icon: IconName; mobile: boolean }[] 
   { href: "/money", label: "Money", icon: "money", mobile: true },
   { href: "/tax", label: "Tax", icon: "tax", mobile: true },
   { href: "/clients", label: "Clients", icon: "users", mobile: false },
+  { href: "/contracts", label: "Contracts", icon: "pen", mobile: false },
   { href: "/settings", label: "Settings", icon: "settings", mobile: false },
 ];
 

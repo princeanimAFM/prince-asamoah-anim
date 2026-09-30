@@ -7,6 +7,7 @@ The RMR Dev Works business assistant. It runs in the browser and installs on you
 - **Invoices**: create them from logged hours or fixed prices, get a branded PDF, mark sent and paid
 - **Money**: import Monzo (or any bank) CSV statements. Payments that quote an invoice number are matched and the invoice is marked paid.
 - **Tax**: an estimate of income tax and Class 4 NI on your freelance profit on top of your salary, plus what you've saved in your tax pot and key deadlines
+- **Contracts**: build a plain-English agreement from a template (one-off or monthly, Scottish or English law), edit it, then send the client a private signing link by WhatsApp or email. They read and sign on their phone with no account; you get a signed PDF with an audit record (time, IP, browser and a fingerprint of the exact text), filed in Drive under `Contracts/<client>`. Withdrawing a link or voiding a contract stops the old link working.
 - **Google Drive**: invoices and yearly records saved in an `RMR Dev Works` folder:
 
 ```
@@ -74,7 +75,6 @@ In the Monzo app go to **Account › Statements › Export**, choose **CSV** and
 
 ## Planned next
 
-- Contracts from a template, with online signing and signed PDFs saved to Drive
 - Emailing invoices and reminders directly from the app
 - Automatic Monzo sync through Monzo's API (limited to your own account, with re-authorisation every 90 days)
 - Receipt photos for expenses

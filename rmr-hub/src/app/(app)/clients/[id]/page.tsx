@@ -28,6 +28,9 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
             <Link href={`/invoices/new?clientId=${id}`} className="btn-primary">
               <Icon name="invoice" size={18} /> New invoice
             </Link>
+            <Link href={`/contracts/new?clientId=${id}`} className="btn-secondary">
+              <Icon name="pen" size={18} /> New contract
+            </Link>
             <Link href={`/clients/${id}/edit`} className="btn-secondary">
               Edit
             </Link>

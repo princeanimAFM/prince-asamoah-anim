@@ -103,6 +103,36 @@ export const transactions = pgTable(
   (t) => [uniqueIndex("transactions_external_idx").on(t.externalId), index("transactions_date_idx").on(t.date)],
 );
 
+/**
+ * Client contracts. A contract is edited as a draft, then "sent": its text is frozen
+ * (bodyHash) and a secret signing link (token) is created. The client signs on a public
+ * page; the signature, time, IP and browser are kept as the audit record.
+ * status: draft | sent | signed | void
+ */
+export const contracts = pgTable(
+  "contracts",
+  {
+    id: serial("id").primaryKey(),
+    clientId: integer("client_id")
+      .notNull()
+      .references(() => clients.id),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    status: text("status").notNull().default("draft"),
+    token: text("token"),
+    bodyHash: text("body_hash"),
+    sentAt: timestamp("sent_at"),
+    signedAt: timestamp("signed_at"),
+    signerName: text("signer_name"),
+    signatureImage: text("signature_image"),
+    signerIp: text("signer_ip"),
+    signerAgent: text("signer_agent"),
+    driveFileId: text("drive_file_id"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("contracts_token_idx").on(t.token)],
+);
+
 /** The signed-in Google account, kept so the app can save files to Drive. */
 export const googleAccount = pgTable("google_account", {
   id: integer("id").primaryKey().default(1),
@@ -125,3 +155,4 @@ export type Invoice = typeof invoices.$inferSelect;
 export type InvoiceItem = typeof invoiceItems.$inferSelect;
 export type TimeEntry = typeof timeEntries.$inferSelect;
 export type Transaction = typeof transactions.$inferSelect;
+export type Contract = typeof contracts.$inferSelect;
