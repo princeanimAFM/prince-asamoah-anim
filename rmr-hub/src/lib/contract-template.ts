@@ -21,16 +21,25 @@ export interface ContractInput {
   projectTitle: string;
   scope: string;
   model: PriceModel;
-  /** One-off: total price. Monthly: setup fee. Pence. */
+  /** One-off: total price. Monthly: start fee. Pence. */
   price: number;
+  /** One-off: number of equal payments (2 or 3). */
+  stages: number;
+  /** Monthly: fee per month, including care. Pence. */
   monthly: number;
+  /** Monthly: number of monthly payments after which the software is yours. */
+  termMonths: number;
   minimumMonths: number;
-  buyout: number;
+  /** Monthly: early buy-out price for each monthly payment still to come. Pence. */
+  buyoutPerMonth: number;
   startDate: string;
   timeline: string;
   reviewRounds: number;
   warrantyDays: number;
   careMonthly: number;
+  /** Charges for fixes without the care plan. Pence. */
+  smallFix: number;
+  biggerChange: number;
   paymentTermsDays: number;
   law: Law;
 }
@@ -49,30 +58,61 @@ function bullets(text: string): string {
     .join("\n");
 }
 
+/** Split a price into equal payments; any odd pence go on the last one. */
+export function splitPayments(total: number, parts: number): number[] {
+  const n = Math.max(1, Math.round(parts));
+  const each = Math.floor(total / n);
+  return Array.from({ length: n }, (_, k) => (k === n - 1 ? total - each * (n - 1) : each));
+}
+
+const STAGES: Record<number, string[]> = {
+  1: ["before work starts"],
+  2: ["before work starts", "when the software is launched"],
+  3: ["before work starts", "when you are given the first working version to try", "when the software is launched"],
+};
+
 export function buildContract(i: ContractInput): string {
   const client = i.clientCompany ? `${i.clientCompany} (contact: ${i.clientName})` : i.clientName;
+  const stages = Math.min(3, Math.max(1, Math.round(i.stages) || 2));
+  const parts = splitPayments(i.price, stages);
+  const equal = parts.every((p) => p === parts[0]);
+  const care = `care (hosting, security updates, backups, fixing faults, and up to 1 hour of small changes each month; unused time does not carry over)`;
+  const extraWork = `Without care, fixes and changes are charged at ${formatGBP(i.smallFix)} for a small fix (up to 2 hours) and ${formatGBP(
+    i.biggerChange,
+  )} for a bigger change (up to half a day). Anything larger is quoted first.`;
+
   const price =
     i.model === "one_off"
-      ? `The price is ${formatGBP(i.price)} for the work in section 1. It is paid in two parts: 50% (${formatGBP(
-          Math.round(i.price / 2),
-        )}) before work starts and the remaining ${formatGBP(i.price - Math.round(i.price / 2))} when the software is launched.`
-      : `The setup fee is ${formatGBP(i.price)}, paid before work starts. From launch, the monthly fee is ${formatGBP(
+      ? stages === 1
+        ? `The price is ${formatGBP(i.price)} for the work in section 1, paid before work starts.`
+        : `The price is ${formatGBP(i.price)} for the work in section 1. It is paid in ${stages} ${
+            equal ? "equal " : ""
+          }payments:\n\n${parts.map((p, k) => `- ${formatGBP(p)} ${STAGES[stages][k]}`).join("\n")}`
+      : `The start fee is ${formatGBP(i.price)}, paid before work starts. From launch, the monthly fee is ${formatGBP(
           i.monthly,
-        )} a month, for a minimum of ${i.minimumMonths} months. After the minimum period the agreement continues month to month until either of us ends it with 30 days' written notice.`;
+        )} a month for ${i.termMonths} months, which includes ${care}. The minimum period is ${i.minimumMonths} months. After the ${
+          i.termMonths
+        }th monthly payment the software is yours (section 6) and the monthly fee ends.`;
 
   const support =
     i.model === "one_off"
-      ? `For ${i.warrantyDays} days after launch we fix, free of charge, any fault where the software does not work as agreed. After that, ongoing care (hosting, updates and fixes) is available for ${formatGBP(
+      ? `For ${i.warrantyDays} days after launch we fix, free of charge, any fault where the software does not work as agreed. After that you can choose ${care} for ${formatGBP(
           i.careMonthly,
-        )} a month if you want it.`
-      : `The monthly fee covers hosting, security updates, fixing faults, support, and up to 2 hours of small changes each month. Unused hours do not carry over.`;
+        )} a month. ${extraWork}`
+      : `The monthly fee includes ${care}. Once the software is yours, you can keep care for ${formatGBP(
+          i.careMonthly,
+        )} a month, or end it. ${extraWork}`;
+
+  const priceReview = `Our prices are fixed for the first 24 months. After that we may increase the care fee once a year in line with inflation, by no more than 5%, with 60 days' written notice. If you do not accept an increase you may end care without charge.`;
 
   const ownership =
     i.model === "one_off"
-      ? `Once the full price has been paid, you own the software written for you under this agreement and may use and change it as you wish. Until then we grant you a licence to use it.`
-      : `While you are on the monthly plan we keep ownership of the software and grant you a licence to use it for your business. After the minimum period you may buy the software outright for ${formatGBP(
-          i.buyout,
-        )}; ownership then passes to you and we hand over the code and accounts.`;
+      ? `Once the full price has been paid, you own the software written for you under this agreement and may use and change it as you wish. Until then we grant you a licence to use it. When it is yours we hand over the code and accounts, so you can stay with us or move to another developer.`
+      : `While you are on the monthly plan we keep ownership of the software and grant you a licence to use it for your business. When all ${
+          i.termMonths
+        } monthly payments have been made, ownership passes to you. After the minimum period you may instead buy it early for ${formatGBP(
+          i.buyoutPerMonth,
+        )} for each monthly payment still to come; ownership then passes to you. When it is yours we hand over the code and accounts, so you can stay with us or move to another developer.`;
 
   return [
     `This agreement is between ${i.ownerName}, trading as ${i.businessName}${i.ownerAddress ? `, ${i.ownerAddress}` : ""} ("we", "us"), and ${client}${
@@ -86,6 +126,7 @@ export function buildContract(i: ContractInput): string {
 
     `2. Price and payment`,
     price,
+    priceReview,
     `Invoices are payable within ${i.paymentTermsDays} days by bank transfer. We are not VAT registered, so no VAT is added. Costs charged by other providers (see section 8) are paid by you directly and are not part of our price. If a payment is more than 14 days late we may pause work until it is paid.`,
 
     `3. Timeline and what we need from you`,
@@ -116,8 +157,8 @@ export function buildContract(i: ContractInput): string {
     `10. Ending the agreement`,
     `Either of us may end this agreement by written notice if the other seriously breaks it and does not put it right within 14 days of being asked. You pay for work done up to the end date. ${
       i.model === "monthly"
-        ? "If you end the monthly plan before the minimum period for any other reason, the remaining monthly fees for the minimum period are due."
-        : "Deposits cover work already started and are not refundable once work has begun."
+        ? "If you end the monthly plan before the minimum period for any other reason, the remaining monthly fees for the minimum period are due. After the minimum period you may end it with 30 days' written notice; you then either buy the software early (section 6) or stop using it."
+        : "Payments already made cover work started and are not refundable once work has begun."
     } On ending, we give you an export of your data.`,
 
     `11. General`,

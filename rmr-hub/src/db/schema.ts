@@ -23,6 +23,8 @@ export const settings = pgTable("settings", {
   salary: integer("salary").notNull().default(0),
   /** scotland | rest_of_uk: Scotland has its own income tax bands. */
   taxRegion: text("tax_region").notNull().default("scotland"),
+  /** Email payment reminders automatically 1, 7 and 14 days after an invoice is due. */
+  autoReminders: boolean("auto_reminders").notNull().default(false),
 });
 
 export const clients = pgTable("clients", {
@@ -50,6 +52,11 @@ export const invoices = pgTable(
     notes: text("notes").notNull().default(""),
     paidDate: text("paid_date"),
     driveFileId: text("drive_file_id"),
+    /** When the invoice was last emailed to the client. */
+    emailedAt: timestamp("emailed_at"),
+    /** Payment reminders sent (by hand or automatically), and the date of the last one. */
+    reminderCount: integer("reminder_count").notNull().default(0),
+    lastReminderDate: text("last_reminder_date"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [uniqueIndex("invoices_number_idx").on(t.number)],
@@ -98,6 +105,8 @@ export const transactions = pgTable(
     externalId: text("external_id"),
     invoiceId: integer("invoice_id").references(() => invoices.id, { onDelete: "set null" }),
     notes: text("notes").notNull().default(""),
+    /** Receipt photo or PDF saved in Google Drive. */
+    receiptFileId: text("receipt_file_id"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [uniqueIndex("transactions_external_idx").on(t.externalId), index("transactions_date_idx").on(t.date)],
@@ -141,6 +150,22 @@ export const googleAccount = pgTable("google_account", {
   accessToken: text("access_token"),
   expiresAt: integer("expires_at"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+/**
+ * Connection to your own Monzo account through Monzo's developer API (read only).
+ * accountId is the account whose transactions are synced.
+ */
+export const monzoAccount = pgTable("monzo_account", {
+  id: integer("id").primaryKey().default(1),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  expiresAt: integer("expires_at"),
+  accountId: text("account_id"),
+  accountName: text("account_name"),
+  connectedAt: timestamp("connected_at"),
+  lastSyncAt: timestamp("last_sync_at"),
+  lastError: text("last_error"),
 });
 
 /** Cache of Drive folder ids by path, e.g. "Invoices/2025-26". */

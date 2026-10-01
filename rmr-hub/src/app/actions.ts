@@ -5,12 +5,16 @@ import { redirect } from "next/navigation";
 import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { auth, signOut, skipAuth } from "@/auth";
 import { getDb, schema } from "@/db";
-import { findInvoiceNumber, readBankCSV } from "@/lib/bank-csv";
+import { readBankCSV } from "@/lib/bank-csv";
+import { applyPayment, importBankRows } from "@/lib/bank-import";
 import { getInvoice, getSettings, listTimeEntries, listTransactions } from "@/lib/data";
 import { addDays, taxYearOf, todayISO } from "@/lib/dates";
-import { saveToDrive } from "@/lib/google";
+import { driveLink, saveToDrive } from "@/lib/google";
 import { invoiceFileName, renderInvoicePdf } from "@/lib/invoice-pdf";
+import { sendInvoiceEmail } from "@/lib/invoice-mail";
 import { parsePence } from "@/lib/money";
+import { disconnectMonzo, syncMonzo } from "@/lib/monzo";
+import { MAX_RECEIPT_BYTES, receiptFileName, sniffReceipt } from "@/lib/receipts";
 
 async function requireUser() {
   if (skipAuth) return;
@@ -53,6 +57,7 @@ export async function saveSettings(f: FormData) {
       weeklyHourLimit: Math.max(1, Math.round(num(f, "weeklyHourLimit")) || 20),
       salary: parsePence(str(f, "salary")) ?? 0,
       taxRegion: str(f, "taxRegion") === "rest_of_uk" ? "rest_of_uk" : "scotland",
+      autoReminders: f.get("autoReminders") === "on",
     })
     .where(eq(schema.settings.id, 1));
   refresh();
@@ -245,17 +250,6 @@ export async function deleteDraftInvoice(id: number) {
   redirect("/invoices");
 }
 
-/** Record a payment against an invoice; marks it paid once fully covered. */
-async function applyPayment(invoiceId: number, date: string) {
-  const db = await getDb();
-  const data = await getInvoice(invoiceId);
-  if (!data) return;
-  const received = data.payments.filter((p) => p.kind === "income").reduce((a, p) => a + p.amount, 0);
-  if (received >= data.total && data.total > 0) {
-    await db.update(schema.invoices).set({ status: "paid", paidDate: date }).where(eq(schema.invoices.id, invoiceId));
-  }
-}
-
 export async function markInvoicePaid(f: FormData) {
   await requireUser();
   const db = await getDb();
@@ -301,9 +295,35 @@ export async function saveInvoiceToDrive(id: number): Promise<{ ok: boolean; mes
   }
 }
 
+export type FormResult = { ok: boolean; message: string } | null;
+
+/** Email the invoice, or a payment reminder, to the client with the PDF attached. */
+export async function emailInvoice(_prev: FormResult, f: FormData): Promise<FormResult> {
+  await requireUser();
+  const kind = str(f, "kind") === "reminder" ? "reminder" : "invoice";
+  try {
+    await sendInvoiceEmail({
+      invoiceId: num(f, "id"),
+      kind,
+      to: str(f, "to"),
+      subject: str(f, "subject"),
+      text: String(f.get("text") ?? ""),
+    });
+    refresh();
+    return { ok: true, message: kind === "invoice" ? "Invoice emailed." : "Reminder emailed." };
+  } catch (e) {
+    return { ok: false, message: (e as Error).message };
+  }
+}
+
 // ---------------------------------------------------------------- money
 
 const SIGN: Record<string, 1 | -1> = { income: 1, expense: -1, tax_saving: -1, tax_payment: -1, ignore: 1 };
+
+/** Only same-site paths, so a form can't be made to send you to another website. */
+function localPath(v: string, fallback: string) {
+  return /^\/(?![\/\\])/.test(v) ? v : fallback;
+}
 
 export async function addTransaction(f: FormData) {
   await requireUser();
@@ -311,15 +331,58 @@ export async function addTransaction(f: FormData) {
   const kind = str(f, "kind");
   const amount = parsePence(str(f, "amount"));
   if (!(kind in SIGN) || !amount) redirect("/money?error=amount");
-  await db.insert(schema.transactions).values({
-    date: isoDate(str(f, "date")),
-    description: str(f, "description") || kind,
-    amount: Math.abs(amount) * SIGN[kind],
-    kind,
-    notes: str(f, "notes"),
-  });
+  const [tx] = await db
+    .insert(schema.transactions)
+    .values({
+      date: isoDate(str(f, "date")),
+      description: str(f, "description") || kind,
+      amount: Math.abs(amount) * SIGN[kind],
+      kind,
+      notes: str(f, "notes"),
+    })
+    .returning({ id: schema.transactions.id });
+  const receipt = f.get("receipt");
+  let error = "";
+  if (receipt instanceof File && receipt.size > 0) {
+    const r = await saveReceipt(tx.id, receipt);
+    if (!r.ok) error = `&receipt=${encodeURIComponent(r.message)}`;
+  }
   refresh();
-  redirect(str(f, "returnTo") || "/money");
+  const back = localPath(str(f, "returnTo"), "/money");
+  redirect(error ? `${back}${back.includes("?") ? "&" : "?"}${error.slice(1)}` : back);
+}
+
+async function saveReceipt(txId: number, file: File): Promise<{ ok: boolean; message: string; link?: string }> {
+  if (file.size > MAX_RECEIPT_BYTES) return { ok: false, message: "That file is too large (8 MB at most)." };
+  const db = await getDb();
+  const [tx] = await db.select().from(schema.transactions).where(eq(schema.transactions.id, txId));
+  if (!tx) return { ok: false, message: "Transaction not found" };
+  const data = new Uint8Array(await file.arrayBuffer());
+  const type = sniffReceipt(data);
+  if (!type) return { ok: false, message: "Receipts must be a photo (JPEG, PNG, WebP, HEIC) or a PDF." };
+  try {
+    const saved = await saveToDrive({
+      folder: `Receipts/${taxYearOf(tx.date)}`,
+      name: receiptFileName(tx.date, tx.description, type.ext),
+      mimeType: type.mime,
+      data,
+      existingId: tx.receiptFileId,
+    });
+    await db.update(schema.transactions).set({ receiptFileId: saved.id }).where(eq(schema.transactions.id, txId));
+    return { ok: true, message: "Receipt saved to Drive", link: saved.link };
+  } catch (e) {
+    return { ok: false, message: (e as Error).message };
+  }
+}
+
+/** Attach a receipt photo or PDF to a transaction; it's filed in Drive under Receipts/<tax year>. */
+export async function attachReceipt(f: FormData): Promise<{ ok: boolean; message: string; link?: string }> {
+  await requireUser();
+  const file = f.get("receipt");
+  if (!(file instanceof File) || file.size === 0) return { ok: false, message: "Choose a photo or PDF." };
+  const result = await saveReceipt(num(f, "id"), file);
+  if (result.ok) refresh();
+  return result;
 }
 
 export async function setTransactionKind(id: number, kind: string) {
@@ -343,13 +406,6 @@ export async function deleteTransaction(id: number) {
   refresh();
 }
 
-function guessKind(amount: number, text: string): string {
-  const t = text.toLowerCase();
-  if (/\bpot\b|savings/.test(t)) return amount < 0 ? "tax_saving" : "ignore";
-  if (/hmrc/.test(t)) return amount < 0 ? "tax_payment" : "income";
-  return amount > 0 ? "income" : "expense";
-}
-
 export async function importBankCsv(f: FormData) {
   await requireUser();
   const file = f.get("file");
@@ -361,46 +417,43 @@ export async function importBankCsv(f: FormData) {
   } catch {
     redirect("/money?error=format");
   }
-  const db = await getDb();
   const settings = await getSettings();
-  const invoices = await db.select().from(schema.invoices);
-  let added = 0;
-  let matched = 0;
-  const bankName = settings.bankName.toLowerCase().includes("monzo") ? "monzo_csv" : "bank_csv";
-
-  for (const row of parsed.rows) {
-    const kind = guessKind(row.amount, `${row.description} ${row.category ?? ""}`);
-    const number = kind === "income" ? findInvoiceNumber(row.description, settings.invoicePrefix) : null;
-    const invoice = number ? invoices.find((i) => i.number === number && i.status !== "void") : undefined;
-    const inserted = await db
-      .insert(schema.transactions)
-      .values({
-        date: row.date,
-        description: row.description,
-        amount: row.amount,
-        kind,
-        source: bankName,
-        externalId: row.externalId,
-        invoiceId: invoice?.id ?? null,
-      })
-      .onConflictDoNothing({ target: schema.transactions.externalId })
-      .returning({ id: schema.transactions.id });
-    if (inserted.length) {
-      added++;
-      if (invoice) {
-        matched++;
-        await applyPayment(invoice.id, row.date);
-      }
-    }
-  }
+  const source = settings.bankName.toLowerCase().includes("monzo") ? "monzo_csv" : "bank_csv";
+  const { added, matched } = await importBankRows(parsed.rows, source);
   refresh();
   redirect(`/money?imported=${added}&matched=${matched}&dupes=${parsed.rows.length - added}`);
+}
+
+export async function syncMonzoNow(): Promise<{ ok: boolean; message: string }> {
+  await requireUser();
+  try {
+    const { added, matched } = await syncMonzo();
+    refresh();
+    return {
+      ok: true,
+      message:
+        added === 0
+          ? "Up to date: no new transactions."
+          : `Added ${added} new transaction${added === 1 ? "" : "s"}${matched ? `, matched ${matched} to invoices` : ""}.`,
+    };
+  } catch (e) {
+    refresh();
+    return { ok: false, message: (e as Error).message };
+  }
+}
+
+export async function disconnectMonzoAccount() {
+  await requireUser();
+  await disconnectMonzo();
+  refresh();
 }
 
 // ---------------------------------------------------------------- records
 
 function csvCell(v: unknown) {
-  const s = String(v ?? "");
+  let s = String(v ?? "");
+  // Text starting with = + - @ would run as a formula in Excel or Sheets; numbers are left alone.
+  if (/^[=+\-@\t\r]/.test(s) && !/^-?\d+(\.\d+)?$/.test(s)) s = `'${s}`;
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
@@ -409,12 +462,20 @@ export async function exportRecordsToDrive(taxYear: string): Promise<{ ok: boole
   try {
     const txs = await listTransactions(taxYear);
     const money = [
-      ["Date", "Description", "Type", "Amount (GBP)", "Invoice", "Source"].join(","),
+      ["Date", "Description", "Type", "Amount (GBP)", "Invoice", "Source", "Receipt"].join(","),
       ...txs
         .slice()
         .reverse()
         .map(({ tx, invoiceNumber }) =>
-          [tx.date, tx.description, tx.kind, (tx.amount / 100).toFixed(2), invoiceNumber ?? "", tx.source]
+          [
+            tx.date,
+            tx.description,
+            tx.kind,
+            (tx.amount / 100).toFixed(2),
+            invoiceNumber ?? "",
+            tx.source,
+            tx.receiptFileId ? driveLink(tx.receiptFileId) : "",
+          ]
             .map(csvCell)
             .join(","),
         ),

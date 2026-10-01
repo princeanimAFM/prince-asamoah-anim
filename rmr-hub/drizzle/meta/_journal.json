@@ -22,6 +22,27 @@
       "when": 1790801352956,
       "tag": "0002_contracts",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790847851376,
+      "tag": "0003_invoice_emails",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790847980267,
+      "tag": "0004_receipts",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790848114091,
+      "tag": "0005_monzo",
+      "breakpoints": true
     }
   ]
 }

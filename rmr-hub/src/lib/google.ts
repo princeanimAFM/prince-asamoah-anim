@@ -42,7 +42,7 @@ export async function driveStatus(): Promise<{ connected: boolean; email?: strin
 async function accessToken(): Promise<string> {
   const db = await getDb();
   const [acct] = await db.select().from(schema.googleAccount).limit(1);
-  if (!acct?.refreshToken) throw new Error("Google Drive isn't connected. Sign out and sign in again with Google.");
+  if (!acct?.refreshToken) throw new Error("Google isn't connected. Sign out and sign in again with Google.");
   const now = Math.floor(Date.now() / 1000);
   if (acct.accessToken && acct.expiresAt && acct.expiresAt - 60 > now) return acct.accessToken;
 
@@ -56,7 +56,7 @@ async function accessToken(): Promise<string> {
       refresh_token: acct.refreshToken,
     }),
   });
-  if (!res.ok) throw new Error("Google Drive access has expired. Sign out and sign in again with Google.");
+  if (!res.ok) throw new Error("Google access has expired. Sign out and sign in again with Google.");
   const data = (await res.json()) as { access_token: string; expires_in: number };
   await db
     .update(schema.googleAccount)
@@ -179,4 +179,31 @@ export async function saveToDrive(opts: {
 
 export function driveLink(id: string) {
   return `https://drive.google.com/file/d/${id}/view`;
+}
+
+// ------------------------------------------------------------------ Gmail
+
+/** The connected Google account's address (emails are sent from it). */
+export async function googleEmail(): Promise<string | null> {
+  const db = await getDb();
+  const [acct] = await db.select().from(schema.googleAccount).limit(1);
+  return acct?.refreshToken ? acct.email : null;
+}
+
+/**
+ * Send a message built with buildMime() from the connected Gmail account.
+ * Needs the gmail.send scope: accounts connected before email was added must sign in again.
+ */
+export async function sendGmail(raw: string): Promise<{ id: string }> {
+  const token = await accessToken();
+  const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ raw: Buffer.from(raw, "utf8").toString("base64url") }),
+  });
+  if (res.status === 403 || res.status === 401) {
+    throw new Error("The app isn't allowed to send email yet. Sign out, sign in again with Google and allow sending email.");
+  }
+  if (!res.ok) throw new Error(`Gmail couldn't send the email (${res.status}). Please try again.`);
+  return (await res.json()) as { id: string };
 }

@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { addTransaction, deleteTransaction, importBankCsv } from "@/app/actions";
-import { ActionButton, SubmitButton } from "@/components/buttons";
+import { addTransaction, attachReceipt, deleteTransaction, importBankCsv, syncMonzoNow } from "@/app/actions";
+import { ActionButton, ResultButton, SubmitButton } from "@/components/buttons";
 import { KindSelect } from "@/components/KindSelect";
+import { ReceiptUpload } from "@/components/ReceiptUpload";
 import { KINDS } from "@/lib/kinds";
 import { Notice, PageHeader, Stat } from "@/components/ui";
 import { getSettings, listTransactions, taxSummary } from "@/lib/data";
 import { formatDate, taxYearOf, todayISO } from "@/lib/dates";
+import { driveLink } from "@/lib/google";
 import { formatGBP } from "@/lib/money";
+import { monzoStatus } from "@/lib/monzo";
 
 export const metadata: Metadata = { title: "Money" };
 
@@ -21,18 +24,33 @@ const ERRORS: Record<string, string> = {
 export default async function MoneyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ year?: string; imported?: string; matched?: string; dupes?: string; error?: string }>;
+  searchParams: Promise<{ year?: string; imported?: string; matched?: string; dupes?: string; error?: string; receipt?: string }>;
 }) {
   const sp = await searchParams;
   const current = taxYearOf(todayISO());
   const year = /^\d{4}-\d{2}$/.test(sp.year ?? "") ? sp.year! : current;
-  const [rows, summary, settings] = await Promise.all([listTransactions(year), taxSummary(year), getSettings()]);
+  const [rows, summary, settings, monzo] = await Promise.all([
+    listTransactions(year),
+    taxSummary(year),
+    getSettings(),
+    monzoStatus(),
+  ]);
   const startYear = Number(current.slice(0, 4));
   const years = [0, 1, 2].map((i) => `${startYear - i}-${String((startYear - i + 1) % 100).padStart(2, "0")}`);
 
   return (
     <>
-      <PageHeader title="Money" subtitle="Everything in and out of your business account." />
+      <PageHeader
+        title="Money"
+        subtitle="Everything in and out of your business account."
+        action={
+          monzo.connected ? (
+            <ResultButton action={syncMonzoNow} icon="money">
+              Sync Monzo
+            </ResultButton>
+          ) : undefined
+        }
+      />
       {sp.imported && (
         <Notice tone="good">
           Imported {sp.imported} new transaction{sp.imported === "1" ? "" : "s"}
@@ -41,6 +59,7 @@ export default async function MoneyPage({
         </Notice>
       )}
       {sp.error && <Notice tone="bad">{ERRORS[sp.error] ?? "Something went wrong."}</Notice>}
+      {sp.receipt && <Notice tone="bad">Added, but the receipt wasn&apos;t saved: {sp.receipt.slice(0, 200)}</Notice>}
 
       <nav aria-label="Tax year" className="mb-4 flex flex-wrap gap-2">
         {years.map((y) => (
@@ -107,6 +126,10 @@ export default async function MoneyPage({
             Description
             <input name="description" className="input" placeholder="e.g. Claude subscription" />
           </label>
+          <label className="field">
+            Receipt (optional photo or PDF, saved to Drive)
+            <input type="file" name="receipt" accept="image/*,application/pdf" className="input py-2" />
+          </label>
           <div>
             <SubmitButton>Add</SubmitButton>
           </div>
@@ -128,6 +151,7 @@ export default async function MoneyPage({
                   <th>Description</th>
                   <th>Type</th>
                   <th className="text-right">Amount</th>
+                  <th>Receipt</th>
                   <th>
                     <span className="sr-only">Delete</span>
                   </th>
@@ -150,6 +174,15 @@ export default async function MoneyPage({
                     </td>
                     <td className={`text-right font-bold whitespace-nowrap ${tx.amount > 0 ? "text-good" : ""}`}>
                       {formatGBP(tx.amount, { sign: true })}
+                    </td>
+                    <td>
+                      {tx.amount < 0 || tx.receiptFileId ? (
+                        <ReceiptUpload
+                          id={tx.id}
+                          action={attachReceipt}
+                          link={tx.receiptFileId ? driveLink(tx.receiptFileId) : null}
+                        />
+                      ) : null}
                     </td>
                     <td className="text-right">
                       <ActionButton

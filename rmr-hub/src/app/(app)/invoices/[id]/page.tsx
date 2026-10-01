@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   addInvoiceItem,
   deleteDraftInvoice,
+  emailInvoice,
   markInvoicePaid,
   removeInvoiceItem,
   saveInvoiceToDrive,
@@ -11,10 +12,12 @@ import {
   updateInvoiceDetails,
 } from "@/app/actions";
 import { ActionButton, ResultButton, SubmitButton } from "@/components/buttons";
+import { EmailPanel } from "@/components/EmailForm";
 import { Icon } from "@/components/icons";
 import { Notice, PageHeader, StatusBadge } from "@/components/ui";
 import { getInvoice, getSettings, lineAmount } from "@/lib/data";
 import { formatDate, todayISO } from "@/lib/dates";
+import { invoiceEmail, reminderEmail } from "@/lib/email";
 import { driveLink, driveStatus } from "@/lib/google";
 import { formatGBP } from "@/lib/money";
 
@@ -29,11 +32,18 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   const due = Math.max(0, total - received);
   const draft = invoice.status === "draft";
   const overdue = invoice.status === "sent" && invoice.dueDate < todayISO();
-  const mailto = client.email
-    ? `mailto:${client.email}?subject=${encodeURIComponent(`Invoice ${invoice.number} from ${settings.businessName}`)}&body=${encodeURIComponent(
-        `Hi ${client.name.split(" ")[0]},\n\nPlease find attached invoice ${invoice.number} for ${formatGBP(due)}, due on ${formatDate(invoice.dueDate)}.\n\nPayment details are on the invoice. Please use ${invoice.number} as the reference.\n\nThank you,\n${settings.ownerName}\n${settings.businessName}`,
-      )}`
-    : null;
+  const canEmail = (draft || invoice.status === "sent") && total > 0;
+  const wording = {
+    number: invoice.number,
+    amountDue: due,
+    dueDate: invoice.dueDate,
+    clientName: client.name,
+    ownerName: settings.ownerName,
+    businessName: settings.businessName,
+    today: todayISO(),
+  };
+  const first = invoiceEmail(wording);
+  const reminder = reminderEmail(wording);
 
   return (
     <>
@@ -52,8 +62,8 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
             <a href={`/invoices/${id}/pdf`} target="_blank" rel="noreferrer" className="btn-primary">
               <Icon name="download" size={18} /> PDF
             </a>
-            {mailto && (
-              <a href={mailto} className="btn-secondary">
+            {canEmail && (
+              <a href="#email" className="btn-secondary">
                 Email client
               </a>
             )}
@@ -63,7 +73,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
       {draft && (
         <Notice>
-          This is a draft. Check the lines, download the PDF, send it to your client, then mark it as sent.
+          This is a draft. Check the lines, then email it to your client below. Emailing it marks it as sent.
         </Notice>
       )}
 
@@ -200,6 +210,52 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
               </ActionButton>
             )}
           </section>
+
+          {canEmail && (
+            <section id="email" className="card flex flex-col gap-3 scroll-mt-20" aria-labelledby="email-h">
+              <h2 id="email-h" className="text-xl font-extrabold">
+                Email
+              </h2>
+              {(invoice.emailedAt || invoice.reminderCount > 0) && (
+                <p className="text-sm text-grey">
+                  {invoice.emailedAt && <>Emailed on {formatDate(invoice.emailedAt.toISOString().slice(0, 10))}. </>}
+                  {invoice.reminderCount > 0 && (
+                    <>
+                      {invoice.reminderCount} reminder{invoice.reminderCount > 1 ? "s" : ""} sent, last on{" "}
+                      {formatDate(invoice.lastReminderDate)}.
+                    </>
+                  )}
+                </p>
+              )}
+              {!client.email && (
+                <p className="text-sm text-grey">
+                  Tip: add an email address to{" "}
+                  <Link href={`/clients/${client.id}/edit`} className="link">
+                    the client
+                  </Link>{" "}
+                  so it's filled in for you.
+                </p>
+              )}
+              <EmailPanel
+                action={emailInvoice}
+                id={id}
+                to={client.email}
+                invoice={first}
+                reminder={draft || !invoice.emailedAt ? null : reminder}
+              />
+              {settings.autoReminders ? (
+                <p className="text-xs text-grey">Automatic reminders are on: 1, 7 and 14 days after the due date.</p>
+              ) : (
+                <p className="text-xs text-grey">
+                  Turn on automatic reminders in{" "}
+                  <Link href="/settings#reminders" className="link">
+                    Settings
+                  </Link>
+                  .
+                </p>
+              )}
+            </section>
+          )}
 
           <section className="card flex flex-col gap-3" aria-labelledby="drive-h">
             <h2 id="drive-h" className="text-xl font-extrabold">
