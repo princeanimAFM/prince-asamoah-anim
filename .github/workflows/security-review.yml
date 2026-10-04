@@ -1,0 +1,24 @@
+# Runs Claude's security review on every pull request and comments on any findings.
+# Needs a repository secret called CLAUDE_API_KEY (an Anthropic API key):
+# GitHub repo → Settings → Secrets and variables → Actions → New repository secret.
+name: Security review
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  security-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: anthropics/claude-code-security-review@main
+        with:
+          comment-pr: true
+          claude-api-key: ${{ secrets.CLAUDE_API_KEY }}
