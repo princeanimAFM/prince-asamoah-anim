@@ -2,7 +2,16 @@ import "server-only";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import { importBankRows } from "@/lib/bank-import";
-import { type MonzoAccountInfo, type MonzoTx, accountLabel, monzoToRow, pickAccount } from "@/lib/monzo-map";
+import { getSettings } from "@/lib/data";
+import {
+  type MonzoAccountInfo,
+  type MonzoTx,
+  accountLabel,
+  isBusinessTx,
+  isPersonalAccount,
+  monzoToRow,
+  pickAccount,
+} from "@/lib/monzo-map";
 
 /**
  * Read-only connection to your own Monzo account through Monzo's developer API
@@ -59,7 +68,14 @@ async function saveTokens(t: TokenResponse, extra: Partial<typeof schema.monzoAc
 
 export async function finishMonzoConnect(code: string, redirectUri: string) {
   const t = await tokenRequest({ grant_type: "authorization_code", redirect_uri: redirectUri, code });
-  await saveTokens(t, { connectedAt: new Date(), accountId: null, accountName: null, lastError: null, lastSyncAt: null });
+  await saveTokens(t, {
+    connectedAt: new Date(),
+    accountId: null,
+    accountName: null,
+    accountType: null,
+    lastError: null,
+    lastSyncAt: null,
+  });
 }
 
 async function account() {
@@ -104,6 +120,7 @@ export async function monzoStatus() {
     configured: monzoConfigured(),
     connected: Boolean(a?.refreshToken || a?.accessToken),
     accountName: a?.accountName ?? null,
+    personal: isPersonalAccount(a?.accountType),
     lastSyncAt: a?.lastSyncAt ?? null,
     lastError: a?.lastError ?? null,
   };
@@ -117,15 +134,15 @@ export async function syncMonzo(): Promise<{ added: number; matched: number }> {
   try {
     let a = await account();
     if (!a) throw new Error("Monzo isn't connected.");
-    if (!a.accountId) {
+    if (!a.accountId || !a.accountType) {
       const { accounts } = await api<{ accounts: MonzoAccountInfo[] }>("/accounts");
-      const chosen = pickAccount(accounts);
+      const chosen = accounts.find((x) => x.id === a!.accountId) ?? pickAccount(accounts);
       if (!chosen) throw new Error("No open Monzo account was found.");
       await db
         .update(schema.monzoAccount)
-        .set({ accountId: chosen.id, accountName: accountLabel(chosen) })
+        .set({ accountId: chosen.id, accountName: accountLabel(chosen), accountType: chosen.type })
         .where(eq(schema.monzoAccount.id, 1));
-      a = { ...a, accountId: chosen.id };
+      a = { ...a, accountId: chosen.id, accountType: chosen.type };
     }
 
     // Monzo only allows the last 90 days once the first 5 minutes after approval have passed.
@@ -141,7 +158,14 @@ export async function syncMonzo(): Promise<{ added: number; matched: number }> {
       if (transactions.length < 100) break;
       since = transactions[transactions.length - 1].id;
     }
-    const rows = all.map(monzoToRow).filter((r) => r !== null);
+    // On a personal account, keep only business transactions (see isBusinessTx).
+    const personal = isPersonalAccount(a.accountType);
+    const prefix = personal ? (await getSettings()).invoicePrefix : "";
+    const rows = all.flatMap((t) => {
+      const row = monzoToRow(t);
+      if (!row) return [];
+      return !personal || isBusinessTx(t, row, prefix) ? [row] : [];
+    });
     const result = await importBankRows(rows, "monzo_api");
     await db
       .update(schema.monzoAccount)
