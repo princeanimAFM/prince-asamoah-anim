@@ -87,6 +87,8 @@ Monzo's developer API lets you read your own account. It can't move money.
 3. Copy the client ID and secret into `MONZO_CLIENT_ID` and `MONZO_CLIENT_SECRET` in Netlify and redeploy.
 4. In RMR Hub go to **Settings › Monzo › Connect Monzo**, sign in, then approve access in the Monzo app and press **Sync now**.
 
+With a **personal** Monzo account, only business transactions are synced: payments in that quote an invoice number (e.g. `RMR-0002`), and anything you tag `#rmr` (or `#business`) in the transaction's notes in the Monzo app. With a business account, everything is synced.
+
 The first sync brings in the last 90 days (Monzo's limit). After that it syncs every morning. If Monzo asks you to reconnect, Settings shows a message; press **Reconnect**.
 
 Only the `ALLOWED_EMAIL` account can sign in. `DEV_SKIP_AUTH` is ignored in production.

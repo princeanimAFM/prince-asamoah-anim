@@ -1,0 +1,1 @@
+ALTER TABLE "monzo_account" ADD COLUMN "account_type" text;

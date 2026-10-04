@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { accountLabel, monzoToRow, pickAccount, ukDate } from "./monzo-map";
+import { accountLabel, isBusinessTx, isPersonalAccount, monzoToRow, pickAccount, ukDate } from "./monzo-map";
 
 const base = { id: "tx_1", created: "2026-03-31T23:30:00Z", description: "x", amount: -1500, currency: "GBP" };
 
@@ -41,5 +41,28 @@ describe("monzo", () => {
     expect(pickAccount(accts.slice(0, 1))?.id).toBe("acc_p");
     expect(accountLabel(accts[1])).toBe("Business account (RMR Dev Works)");
     expect(accountLabel(accts[0])).toBe("Personal account");
+  });
+});
+
+describe("personal account: business transactions only", () => {
+  const keep = (t: Parameters<typeof monzoToRow>[0]) => isBusinessTx(t, monzoToRow(t)!, "RMR");
+  it("keeps client payments quoting an invoice number", () => {
+    expect(keep({ ...base, amount: 100000, description: "RMR-0002", counterparty: { name: "MIGHTY COURIER" } })).toBe(true);
+    expect(keep({ ...base, amount: 100000, description: "rmr 2", counterparty: { name: "K MENSAH" } })).toBe(true);
+  });
+  it("keeps anything tagged #rmr or #business in the notes", () => {
+    expect(keep({ ...base, merchant: { name: "Anthropic" }, notes: "Claude #rmr" })).toBe(true);
+    expect(keep({ ...base, amount: 50000, description: "Thanks", counterparty: { name: "K MENSAH" }, notes: "#Business" })).toBe(true);
+  });
+  it("skips everyday spending and other money in", () => {
+    expect(keep({ ...base, merchant: { name: "Tesco" } })).toBe(false);
+    expect(keep({ ...base, amount: 240000, description: "NHS SALARY", counterparty: { name: "NHS LOTHIAN" } })).toBe(false);
+    expect(keep({ ...base, amount: -100000, description: "RMR-0002 refund", counterparty: { name: "X" } })).toBe(false);
+  });
+  it("knows personal account types", () => {
+    expect(isPersonalAccount("uk_retail")).toBe(true);
+    expect(isPersonalAccount("uk_retail_joint")).toBe(true);
+    expect(isPersonalAccount("uk_business")).toBe(false);
+    expect(isPersonalAccount(null)).toBe(false);
   });
 });

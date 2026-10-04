@@ -165,6 +165,8 @@ export const monzoAccount = pgTable("monzo_account", {
   expiresAt: integer("expires_at"),
   accountId: text("account_id"),
   accountName: text("account_name"),
+  /** Monzo account type, e.g. uk_business or uk_retail (personal: only business items are synced). */
+  accountType: text("account_type"),
   connectedAt: timestamp("connected_at"),
   lastSyncAt: timestamp("last_sync_at"),
   lastError: text("last_error"),

@@ -62,6 +62,13 @@ export default async function SettingsPage({
                 ? `Last synced ${formatDate(monzo.lastSyncAt.toISOString().slice(0, 10))}. It syncs by itself every morning.`
                 : "Not synced yet."}
             </p>
+            {monzo.personal && (
+              <p className="rounded-xl bg-ground p-3 text-sm">
+                This is a personal account, so only business transactions are brought in: payments in that quote an
+                invoice number (e.g. RMR-0002), and anything you tag <b>#rmr</b> in the transaction&apos;s notes in the
+                Monzo app (business costs, or a client payment without a reference).
+              </p>
+            )}
             {monzo.lastError && <p className="text-sm font-semibold text-bad">{monzo.lastError}</p>}
             <div className="flex flex-wrap gap-2">
               <ResultButton action={syncMonzoNow} icon="money" className="btn-primary">
