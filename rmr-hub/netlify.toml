@@ -1,0 +1,10 @@
+# Netlify settings for RMR Hub. In Netlify, set the base directory to "rmr-hub".
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"

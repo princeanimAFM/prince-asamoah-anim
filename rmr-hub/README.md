@@ -42,46 +42,49 @@ Checks: `npm test`, `npm run typecheck` and `npx next build`.
 
 ## Put it online (free tiers)
 
-### 1. Database: Neon, through Vercel
-After importing the project in Vercel (step 3), open it and go to **Storage › Create Database › Neon** (free plan, region London, `eu-west-2`), and connect it to the project. Vercel adds `DATABASE_URL` for you. Tables are created automatically the first time the app starts.
+RMR Hub runs on Netlify's free plan (business use allowed) with a free Neon Postgres database. It also runs on Vercel (`vercel.json` holds the daily job there), but Vercel's free plan is for non-commercial use only.
 
-Any Postgres database works instead (Supabase, for example): put its connection URL in `DATABASE_URL`.
+### 1. Database: Neon
+1. Sign up at [neon.tech](https://neon.tech) and create a project called `rmr-hub` in **AWS Europe West 2 (London)**.
+2. On the project dashboard press **Connect**, turn on **Connection pooling**, and copy the connection string. That's your `DATABASE_URL`.
+3. Tables are created automatically the first time the app starts.
 
 ### 2. Google sign-in, Drive and Gmail
 1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project called "RMR Hub".
 2. **APIs & Services › Library**: enable the **Google Drive API** and the **Gmail API**.
-3. **OAuth consent screen**: app name "RMR Hub", your email as the support contact.
+3. **OAuth consent screen** (Google Auth Platform): app name "RMR Hub", your email as the support contact.
    - If your email is a Google Workspace address, choose **Internal**.
-   - If it's a normal Gmail address, choose **External**, then press **Publish app** so it's "In production". (In "Testing", Google signs you out of Drive and Gmail every 7 days.) Google will show an "unverified app" warning when you sign in: that's expected for your own private app; choose **Advanced › Go to RMR Hub**. Only `ALLOWED_EMAIL` can get in.
-4. **Credentials › Create credentials › OAuth client ID › Web application**:
+   - If it's a normal Gmail address, choose **External**, then under **Audience** press **Publish app** so it's "In production". (In "Testing", Google signs you out of Drive and Gmail every 7 days.) Google will show an "unverified app" warning when you sign in: that's expected for your own private app; choose **Advanced › Go to RMR Hub**. Only `ALLOWED_EMAIL` can get in.
+4. **Clients › Create client › Web application**:
    - Authorised redirect URIs:
      - `http://localhost:3000/api/auth/callback/google`
-     - `https://YOUR-APP.vercel.app/api/auth/callback/google`
+     - `https://YOUR-SITE.netlify.app/api/auth/callback/google`
 5. Copy the client ID and secret into `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
 
 RMR Hub asks for two permissions: `drive.file` (it can see and change only the files it creates, not the rest of your Drive) and `gmail.send` (it can send email as you; it can't read your inbox).
 
-### 3. Hosting: Vercel
-1. Import this GitHub repo at [vercel.com](https://vercel.com) and set **Root Directory** to `rmr-hub`.
-2. Add the environment variables:
+### 3. Hosting: Netlify
+1. In [Netlify](https://app.netlify.com): **Add new project › Import an existing project › GitHub**, and pick this repo.
+2. Set **Base directory** to `rmr-hub`. The rest is read from `rmr-hub/netlify.toml`.
+3. Add the environment variables (mark the secret ones as secret):
    - `DATABASE_URL`
-   - `AUTH_SECRET` (run `npx auth secret` to make one)
-   - `AUTH_GOOGLE_ID`
-   - `AUTH_GOOGLE_SECRET`
+   - `AUTH_SECRET`: 32 or more random characters (e.g. from https://generate-secret.vercel.app/32, or `npx auth secret`)
+   - `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`
    - `ALLOWED_EMAIL` (your Google account)
-   - `CRON_SECRET`: any long random text (e.g. run `npx auth secret` again). Vercel uses it to run the daily job at 7am UTC that syncs Monzo, sends automatic reminders and backs everything up to Drive.
-   - `APP_URL`: your site address, e.g. `https://rmr-hub.vercel.app` (used for the Monzo sign-in)
+   - `CRON_SECRET`: another long random value. The scheduled function in `netlify/functions/daily.mts` uses it every morning at 7am UTC to sync Monzo, send automatic reminders and back everything up to Drive.
    - `MONZO_CLIENT_ID` and `MONZO_CLIENT_SECRET` (step 4, optional)
-3. Deploy, then open the site on your phone and choose **Add to Home Screen**.
+4. Deploy, then open the site on your phone and choose **Add to Home Screen**.
+
+Only the `ALLOWED_EMAIL` account can sign in. `DEV_SKIP_AUTH` is ignored in production. On first sign-in, check **Settings › Business details**: the email there is shown on invoices and used as the reply-to address for invoice emails.
 
 ### 4. Monzo sync (optional)
 Monzo's developer API lets you read your own account. It can't move money.
 1. Sign in at [developers.monzo.com](https://developers.monzo.com) with the email your Monzo account uses, and approve the sign-in in the Monzo app.
 2. **Clients › New OAuth client**:
    - Name: RMR Hub
-   - Redirect URL: `https://YOUR-APP.vercel.app/api/monzo/callback` (exactly your `APP_URL` plus `/api/monzo/callback`)
+   - Redirect URL: `https://YOUR-SITE.netlify.app/api/monzo/callback`
    - Confidentiality: **Confidential** (so it can stay signed in)
-3. Copy the client ID and secret into `MONZO_CLIENT_ID` and `MONZO_CLIENT_SECRET` in Vercel and redeploy.
+3. Copy the client ID and secret into `MONZO_CLIENT_ID` and `MONZO_CLIENT_SECRET` in Netlify and redeploy.
 4. In RMR Hub go to **Settings › Monzo › Connect Monzo**, sign in, then approve access in the Monzo app and press **Sync now**.
 
 The first sync brings in the last 90 days (Monzo's limit). After that it syncs every morning. If Monzo asks you to reconnect, Settings shows a message; press **Reconnect**.

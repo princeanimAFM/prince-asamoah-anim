@@ -8,9 +8,12 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 /**
- * Daily job (see vercel.json): syncs Monzo, emails automatic payment reminders (after the
- * sync, so invoices just paid aren't chased), then backs everything up to Google Drive.
- * Vercel calls it with "Authorization: Bearer <CRON_SECRET>"; anything else is refused.
+ * Daily job: syncs Monzo, emails automatic payment reminders (after the sync, so invoices
+ * just paid aren't chased), then backs everything up to Google Drive.
+ *
+ * On Netlify, netlify/functions/daily.mts calls it once per step (?task=monzo, then
+ * reminders, then backup) so each request stays short. Without ?task it runs all three.
+ * Callers must send "Authorization: Bearer <CRON_SECRET>"; anything else is refused.
  */
 function authorised(header: string | null): boolean {
   const secret = process.env.CRON_SECRET ?? "";
@@ -20,25 +23,35 @@ function authorised(header: string | null): boolean {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
+const TASKS = {
+  async monzo() {
+    if (!(await monzoStatus()).connected) return "not connected";
+    const r = await syncMonzo();
+    return `added ${r.added}, matched ${r.matched}`;
+  },
+  async reminders() {
+    return runAutoReminders();
+  },
+  async backup() {
+    if (!(await googleEmail())) return "Google not connected";
+    return `saved ${(await runBackup()).date}`;
+  },
+};
+
+type Task = keyof typeof TASKS;
+
 export async function GET(req: Request) {
   if (!authorised(req.headers.get("authorization"))) return new Response("Unauthorised", { status: 401 });
-  let monzo: string = "not connected";
-  if ((await monzoStatus()).connected) {
+  const asked = new URL(req.url).searchParams.get("task");
+  if (asked && !(asked in TASKS)) return new Response("Unknown task", { status: 400 });
+  const tasks = asked ? [asked as Task] : (Object.keys(TASKS) as Task[]);
+  const result: Record<string, unknown> = {};
+  for (const t of tasks) {
     try {
-      const r = await syncMonzo();
-      monzo = `added ${r.added}, matched ${r.matched}`;
+      result[t] = await TASKS[t]();
     } catch {
-      monzo = "failed";
+      result[t] = "failed";
     }
   }
-  const reminders = await runAutoReminders();
-  let backup = "Google not connected";
-  if (await googleEmail()) {
-    try {
-      backup = `saved ${(await runBackup()).date}`;
-    } catch {
-      backup = "failed";
-    }
-  }
-  return Response.json({ monzo, reminders, backup });
+  return Response.json(result);
 }

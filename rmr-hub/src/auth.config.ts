@@ -29,6 +29,8 @@ export const authConfig = {
   ],
   pages: { signIn: "/login" },
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 30 },
+  // Hosts like Netlify sit behind a proxy that sets the site address; trust it.
+  trustHost: true,
   callbacks: {
     signIn({ profile }) {
       const email = profile?.email?.toLowerCase();

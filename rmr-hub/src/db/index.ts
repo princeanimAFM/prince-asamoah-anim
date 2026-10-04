@@ -17,7 +17,10 @@ async function connect() {
     const { default: postgres } = await import("postgres");
     const { drizzle } = await import("drizzle-orm/postgres-js");
     const { migrate } = await import("drizzle-orm/postgres-js/migrator");
-    const client = postgres(url, { prepare: false, max: 5 });
+    // Neon adds channel_binding=require, which the driver would pass on as a setting Postgres rejects.
+    const u = new URL(url);
+    u.searchParams.delete("channel_binding");
+    const client = postgres(u.toString(), { prepare: false, max: 5 });
     const db = drizzle(client, { schema });
     await migrate(db, { migrationsFolder: MIGRATIONS });
     return db;

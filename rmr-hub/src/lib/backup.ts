@@ -90,9 +90,12 @@ export async function runBackup(): Promise<{ link: string; date: string }> {
     data: enc.encode(JSON.stringify(backup)),
     remember: true,
   });
-  for (const [name, csv] of Object.entries(spreadsheets(backup))) {
-    await saveToDrive({ folder: "Backups/Spreadsheets", name, mimeType: "text/csv", data: enc.encode(csv), remember: true });
-  }
+  // The first file creates the folder if needed; the rest upload together, which is quicker.
+  const [first, ...rest] = Object.entries(spreadsheets(backup));
+  const save = ([name, csv]: [string, string]) =>
+    saveToDrive({ folder: "Backups/Spreadsheets", name, mimeType: "text/csv", data: enc.encode(csv), remember: true });
+  await save(first);
+  await Promise.all(rest.map(save));
   const db = await getDb();
   await db.update(schema.settings).set({ lastBackupAt: new Date() }).where(eq(schema.settings.id, 1));
   return { link: saved.link, date };
