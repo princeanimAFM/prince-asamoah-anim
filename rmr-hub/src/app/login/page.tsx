@@ -32,6 +32,11 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
           <button className="btn-primary w-full">Sign in with Google</button>
         </form>
         <p className="mt-4 text-xs text-grey">Signing in also lets RMR Hub save your invoices and records to Google Drive.</p>
+        <p className="mt-3 text-xs">
+          <a href="/privacy" className="link">
+            Privacy notice
+          </a>
+        </p>
       </div>
     </main>
   );
