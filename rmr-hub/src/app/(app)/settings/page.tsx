@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { disconnectMonzoAccount, saveSettings, syncMonzoNow } from "@/app/actions";
+import { backupNow, disconnectMonzoAccount, restoreFromBackup, saveSettings, syncMonzoNow } from "@/app/actions";
 import { ActionButton, ResultButton, SubmitButton } from "@/components/buttons";
 import { Notice, PageHeader } from "@/components/ui";
 import { getSettings } from "@/lib/data";
@@ -21,7 +21,17 @@ const MONZO_NOTICES: Record<string, { tone: "good" | "bad"; text: string }> = {
   setup: { tone: "bad", text: "Monzo isn't set up yet: add MONZO_CLIENT_ID and MONZO_CLIENT_SECRET (see the README)." },
 };
 
-export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ saved?: string; monzo?: string }> }) {
+const RESTORE_ERRORS: Record<string, string> = {
+  confirm: "Tick the box to confirm you want to replace everything with the backup.",
+  file: "Choose a backup file (.json) first.",
+  big: "That file is too large to be an RMR Hub backup.",
+};
+
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string; monzo?: string; restore?: string; why?: string; restored?: string; clients?: string }>;
+}) {
   const [s, drive, monzo, sp] = await Promise.all([getSettings(), driveStatus(), monzoStatus(), searchParams]);
   const monzoNotice = sp.monzo ? MONZO_NOTICES[sp.monzo] : undefined;
   return (
@@ -29,6 +39,16 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
       <PageHeader title="Settings" />
       {sp.saved && <Notice tone="good">Settings saved.</Notice>}
       {monzoNotice && <Notice tone={monzoNotice.tone}>{monzoNotice.text}</Notice>}
+      {sp.restored && (
+        <Notice tone="good">
+          Backup restored: {sp.clients ?? 0} clients and {sp.restored} invoices, with all their payments, hours and contracts.
+        </Notice>
+      )}
+      {sp.restore && (
+        <Notice tone="bad">
+          {sp.restore === "failed" ? `Nothing was changed. ${sp.why?.slice(0, 200) ?? ""}` : RESTORE_ERRORS[sp.restore] ?? "Nothing was changed."}
+        </Notice>
+      )}
 
       <section id="monzo" className="card mb-4 flex max-w-3xl scroll-mt-20 flex-col gap-3" aria-labelledby="monzo-h">
         <h2 id="monzo-h" className="text-xl font-extrabold">
@@ -201,6 +221,45 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             ? `Connected as ${drive.email}. Files are saved in a "RMR Dev Works" folder, and invoices are emailed from this address. RMR Hub can only see files it created, and can send email but not read it. If emailing says it isn't allowed yet, sign out and sign in again.`
             : "Not connected. Sign out and sign in with Google to connect."}
         </p>
+      </section>
+
+      <section id="backups" className="card mt-4 flex max-w-3xl scroll-mt-20 flex-col gap-3" aria-labelledby="backup-h">
+        <h2 id="backup-h" className="text-xl font-extrabold">
+          Backups
+        </h2>
+        <p className="text-sm text-grey">
+          Every morning everything is copied to Google Drive, in <b>RMR Dev Works › Backups</b>: a full backup file for each
+          day, and spreadsheets of your clients, invoices, money, hours and contracts that open in Google Sheets or Excel.
+          {s.lastBackupAt ? ` Last backup: ${formatDate(s.lastBackupAt.toISOString().slice(0, 10))}.` : " No backup yet."}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {drive.connected && <ResultButton action={backupNow}>Back up now</ResultButton>}
+          <a href="/settings/backup" className="btn-secondary">
+            Download a backup
+          </a>
+        </div>
+        <details className="rounded-xl bg-ground p-3">
+          <summary className="cursor-pointer font-bold">Restore from a backup</summary>
+          <form action={restoreFromBackup} className="mt-3 flex flex-col gap-3">
+            <p className="text-sm">
+              Replaces <b>all</b> clients, invoices, payments, hours, contracts and settings with the ones in the backup file.
+              Your Google and Monzo connections stay. If anything goes wrong, nothing is changed.
+            </p>
+            <label className="field">
+              Backup file (RMR Hub backup ….json)
+              <input type="file" name="backup" accept=".json,application/json" required className="input py-2" />
+            </label>
+            <label className="flex min-h-11 items-center gap-3 font-semibold">
+              <input type="checkbox" name="confirm" className="size-5 accent-blue" />
+              Replace everything with this backup
+            </label>
+            <div>
+              <SubmitButton className="btn-danger" pendingText="Restoring…">
+                Restore
+              </SubmitButton>
+            </div>
+          </form>
+        </details>
       </section>
     </>
   );

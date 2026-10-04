@@ -9,6 +9,7 @@ export function monzoRedirectUri(req: Request): string {
   return `${base}/api/monzo/callback`;
 }
 
+/** True when you are signed in to the hub (or sign-in is skipped locally). */
 export async function signedIn(): Promise<boolean> {
   return skipAuth || Boolean((await auth())?.user);
 }

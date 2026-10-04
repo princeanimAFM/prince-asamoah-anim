@@ -1,4 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
+import { runBackup } from "@/lib/backup";
+import { googleEmail } from "@/lib/google";
 import { runAutoReminders } from "@/lib/invoice-mail";
 import { monzoStatus, syncMonzo } from "@/lib/monzo";
 
@@ -6,8 +8,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 /**
- * Daily job (see vercel.json): syncs Monzo, then emails automatic payment reminders
- * (after the sync, so invoices just paid aren't chased).
+ * Daily job (see vercel.json): syncs Monzo, emails automatic payment reminders (after the
+ * sync, so invoices just paid aren't chased), then backs everything up to Google Drive.
  * Vercel calls it with "Authorization: Bearer <CRON_SECRET>"; anything else is refused.
  */
 function authorised(header: string | null): boolean {
@@ -30,5 +32,13 @@ export async function GET(req: Request) {
     }
   }
   const reminders = await runAutoReminders();
-  return Response.json({ monzo, reminders });
+  let backup = "Google not connected";
+  if (await googleEmail()) {
+    try {
+      backup = `saved ${(await runBackup()).date}`;
+    } catch {
+      backup = "failed";
+    }
+  }
+  return Response.json({ monzo, reminders, backup });
 }

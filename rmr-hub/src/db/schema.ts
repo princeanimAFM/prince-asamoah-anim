@@ -25,6 +25,8 @@ export const settings = pgTable("settings", {
   taxRegion: text("tax_region").notNull().default("scotland"),
   /** Email payment reminders automatically 1, 7 and 14 days after an invoice is due. */
   autoReminders: boolean("auto_reminders").notNull().default(false),
+  /** When everything was last backed up to Google Drive. */
+  lastBackupAt: timestamp("last_backup_at"),
 });
 
 export const clients = pgTable("clients", {

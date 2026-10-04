@@ -5,7 +5,9 @@ import { redirect } from "next/navigation";
 import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { auth, signOut, skipAuth } from "@/auth";
 import { getDb, schema } from "@/db";
+import { restoreBackup, runBackup } from "@/lib/backup";
 import { readBankCSV } from "@/lib/bank-csv";
+import { csvCell } from "@/lib/csv";
 import { applyPayment, importBankRows } from "@/lib/bank-import";
 import { getInvoice, getSettings, listTimeEntries, listTransactions } from "@/lib/data";
 import { addDays, taxYearOf, todayISO } from "@/lib/dates";
@@ -450,11 +452,31 @@ export async function disconnectMonzoAccount() {
 
 // ---------------------------------------------------------------- records
 
-function csvCell(v: unknown) {
-  let s = String(v ?? "");
-  // Text starting with = + - @ would run as a formula in Excel or Sheets; numbers are left alone.
-  if (/^[=+\-@\t\r]/.test(s) && !/^-?\d+(\.\d+)?$/.test(s)) s = `'${s}`;
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+export async function backupNow(): Promise<{ ok: boolean; message: string; link?: string }> {
+  await requireUser();
+  try {
+    const { link } = await runBackup();
+    refresh();
+    return { ok: true, message: "Backed up to Google Drive.", link };
+  } catch (e) {
+    return { ok: false, message: (e as Error).message };
+  }
+}
+
+export async function restoreFromBackup(f: FormData) {
+  await requireUser();
+  const file = f.get("backup");
+  if (f.get("confirm") !== "on") redirect("/settings?restore=confirm#backups");
+  if (!(file instanceof File) || file.size === 0) redirect("/settings?restore=file#backups");
+  if (file.size > 9_000_000) redirect("/settings?restore=big#backups");
+  let counts: Record<string, number>;
+  try {
+    counts = await restoreBackup(await file.text());
+  } catch (e) {
+    redirect(`/settings?restore=failed&why=${encodeURIComponent((e as Error).message.slice(0, 200))}#backups`);
+  }
+  refresh();
+  redirect(`/settings?restored=${counts.invoices}&clients=${counts.clients}#backups`);
 }
 
 export async function exportRecordsToDrive(taxYear: string): Promise<{ ok: boolean; message: string; link?: string }> {

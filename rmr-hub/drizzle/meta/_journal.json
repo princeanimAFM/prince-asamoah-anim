@@ -43,6 +43,13 @@
       "when": 1790848114091,
       "tag": "0005_monzo",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791123811958,
+      "tag": "0006_backups",
+      "breakpoints": true
     }
   ]
 }

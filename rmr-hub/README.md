@@ -8,6 +8,7 @@ The RMR Dev Works business assistant. It runs in the browser and installs on you
 - **Money**: Monzo syncs by itself every morning (or import any bank's CSV statement). Payments that quote an invoice number are matched and the invoice is marked paid. Snap a photo of a receipt against any expense; it's filed in Drive.
 - **Tax**: an estimate of income tax and Class 4 NI on your freelance profit on top of your salary, plus what you've saved in your tax pot and key deadlines
 - **Contracts**: build a plain-English agreement from a template (buy outright in 1 to 3 payments, or a start fee plus monthly payments with care included and an early buy-out; Scottish or English law), edit it, then send the client a private signing link by WhatsApp or email. They read and sign on their phone with no account; you get a signed PDF with an audit record (time, IP, browser and a fingerprint of the exact text), filed in Drive under `Contracts/<client>`. Withdrawing a link or voiding a contract stops the old link working.
+- **Backups**: every morning everything is copied to Google Drive (a full backup file per day plus spreadsheets). Settings also lets you download a backup, or restore one.
 - **Google Drive**: invoices and yearly records saved in an `RMR Dev Works` folder:
 
 ```
@@ -17,6 +18,8 @@ RMR Dev Works/
   Receipts/2026-27/2026-10-01 Claude subscription.jpg
   Tax/2026-27/Money in and out 2026-27.csv
   Tax/2026-27/Hours log 2026-27.csv
+  Backups/2026/RMR Hub backup 2026-10-04.json
+  Backups/Spreadsheets/Clients.csv, Invoices.csv, Money in and out.csv, …
 ```
 
 The tax figures are planning estimates using Scottish or rest-of-UK income tax bands (choose in Settings). Your Self Assessment return is the real figure. Rates are in `src/lib/tax.ts`; add each new tax year's bands there when they're announced.
@@ -39,10 +42,10 @@ Checks: `npm test`, `npm run typecheck` and `npx next build`.
 
 ## Put it online (free tiers)
 
-### 1. Database: Supabase
-1. Create a project at [supabase.com](https://supabase.com) (choose the London region).
-2. Go to **Project settings › Database › Connection string › URI** (use the "Transaction pooler" one) and copy it. That's your `DATABASE_URL`.
-3. Tables are created automatically the first time the app starts.
+### 1. Database: Neon, through Vercel
+After importing the project in Vercel (step 3), open it and go to **Storage › Create Database › Neon** (free plan, region London, `eu-west-2`), and connect it to the project. Vercel adds `DATABASE_URL` for you. Tables are created automatically the first time the app starts.
+
+Any Postgres database works instead (Supabase, for example): put its connection URL in `DATABASE_URL`.
 
 ### 2. Google sign-in, Drive and Gmail
 1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project called "RMR Hub".
@@ -66,7 +69,7 @@ RMR Hub asks for two permissions: `drive.file` (it can see and change only the f
    - `AUTH_GOOGLE_ID`
    - `AUTH_GOOGLE_SECRET`
    - `ALLOWED_EMAIL` (your Google account)
-   - `CRON_SECRET`: any long random text (e.g. run `npx auth secret` again). Vercel uses it to run the daily job that syncs Monzo and sends automatic reminders at 7am UTC.
+   - `CRON_SECRET`: any long random text (e.g. run `npx auth secret` again). Vercel uses it to run the daily job at 7am UTC that syncs Monzo, sends automatic reminders and backs everything up to Drive.
    - `APP_URL`: your site address, e.g. `https://rmr-hub.vercel.app` (used for the Monzo sign-in)
    - `MONZO_CLIENT_ID` and `MONZO_CLIENT_SECRET` (step 4, optional)
 3. Deploy, then open the site on your phone and choose **Add to Home Screen**.
