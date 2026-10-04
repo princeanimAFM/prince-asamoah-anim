@@ -6,3 +6,6 @@ out/
 /data/
 *.tsbuildinfo
 next-env.d.ts
+
+# Netlify build output
+.netlify

@@ -8,3 +8,7 @@
 
 [functions]
   directory = "netlify/functions"
+
+# Runs the app's server on Netlify (pages, sign-in, signing links, API routes).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
