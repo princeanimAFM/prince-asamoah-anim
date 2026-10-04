@@ -22,7 +22,9 @@ async function connect() {
     u.searchParams.delete("channel_binding");
     const client = postgres(u.toString(), { prepare: false, max: 5 });
     const db = drizzle(client, { schema });
-    await migrate(db, { migrationsFolder: MIGRATIONS });
+    // On Netlify the build has already migrated (scripts/migrate.mjs), saving a few
+    // database round trips every time the app wakes up.
+    if (process.env.MIGRATIONS_AT_BUILD !== "true") await migrate(db, { migrationsFolder: MIGRATIONS });
     return db;
   }
   const { PGlite } = await import("@electric-sql/pglite");
@@ -43,7 +45,9 @@ const g = globalThis as unknown as { __rmrDb?: Promise<DB> };
 export function getDb(): Promise<DB> {
   if (!g.__rmrDb) {
     g.__rmrDb = connect().then(async (db) => {
-      await db.insert(schema.settings).values({ id: 1 }).onConflictDoNothing();
+      if (process.env.MIGRATIONS_AT_BUILD !== "true") {
+        await db.insert(schema.settings).values({ id: 1 }).onConflictDoNothing();
+      }
       return db;
     });
     g.__rmrDb.catch(() => {
