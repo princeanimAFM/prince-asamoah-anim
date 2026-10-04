@@ -1,10 +1,12 @@
 # Netlify settings for RMR Hub. In Netlify, set the base directory to "rmr-hub".
 [build]
-  command = "npm run build"
+  # Migrate the database first, so the live app can skip that check when it starts.
+  command = "npm run db:migrate && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
+  MIGRATIONS_AT_BUILD = "true"
 
 [functions]
   directory = "netlify/functions"

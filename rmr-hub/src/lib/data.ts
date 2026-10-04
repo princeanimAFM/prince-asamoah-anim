@@ -1,3 +1,4 @@
+import { cache } from "react";
 import "server-only";
 import { and, asc, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { getDb, schema } from "@/db";
@@ -5,11 +6,12 @@ import type { Invoice, InvoiceItem, Settings } from "@/db/schema";
 import { addDays, taxYearOf, taxYearRange, todayISO, weekStart } from "@/lib/dates";
 import { estimate, type TaxRegion } from "@/lib/tax";
 
-export async function getSettings(): Promise<Settings> {
+/** Settings, read once per page load however many parts of the page ask for them. */
+export const getSettings = cache(async (): Promise<Settings> => {
   const db = await getDb();
   const [s] = await db.select().from(schema.settings).where(eq(schema.settings.id, 1));
   return s;
-}
+});
 
 export async function listClients(includeArchived = false) {
   const db = await getDb();
