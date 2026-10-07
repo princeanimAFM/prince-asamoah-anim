@@ -15,7 +15,11 @@ export function parsePence(input: string | null | undefined): number | null {
   const cleaned = String(input).replace(/[£,\s]/g, "");
   if (cleaned === "" || !/^-?\d*(\.\d+)?$/.test(cleaned)) return null;
   const n = Number(cleaned);
-  return Number.isFinite(n) ? Math.round(n * 100) : null;
+  if (!Number.isFinite(n)) return null;
+  // n * 100 can land just below a half penny (1.005 * 100 = 100.49999…), so trim the float
+  // error first, then round halves away from zero. "+ 0" turns -0 into 0.
+  const pence = Math.abs(Number((n * 100).toPrecision(12)));
+  return Math.sign(n) * Math.round(pence) + 0;
 }
 
 export function formatHours(minutes: number): string {

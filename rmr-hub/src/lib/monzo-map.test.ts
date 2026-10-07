@@ -66,3 +66,59 @@ describe("personal account: business transactions only", () => {
     expect(isPersonalAccount(null)).toBe(false);
   });
 });
+
+describe("monzo: more mapping cases", () => {
+  it("uses the UK date either side of the October clock change", () => {
+    expect(ukDate("2026-10-24T23:30:00Z")).toBe("2026-10-25"); // BST
+    expect(ukDate("2026-10-25T23:30:00Z")).toBe("2026-10-25"); // GMT
+  });
+
+  it("ignores an unexpanded merchant id and falls back to the counterparty or description", () => {
+    expect(monzoToRow({ ...base, merchant: "merch_123", description: "TFL TRAVEL" })?.description).toBe("TFL TRAVEL");
+    expect(monzoToRow({ ...base, merchant: null, counterparty: { name: "K MENSAH" }, description: "K MENSAH" })?.description).toBe(
+      "K MENSAH",
+    );
+  });
+
+  it("marks money back from a pot too", () => {
+    const r = monzoToRow({ ...base, amount: 20_000, description: "pot_1", metadata: { pot_id: "pot_1" }, category: "savings" });
+    expect(r).toMatchObject({ description: "Pot transfer", amount: 20_000, category: "savings pot" });
+  });
+
+  it("keeps descriptions to 300 characters", () => {
+    expect(monzoToRow({ ...base, description: "x".repeat(400) })?.description).toHaveLength(300);
+  });
+
+  it("finds no account when all are closed or prepaid", () => {
+    expect(pickAccount([])).toBeNull();
+    expect(
+      pickAccount([
+        { id: "a", type: "uk_business", description: "", closed: true },
+        { id: "b", type: "uk_prepaid", description: "", closed: false },
+      ]),
+    ).toBeNull();
+    expect(pickAccount([{ id: "j", type: "uk_retail_joint", description: "acc_1", closed: false }])?.id).toBe("j");
+    expect(accountLabel({ id: "j", type: "uk_retail_joint", description: "acc_1", closed: false })).toBe("Joint account");
+  });
+});
+
+describe("personal account: edge cases", () => {
+  const keep = (t: Parameters<typeof monzoToRow>[0], prefix = "RMR") => isBusinessTx(t, monzoToRow(t)!, prefix);
+  it("finds the invoice number in the notes as well as the reference", () => {
+    expect(keep({ ...base, amount: 50_000, description: "Payment", counterparty: { name: "K" }, notes: "for RMR-0004" })).toBe(true);
+  });
+  it("only accepts the tags as whole words", () => {
+    expect(keep({ ...base, notes: "#rmrx" })).toBe(false);
+    expect(keep({ ...base, notes: "#businesslunch" })).toBe(false);
+    expect(keep({ ...base, notes: "rmr" })).toBe(false);
+    expect(keep({ ...base, notes: "lunch #RMR." })).toBe(true);
+  });
+  it("uses the invoice prefix from settings", () => {
+    const t = { ...base, amount: 50_000, description: "INV-0007", counterparty: { name: "K" } };
+    expect(keep(t, "INV")).toBe(true);
+    expect(keep(t, "RMR")).toBe(false);
+  });
+  it("skips untagged pot moves on a personal account", () => {
+    expect(keep({ ...base, description: "pot_1", metadata: { pot_id: "pot_1" } })).toBe(false);
+  });
+});
