@@ -12,6 +12,7 @@ import { renderContractPdf } from "@/lib/contract-pdf";
 import { contractFileName, getContract, getContractByToken, hashBody, isToken, newToken } from "@/lib/contracts";
 import { todayISO } from "@/lib/dates";
 import { saveToDrive } from "@/lib/google";
+import { clientIp } from "@/lib/signing";
 import { parsePence } from "@/lib/money";
 
 async function requireUser() {
@@ -181,7 +182,6 @@ export async function signContract(f: FormData) {
   if (hashBody(row.contract.body) !== row.contract.bodyHash) redirect(`/sign/${token}?error=changed`);
 
   const h = await headers();
-  const ip = (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || h.get("x-real-ip") || "";
   const db = await getDb();
   const updated = await db
     .update(schema.contracts)
@@ -190,7 +190,7 @@ export async function signContract(f: FormData) {
       signedAt: new Date(),
       signerName: name,
       signatureImage: signature || null,
-      signerIp: ip.slice(0, 64),
+      signerIp: clientIp(h),
       signerAgent: (h.get("user-agent") ?? "").slice(0, 300),
     })
     .where(and(eq(schema.contracts.token, token), eq(schema.contracts.status, "sent")))
