@@ -3,6 +3,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { headers } from "next/headers";
 import { desc, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
+import { signingLinkOpen } from "@/lib/signing";
 
 export function hashBody(body: string): string {
   return createHash("sha256").update(body, "utf8").digest("hex");
@@ -44,7 +45,7 @@ export async function getContractByToken(token: string) {
     .from(schema.contracts)
     .innerJoin(schema.clients, eq(schema.contracts.clientId, schema.clients.id))
     .where(eq(schema.contracts.token, token));
-  if (!row || row.contract.status === "draft" || row.contract.status === "void") return null;
+  if (!row || !signingLinkOpen(row.contract)) return null;
   return row;
 }
 

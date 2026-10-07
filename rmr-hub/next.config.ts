@@ -1,6 +1,33 @@
 import type { NextConfig } from "next";
 
+/**
+ * Sent with every response. No page may be framed (clickjacking), the browser mustn't
+ * guess file types, and links out don't carry full addresses. form-action is left out of
+ * the policy because signing in posts a form that then redirects to Google.
+ */
+const SECURITY_HEADERS = [
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'; base-uri 'self'; object-src 'none'" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Strict-Transport-Security", value: "max-age=63072000" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+];
+
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      { source: "/:path*", headers: SECURITY_HEADERS },
+      // Signing links are secrets: never send them on as a referrer, and keep them out of search engines.
+      {
+        source: "/sign/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
+    ];
+  },
   // Receipt photos are shrunk in the browser first, but PDFs can be a few megabytes.
   experimental: { serverActions: { bodySizeLimit: "10mb" } },
   // Set by netlify.toml during the build: the build migrates the database, so the running

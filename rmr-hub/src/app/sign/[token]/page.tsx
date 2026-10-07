@@ -7,6 +7,7 @@ import { Blocks } from "@/components/icons";
 import { Notice } from "@/components/ui";
 import { getSettings } from "@/lib/data";
 import { getContractByToken } from "@/lib/contracts";
+import { SIGNED_LINK_DAYS } from "@/lib/signing";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Sign agreement", referrer: "no-referrer", robots: { index: false, follow: false } };
@@ -64,7 +65,7 @@ export default async function SignPage({
           <a href={`/sign/${token}/pdf`} className="underline">
             Download your signed copy (PDF)
           </a>
-          .
+          . Please save it: this link stops working {SIGNED_LINK_DAYS} days after signing.
         </Notice>
       ) : (
         <p className="mb-4 text-grey">
@@ -105,7 +106,11 @@ export default async function SignPage({
           </div>
           <p className="text-xs text-grey">
             We record your name, the time, your IP address and browser as proof of signing. You&apos;ll get a signed PDF
-            copy straight away.
+            copy straight away.{" "}
+            <a href="/privacy" className="link">
+              How we use your information
+            </a>
+            .
           </p>
         </form>
       )}
