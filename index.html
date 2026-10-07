@@ -1,8 +1,62 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Prince Asamoah Anim: UK Registered Nurse and certified Master Data Scientist. Experience, projects, certificates and learning log.">
-<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Prince Asamoah Anim</title>
+<style>body{margin:0}img{max-width:100%;height:auto}[hidden]{display:none!important}</style>
+<title>Prince Asamoah Anim · UK Registered Nurse &amp; Master Data Scientist</title>
+<link rel="canonical" href="https://princeanimafm.github.io/prince-asamoah-anim/">
+<meta name="theme-color" content="#0E9AA3">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Prince Asamoah Anim">
+<meta property="og:title" content="Prince Asamoah Anim · UK Registered Nurse &amp; Master Data Scientist">
+<meta property="og:description" content="Prince Asamoah Anim: UK Registered Nurse and certified Master Data Scientist. Experience, projects, certificates and learning log.">
+<meta property="og:url" content="https://princeanimafm.github.io/prince-asamoah-anim/">
+<meta property="og:image" content="https://princeanimafm.github.io/prince-asamoah-anim/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Prince Asamoah Anim: Where care meets data. UK Registered Nurse and Master Data Scientist.">
+<meta property="og:locale" content="en_GB">
+<meta property="profile:first_name" content="Prince">
+<meta property="profile:last_name" content="Asamoah Anim">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prince Asamoah Anim · UK Registered Nurse &amp; Master Data Scientist">
+<meta name="twitter:description" content="Prince Asamoah Anim: UK Registered Nurse and certified Master Data Scientist. Experience, projects, certificates and learning log.">
+<meta name="twitter:image" content="https://princeanimafm.github.io/prince-asamoah-anim/og-image.jpg">
+<meta name="twitter:image:alt" content="Prince Asamoah Anim: Where care meets data. UK Registered Nurse and Master Data Scientist.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://princeanimafm.github.io/prince-asamoah-anim/#person",
+  "name": "Prince Asamoah Anim",
+  "url": "https://princeanimafm.github.io/prince-asamoah-anim/",
+  "description": "UK Registered Nurse and certified Master Data Scientist.",
+  "jobTitle": "Registered Nurse",
+  "worksFor": { "@type": "Organization", "name": "Walton House Care Home" },
+  "homeLocation": { "@type": "Place", "name": "Scotland, United Kingdom" },
+  "email": "mailto:princeanim88@gmail.com",
+  "sameAs": ["https://github.com/princeanimafm"],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "Master Data Scientist",
+      "credentialCategory": "certificate",
+      "dateCreated": "2026-01-16",
+      "recognizedBy": { "@type": "Organization", "name": "10Alytics" }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "Basic Life Support: Train the Trainer",
+      "credentialCategory": "certificate",
+      "dateCreated": "2025-02-20",
+      "recognizedBy": { "@type": "Organization", "name": "Caring for Care Ltd" }
+    }
+  ],
+  "knowsAbout": ["Nursing", "Clinical triage", "Emergency response", "ECG interpretation", "Basic Life Support", "Data science", "Python", "SQL", "Excel", "Tableau", "Statistics", "Machine learning", "Computer vision", "React Native", "Supabase"]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,11 +68,13 @@
     --surface: #FFFFFF;
     --ink: #1D3B47;
     --ink-2: #4F6772;
-    --ink-3: #7A8E96;
+    --ink-3: #5E737C;
     --line: #E4EEEE;
     --accent: #0E9AA3;
+    --accent-ink: #087680; /* accent for small text and filled buttons (4.5:1 on white, tint and chips) */
     --accent-soft: #E0F4F4;
     --pulse: #EF5B5F;
+    --pulse-ink: #BF3A3E; /* pulse for small text (4.5:1) */
     --chip: #E6F6F6;
     --gold: #E08A1E;
     --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
@@ -29,8 +85,12 @@
   * { box-sizing: border-box; }
   body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.6; padding: 0 20px; -webkit-font-smoothing: antialiased; }
   .wrap { max-width: 1040px; margin: 0 auto; }
-  a { color: var(--accent); text-underline-offset: 3px; }
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  a { color: var(--accent-ink); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent-ink); outline-offset: 3px; border-radius: 4px; }
+  .skip { position: absolute; left: 16px; top: -80px; z-index: 10; background: var(--ink); color: #fff; font-weight: 600; padding: 10px 16px; border-radius: 8px; text-decoration: none; }
+  .skip:focus { top: 12px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  main:focus { outline: none; }
   h1, h2, h3 { text-wrap: balance; }
 
   /* Top bar */
@@ -78,8 +138,8 @@
   .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .track { background: var(--tint); border: 1px solid var(--line); border-radius: 14px; padding: 28px; display: flex; flex-direction: column; gap: 14px; }
   .track h3 { font-family: var(--serif); font-weight: 600; font-size: 26px; margin: 0; }
-  .track .k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--pulse); }
-  .track.data .k { color: var(--accent); }
+  .track .k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--pulse-ink); }
+  .track.data .k { color: var(--accent-ink); }
   .track p { margin: 0; color: var(--ink-2); }
   .skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
   .skills span { font-size: 14px; padding: 5px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); }
@@ -92,7 +152,7 @@
   .project li { margin-bottom: 6px; }
   .links { display: flex; flex-wrap: wrap; gap: 12px; }
   .btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; padding: 11px 18px; border-radius: 10px; text-decoration: none; border: 1px solid var(--ink); color: var(--ink); background: transparent; }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary { background: var(--accent-ink); border-color: var(--accent-ink); color: #fff; }
   .stack { font-family: var(--mono); font-size: 13px; color: var(--ink-3); margin-top: 16px; }
   .shot { align-self: center; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(16,42,51,.12); display: block; }
   .shot img { display: block; width: 100%; }
@@ -106,9 +166,9 @@
   .exp { display: grid; gap: 0; border-top: 1px solid var(--line); }
   .job { display: grid; grid-template-columns: 190px 1fr; gap: 28px; padding-block: 26px; border-bottom: 1px solid var(--line); }
   .job .when { font-family: var(--mono); font-size: 13px; color: var(--ink-3); letter-spacing: .03em; padding-top: 4px; }
-  .job .when b { display: block; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pulse); margin-top: 6px; }
+  .job .when b { display: block; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pulse-ink); margin-top: 6px; }
   .job h3 { margin: 0; font-size: 21px; font-weight: 700; }
-  .job .org { color: var(--accent); font-weight: 600; margin: 2px 0 10px; }
+  .job .org { color: var(--accent-ink); font-weight: 600; margin: 2px 0 10px; }
   .job ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
   .job li { margin-bottom: 5px; }
   .training { margin-top: 26px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; padding: 0; list-style: none; }
@@ -144,13 +204,13 @@
   .entry::before { content: ''; position: absolute; left: -7.5px; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
   .entry.care::before { border-color: var(--pulse); }
   .entry .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); letter-spacing: .04em; }
-  .entry .kind { text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
-  .entry.care .kind { background: color-mix(in srgb, var(--pulse) 14%, transparent); color: var(--pulse); }
-  .entry h4 { font-size: 19px; margin: 8px 0 4px; font-weight: 600; }
+  .entry .kind { text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-ink); }
+  .entry.care .kind { background: color-mix(in srgb, var(--pulse) 14%, transparent); color: var(--pulse-ink); }
+  .entry h3 { font-size: 19px; margin: 8px 0 4px; font-weight: 600; }
   .entry p { margin: 0; color: var(--ink-2); max-width: 64ch; }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
   .filters button { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); cursor: pointer; }
-  .filters button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .filters button[aria-pressed="true"] { background: var(--accent-ink); color: #fff; border-color: var(--accent-ink); }
 
   /* Contact */
   .contact { display: grid; grid-template-columns: 1.2fr 1fr; gap: 36px; align-items: end; border-top: 1px solid var(--line); padding-top: 40px; }
@@ -174,28 +234,30 @@
     .fact { grid-template-columns: 100px 1fr; }
     .sh .eyebrow { margin-left: 0; width: 100%; }
   }
-  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
 </style>
 </head><body>
 
+<a class="skip" href="#main">Skip to content</a>
 <div class="glow" aria-hidden="true"></div>
 <div class="wrap">
   <header class="bar">
-    <div class="mark"><span class="mono-badge">PA</span><span>Prince Asamoah Anim</span></div>
-    <nav class="nav">
+    <div class="mark"><span class="mono-badge" aria-hidden="true">PA</span><span>Prince Asamoah Anim</span></div>
+    <nav class="nav" aria-label="Sections">
       <a href="#about">About</a><a href="#experience">Experience</a><a href="#work">Work</a><a href="#design">Design</a><a href="#certificates">Certificates</a><a href="#log">Learning log</a><a href="#contact">Contact</a>
     </nav>
   </header>
 
+  <main id="main" tabindex="-1">
   <div class="hero">
     <div class="eyebrow">UK Registered Nurse · Master Data Scientist</div>
     <h1>Where <em>care</em> meets <em>data</em>.</h1>
     <p class="lede">I’m a UK Registered Nurse with experience across emergency, acute and long-term care in Ghana and Scotland, and a certified Master Data Scientist. This page is my working record: the care I give, the courses I finish and the things I build.</p>
     <div class="tags">
-      <span class="tag care"><i></i>UK Registered Nurse (NMC)</span>
-      <span class="tag care"><i></i>Basic Life Support trainer</span>
-      <span class="tag"><i></i>Master Data Scientist, 10Alytics</span>
-      <span class="tag"><i></i>Built and shipped a live app</span>
+      <span class="tag care"><i aria-hidden="true"></i>UK Registered Nurse (NMC)</span>
+      <span class="tag care"><i aria-hidden="true"></i>Basic Life Support trainer</span>
+      <span class="tag"><i aria-hidden="true"></i>Master Data Scientist, 10Alytics</span>
+      <span class="tag"><i aria-hidden="true"></i>Built and shipped a live app</span>
     </div>
 
     <div class="trace" aria-hidden="true">
@@ -288,8 +350,8 @@
     </ul>
   </section>
 
-  <section>
-    <div class="sh"><h2>What I bring</h2></div>
+  <section aria-labelledby="bring-h">
+    <div class="sh"><h2 id="bring-h">What I bring</h2></div>
     <div class="tracks">
       <article class="track care">
         <div class="k">Clinical practice</div>
@@ -323,7 +385,7 @@
           <li>Released on Android and the web, now in closed testing on Google Play</li>
         </ul>
         <div class="links">
-          <a class="btn primary" href="https://afm-hub.expo.app" target="_blank" rel="noopener">Open the app ↗</a>
+          <a class="btn primary" href="https://afm-hub.expo.app" target="_blank" rel="noopener noreferrer">Open the app <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div class="stack">Expo · React Native · TypeScript · Supabase · EAS · Firebase · Brevo</div>
       </div>
@@ -345,11 +407,11 @@
           <li>Custom domain with HTTPS, registered with Google Search Console, with structured church data for search</li>
         </ul>
         <div class="links">
-          <a class="btn primary" href="https://theafmchurch.org" target="_blank" rel="noopener">Visit theafmchurch.org ↗</a>
+          <a class="btn primary" href="https://theafmchurch.org" target="_blank" rel="noopener noreferrer">Visit theafmchurch.org <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div class="stack">HTML · CSS · JavaScript · Supabase · GitHub Pages · DNS</div>
       </div>
-      <a class="shot" href="https://theafmchurch.org" target="_blank" rel="noopener"><img src="work-afm-site.jpg" alt="Home page of theafmchurch.org"></a>
+      <a class="shot" href="https://theafmchurch.org" target="_blank" rel="noopener noreferrer"><img src="work-afm-site-960.jpg" srcset="work-afm-site-960.jpg 960w, work-afm-site.jpg 1280w" sizes="(max-width: 760px) 100vw, 480px" width="960" height="600" loading="lazy" decoding="async" alt="Home page of theafmchurch.org"><span class="sr-only"> (opens in a new tab)</span></a>
     </article>
     </div>
   </section>
@@ -358,23 +420,23 @@
     <div class="sh"><h2>Design work</h2><span class="eyebrow">Launch campaign · September 2026</span></div>
     <p class="work-intro">The launch materials for The AFM HUB: flyers, a branded QR code that downloads the app, and the Google Play store header. Tap any image to view it full size.</p>
     <div class="gallery">
-      <a href="work-launch.jpg" target="_blank" rel="noopener"><img src="work-launch.jpg" alt="Official app launch flyer for The AFM HUB"></a>
-      <a href="work-features.jpg" target="_blank" rel="noopener"><img src="work-features.jpg" alt="Flyer listing everything in The AFM HUB app"></a>
-      <a href="work-qr.jpg" target="_blank" rel="noopener"><img src="work-qr.jpg" alt="Branded QR code poster to download the app"></a>
-      <a class="wide" href="work-header.jpg" target="_blank" rel="noopener"><img src="work-header.jpg" alt="Google Play developer page header image"></a>
+      <a href="work-launch.jpg" target="_blank" rel="noopener noreferrer"><img src="work-launch-640.jpg" srcset="work-launch-640.jpg 640w, work-launch.jpg 1000w" sizes="(max-width: 760px) 50vw, 340px" width="640" height="800" loading="lazy" decoding="async" alt="Official app launch flyer for The AFM HUB"><span class="sr-only"> (opens in a new tab)</span></a>
+      <a href="work-features.jpg" target="_blank" rel="noopener noreferrer"><img src="work-features-640.jpg" srcset="work-features-640.jpg 640w, work-features.jpg 1000w" sizes="(max-width: 760px) 50vw, 340px" width="640" height="800" loading="lazy" decoding="async" alt="Flyer listing everything in The AFM HUB app"><span class="sr-only"> (opens in a new tab)</span></a>
+      <a href="work-qr.jpg" target="_blank" rel="noopener noreferrer"><img src="work-qr-640.jpg" srcset="work-qr-640.jpg 640w, work-qr.jpg 900w" sizes="(max-width: 760px) 50vw, 340px" width="640" height="800" loading="lazy" decoding="async" alt="Branded QR code poster to download the app"><span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="wide" href="work-header.jpg" target="_blank" rel="noopener noreferrer"><img src="work-header-800.jpg" srcset="work-header-800.jpg 800w, work-header.jpg 1400w" sizes="(max-width: 1072px) 100vw, 1040px" width="800" height="450" loading="lazy" decoding="async" alt="Google Play developer page header image"><span class="sr-only"> (opens in a new tab)</span></a>
     </div>
   </section>
 
   <section id="certificates">
     <div class="sh"><h2>Certificates</h2><span class="eyebrow">Tap to view full size</span></div>
     <div class="certs">
-      <a class="cert" href="cert-mds.jpg" target="_blank" rel="noopener">
-        <div class="img"><img src="cert-mds.jpg" alt="10Alytics Master Data Scientist certificate awarded to Prince Asamoah Anim"></div>
-        <div class="cap"><b>Master Data Scientist</b><span>10Alytics · accredited by the American Council of Training &amp; Development</span><small>16 Jan 2026 · MDS/C25-07/3589</small></div>
+      <a class="cert" href="cert-mds.jpg" target="_blank" rel="noopener noreferrer">
+        <div class="img"><img src="cert-mds-1200.jpg" srcset="cert-mds-1200.jpg 1200w, cert-mds.jpg 1600w" sizes="(max-width: 760px) 100vw, 560px" width="1200" height="848" loading="lazy" decoding="async" alt="10Alytics Master Data Scientist certificate awarded to Prince Asamoah Anim"></div>
+        <div class="cap"><b>Master Data Scientist</b><span>10Alytics · accredited by the American Council of Training &amp; Development</span><small>16 Jan 2026 · MDS/C25-07/3589</small></div><span class="sr-only"> (opens in a new tab)</span>
       </a>
-      <a class="cert" href="cert-bls.jpg" target="_blank" rel="noopener">
-        <div class="img"><img src="cert-bls.jpg" alt="Caring for Care certificate: Basic Life Support Train the Trainer, Prince Asamoah Anim"></div>
-        <div class="cap"><b>Basic Life Support: Train the Trainer</b><span>Caring for Care Ltd</span><small>20 Feb 2025 · valid 3 years</small></div>
+      <a class="cert" href="cert-bls.jpg" target="_blank" rel="noopener noreferrer">
+        <div class="img"><img src="cert-bls-640.jpg" srcset="cert-bls-640.jpg 640w, cert-bls.jpg 1100w" sizes="280px" width="640" height="829" loading="lazy" decoding="async" alt="Caring for Care certificate: Basic Life Support Train the Trainer, Prince Asamoah Anim"></div>
+        <div class="cap"><b>Basic Life Support: Train the Trainer</b><span>Caring for Care Ltd</span><small>20 Feb 2025 · valid 3 years</small></div><span class="sr-only"> (opens in a new tab)</span>
       </a>
     </div>
   </section>
@@ -386,7 +448,8 @@
       <button type="button" id="f-data" data-f="data" aria-pressed="false">Data &amp; tech</button>
       <button type="button" id="f-care" data-f="care" aria-pressed="false">Nursing</button>
     </div>
-    <ol class="log" id="logList"></ol>
+    <ol class="log" id="logList" aria-label="Learning log entries"></ol>
+    <p class="sr-only" id="status" role="status"></p>
   </section>
 
   <section id="contact">
@@ -396,11 +459,12 @@
         <p>I’m always glad to talk about health data, analytics and building useful tools. Future roles are welcome for a conversation when my circumstances allow.</p>
       </div>
       <div class="reach">
-        <div class="row"><div><small>Email</small><span id="email">princeanim88@gmail.com</span></div><button type="button" id="copyEmail">Copy</button></div>
-        <div class="row"><div><small>GitHub</small><span>github.com/princeanimafm</span></div><a class="go" href="https://github.com/princeanimafm" target="_blank" rel="noopener">Open ↗</a></div>
+        <div class="row"><div><small>Email</small><span id="email">princeanim88@gmail.com</span></div><button type="button" id="copyEmail" aria-label="Copy email address">Copy</button></div>
+        <div class="row"><div><small>GitHub</small><span>github.com/princeanimafm</span></div><a class="go" href="https://github.com/princeanimafm" target="_blank" rel="noopener noreferrer" aria-label="Open GitHub profile (opens in a new tab)">Open <span aria-hidden="true">↗</span></a></div>
       </div>
     </div>
   </section>
+  </main>
 
   <footer><span>© 2026 Prince Asamoah Anim</span><span>UK Registered Nurse · Master Data Scientist</span></footer>
 </div>
@@ -420,34 +484,38 @@
   ];
 
   const list = document.getElementById('logList');
+  const status = document.getElementById('status');
   function renderLog(filter) {
     list.innerHTML = '';
-    LOG.filter(e => filter === 'all' || e.kind === filter).forEach(e => {
+    const shown = LOG.filter(e => filter === 'all' || e.kind === filter);
+    shown.forEach(e => {
       const li = document.createElement('li');
       li.className = 'entry ' + e.kind;
       const meta = document.createElement('div'); meta.className = 'meta';
       const d = document.createElement('span'); d.textContent = e.date;
       const k = document.createElement('span'); k.className = 'kind'; k.textContent = e.kind === 'care' ? 'Nursing' : 'Data & tech';
       meta.append(d, k);
-      const h = document.createElement('h4'); h.textContent = e.title;
+      const h = document.createElement('h3'); h.textContent = e.title;
       const p = document.createElement('p'); p.textContent = e.text;
       li.append(meta, h, p);
       list.append(li);
     });
+    return shown.length;
   }
   renderLog('all');
   document.querySelectorAll('.filters button').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('.filters button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
-    renderLog(b.dataset.f);
+    const n = renderLog(b.dataset.f);
+    status.textContent = `Showing ${n} ${n === 1 ? 'entry' : 'entries'}`;
   }));
 
   document.getElementById('copyEmail').addEventListener('click', (ev) => {
     const btn = ev.currentTarget, text = document.getElementById('email').textContent;
-    const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy', 1600); };
+    const done = () => { btn.textContent = 'Copied'; status.textContent = 'Email address copied'; setTimeout(() => btn.textContent = 'Copy', 1600); };
     try {
       navigator.clipboard.writeText(text).then(done, () => selectEmail());
     } catch (e) { selectEmail(); }
-    function selectEmail() { const r = document.createRange(); r.selectNodeContents(document.getElementById('email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; }
+    function selectEmail() { const r = document.createRange(); r.selectNodeContents(document.getElementById('email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; status.textContent = 'Email address selected'; }
   });
 
   // Trace: a heartbeat on the left that becomes a rising data line on the right.
