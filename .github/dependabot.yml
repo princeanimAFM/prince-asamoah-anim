@@ -1,0 +1,16 @@
+# Opens pull requests to update dependencies with security fixes and keep versions current.
+# "**/*" covers every npm project in the repo, including new ones.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories: ["**/*"]
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

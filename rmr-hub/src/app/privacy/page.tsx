@@ -64,7 +64,8 @@ export default async function Privacy() {
         <h2 className="text-xl font-extrabold">Where it is kept</h2>
         <p>
           Records are kept with the services RMR Hub runs on: Netlify (hosting), Neon (database), Google (Drive and
-          Gmail) and, for {owner}&apos;s own bank transactions, Monzo (read-only).
+          Gmail) and, for {owner}&apos;s own bank transactions, Monzo (read-only). Business details of limited companies
+          may be looked up on the public Companies House register; only the company name or number searched for is sent.
         </p>
 
         <h2 className="text-xl font-extrabold">Your rights and contact</h2>

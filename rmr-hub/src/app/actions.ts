@@ -7,6 +7,8 @@ import { auth, signOut, skipAuth } from "@/auth";
 import { getDb, schema } from "@/db";
 import { restoreBackup, runBackup } from "@/lib/backup";
 import { readBankCSV } from "@/lib/bank-csv";
+import { CompaniesHouseError, searchCompanies } from "@/lib/companies-house";
+import type { CompanyMatch } from "@/lib/companies-house-map";
 import { csvCell } from "@/lib/csv";
 import { applyPayment, importBankRows } from "@/lib/bank-import";
 import { getInvoice, getSettings, listTimeEntries, listTransactions } from "@/lib/data";
@@ -93,6 +95,19 @@ export async function saveClient(f: FormData) {
   const [c] = await db.insert(schema.clients).values(values).returning({ id: schema.clients.id });
   refresh();
   redirect(`/clients/${c.id}`);
+}
+
+export type CompanySearchResult = { ok: true; companies: CompanyMatch[] } | { ok: false; message: string };
+
+/** Find a company on the Companies House register to fill in a client's business details. */
+export async function findCompanies(query: string): Promise<CompanySearchResult> {
+  await requireUser();
+  try {
+    return { ok: true, companies: await searchCompanies(String(query ?? "")) };
+  } catch (e) {
+    if (!(e instanceof CompaniesHouseError)) console.error("Companies House search", e);
+    return { ok: false, message: e instanceof CompaniesHouseError ? e.message : "Companies House search failed. Try again later." };
+  }
 }
 
 export async function setClientArchived(id: number, archived: boolean) {

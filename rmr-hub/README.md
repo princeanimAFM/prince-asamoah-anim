@@ -3,7 +3,7 @@
 The RMR Dev Works business assistant. It runs in the browser and installs on your phone's home screen.
 
 - **Hours**: log time per client, with a warning as you approach the 20-hour weekly visa limit
-- **Clients**: contact details that fill in your invoices
+- **Clients**: contact details that fill in your invoices. Look up a UK company on Companies House to fill in its registered name, address and company number.
 - **Invoices**: create them from logged hours or fixed prices, get a branded PDF, and email it to the client from your Gmail with the PDF attached. Send payment reminders with one tap, or switch on automatic reminders (1, 7 and 14 days after the due date) in Settings.
 - **Money**: Monzo syncs by itself every morning (or import any bank's CSV statement). Payments that quote an invoice number are matched and the invoice is marked paid. Snap a photo of a receipt against any expense; it's filed in Drive.
 - **Tax**: an estimate of income tax and Class 4 NI on your freelance profit on top of your salary, plus what you've saved in your tax pot and key deadlines
@@ -73,6 +73,7 @@ RMR Hub asks for two permissions: `drive.file` (it can see and change only the f
    - `ALLOWED_EMAIL` (your Google account)
    - `CRON_SECRET`: another long random value. The scheduled function in `netlify/functions/daily.mts` uses it every morning at 7am UTC to sync Monzo, send automatic reminders and back everything up to Drive.
    - `MONZO_CLIENT_ID` and `MONZO_CLIENT_SECRET` (step 4, optional)
+   - `COMPANIES_HOUSE_API_KEY` (step 5, optional)
 4. Deploy, then open the site on your phone and choose **Add to Home Screen**.
 
 Only the `ALLOWED_EMAIL` account can sign in. `DEV_SKIP_AUTH` is ignored in production. On first sign-in, check **Settings › Business details**: the email there is shown on invoices and used as the reply-to address for invoice emails.
@@ -92,6 +93,14 @@ With a **personal** Monzo account, only business transactions are synced: paymen
 The first sync brings in the last 90 days (Monzo's limit). After that it syncs every morning. If Monzo asks you to reconnect, Settings shows a message; press **Reconnect**.
 
 Only the `ALLOWED_EMAIL` account can sign in. `DEV_SKIP_AUTH` is ignored in production.
+
+### 5. Companies House lookup (optional)
+Free, and it only reads the public register.
+1. Register at [developer.company-information.service.gov.uk](https://developer.company-information.service.gov.uk) and create an application (environment: **Live**).
+2. Add a **REST** API key (no restricted IPs or JavaScript domains needed: RMR Hub calls it from the server).
+3. Put the key in `COMPANIES_HOUSE_API_KEY` in Netlify and redeploy.
+
+A **Look up a UK company** box then appears on the new and edit client pages. Picking a result fills in the business name and registered address, and adds the company number to the notes. Only the search text is sent to Companies House. Sole traders and most partnerships aren't on the register.
 
 ## Importing a statement instead
 

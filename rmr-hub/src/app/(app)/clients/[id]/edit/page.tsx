@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ClientForm } from "@/components/ClientForm";
 import { PageHeader } from "@/components/ui";
+import { companiesHouseConfigured } from "@/lib/companies-house";
 import { getClient } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Edit client" };
@@ -12,7 +13,7 @@ export default async function EditClient({ params }: { params: Promise<{ id: str
   return (
     <>
       <PageHeader title={`Edit ${client.name}`} />
-      <ClientForm client={client} />
+      <ClientForm client={client} lookup={companiesHouseConfigured()} />
     </>
   );
 }
