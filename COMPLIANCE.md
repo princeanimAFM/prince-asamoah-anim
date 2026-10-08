@@ -13,7 +13,6 @@ anything uncertain, ask before shipping.
 | Every pull request, push to main, and weekly | gitleaks scans the whole git history for secrets | `.github/workflows/security.yml` |
 | Same | CodeQL scans the code for security bugs (results in the repo's **Security** tab) | same |
 | Same | Every npm project: no high or critical vulnerabilities; no GPL, AGPL, SSPL or non-commercial licences | `.github/scripts/check-dependencies.sh` |
-| Pull requests | New dependencies are checked for vulnerabilities and licences before merging | same workflow |
 | Weekly | Dependabot opens pull requests for dependency updates and security fixes | `.github/dependabot.yml` |
 | Every Claude change to app code | `/security-review`, with medium-and-above findings fixed | `CLAUDE.md` |
 

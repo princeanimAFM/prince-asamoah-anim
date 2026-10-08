@@ -2,8 +2,8 @@
 # and weekly (new vulnerabilities are published all the time, even when the code doesn't change).
 #   - Secrets: gitleaks scans the whole git history for committed keys and passwords.
 #   - Code: GitHub CodeQL looks for security bugs (injection, XSS, unsafe redirects, …).
-#   - Dependencies: known vulnerabilities and licences in every npm project.
-#   - New dependencies in a pull request are checked before they are merged.
+#   - Dependencies: known vulnerabilities and licences in every npm project (on a pull
+#     request this includes any dependencies it adds, before they are merged).
 name: Security and compliance
 
 on:
@@ -45,21 +45,6 @@ jobs:
         with:
           node-version: 22
       - run: .github/scripts/check-dependencies.sh
-
-  dependency-review:
-    name: New dependencies
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
-        with:
-          fail-on-severity: high
-          deny-licenses: AGPL-1.0, AGPL-3.0, GPL-2.0, GPL-3.0, SSPL-1.0
-          comment-summary-in-pr: on-failure
 
   codeql:
     name: Code scan (CodeQL)
