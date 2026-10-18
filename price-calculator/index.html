@@ -182,15 +182,15 @@
             <span class="money"><span>£</span><input type="number" id="courierPerKg" min="0" step="0.5" inputmode="decimal" value="12"></span>
           </label>
         </div>
-        <label class="switch"><input type="checkbox" id="courierIncludesTaxes">
+        <label class="switch"><input type="checkbox" id="courierIncludesTaxes" checked>
           <span>The courier's price already includes customs duty and import VAT
-            <span class="hint">Ask them. Many Ghana–UK cargo firms quote “all-in”. If so, tick this and nothing extra is added.</span></span>
+            <span class="hint">His usual courier's £12 per kg is all-in, so nothing extra is added. Untick for a courier that charges these separately.</span></span>
         </label>
       </fieldset>
 
       <fieldset id="tax-fields">
         <legend>Customs and VAT</legend>
-        <div class="grid">
+        <div id="duty-fields" class="grid">
           <label>What is it?
             <select id="dutyPreset">
               <option value="12" selected>Clothing (12% duty)</option>
@@ -204,7 +204,7 @@
             <input type="number" id="dutyPct" min="0" step="0.1" inputmode="decimal" value="12">
           </label>
         </div>
-        <label class="switch"><input type="checkbox" id="hasOriginProof">
+        <label class="switch" id="origin-field"><input type="checkbox" id="hasOriginProof">
           <span>Made in Ghana, and the designer's invoice says so
             <span class="hint">A one-line “statement on origin” on the invoice makes it duty-free under the UK–Ghana trade agreement.</span></span>
         </label>
@@ -359,6 +359,8 @@
     $('rate-wrap').hidden = input.currency !== 'GHS';
     $('price-symbol').textContent = input.currency === 'GHS' ? '₵' : '£';
     $('duty-wrap').hidden = $('dutyPreset').value !== 'custom';
+    $('duty-fields').hidden = input.courierIncludesTaxes;
+    $('origin-field').hidden = input.courierIncludesTaxes;
 
     $('price-label').textContent = r.usingSuggestedPrice ? 'Suggested selling price' : 'His selling price';
     $('out-price').textContent = r.sellingPrice ? money(r.sellingPrice) : '—';
