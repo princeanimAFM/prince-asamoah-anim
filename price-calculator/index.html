@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- page-start -->
+<title>Ghana–UK Price Calculator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: inputs in labelled groups on the left, a sticky price ticket on the right; one column on phones with the ticket first. */
+  :root {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --fg: #1d1b26;
+    --muted: #5d5a6b;
+    --line: #dcd9e3;
+    --accent: #2c3a8c;      /* indigo dye */
+    --accent-soft: #e6e8f6;
+    --gold: #b7861a;        /* kente gold */
+    --gold-soft: #f8efd8;
+    --good: #1f7a4a;
+    --bad: #b23a2b;
+    --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-num: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14131b; --surface: #1d1c27; --fg: #ecebf2; --muted: #a6a3b5; --line: #343245;
+      --accent: #9aa8f2; --accent-soft: #262a48; --gold: #e2b450; --gold-soft: #2e2716;
+      --good: #5fcf92; --bad: #f08a7a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14131b; --surface: #1d1c27; --fg: #ecebf2; --muted: #a6a3b5; --line: #343245;
+    --accent: #9aa8f2; --accent-soft: #262a48; --gold: #e2b450; --gold-soft: #2e2716;
+    --good: #5fcf92; --bad: #f08a7a; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.5 var(--font-body);
+  }
+  .wrap {
+    max-width: 1080px; margin: 0 auto;
+    padding-block: 28px 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  header { display: grid; gap: 6px; margin-bottom: 24px; }
+  .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.15; text-wrap: balance; }
+  .lede { margin: 0; color: var(--muted); max-width: 62ch; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 380px); gap: 24px; align-items: start; }
+  @media (max-width: 820px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .ticket { order: -1; position: static !important; }
+  }
+  form { display: grid; gap: 18px; min-width: 0; }
+  fieldset {
+    margin: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+    padding: 16px; display: grid; gap: 14px; min-width: 0;
+  }
+  legend { font-weight: 700; padding: 0 6px; font-size: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: 14px; }
+  label { display: grid; gap: 4px; align-content: start; font-weight: 600; font-size: 14px; }
+  .hint { font-weight: 400; color: var(--muted); font-size: 13px; }
+  input[type="number"], input[type="text"], select {
+    width: 100%; font: 16px var(--font-body); color: var(--fg); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px;
+  }
+  .money { position: relative; display: block; }
+  .money > span { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .money input { padding-left: 26px; }
+  input:focus-visible, select:focus-visible, button:focus-visible, .switch input:focus-visible + span {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  .switch { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; cursor: pointer; }
+  .switch input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); flex: none; }
+  .switch .hint { display: block; }
+  .seg { align-self: start; display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; width: fit-content; }
+  .seg label { display: flex; position: relative; cursor: pointer; }
+  .seg input { position: absolute; opacity: 0; }
+  .seg span { display: block; padding: 7px 14px; font-weight: 600; }
+  .seg input:checked + span { background: var(--accent); color: var(--surface); }
+  .seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .ticket {
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; min-width: 0;
+  }
+  .ticket-head { background: var(--gold-soft); padding: 18px 18px 14px; border-bottom: 1px dashed var(--gold); }
+  .ticket-head .eyebrow { color: var(--gold); }
+  .price { font: 600 clamp(34px, 6vw, 44px)/1.1 var(--font-num); font-variant-numeric: tabular-nums; margin: 4px 0; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0; }
+  .profit-row { display: flex; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .profit-row strong { font: 600 20px var(--font-num); font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+  .pill.bad { background: transparent; color: var(--bad); border: 1px solid var(--bad); }
+  .pill.good { background: transparent; color: var(--good); border: 1px solid var(--good); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 6px 18px; vertical-align: top; }
+  td:last-child { text-align: right; font-family: var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.total td { border-top: 1px solid var(--line); font-weight: 700; padding-top: 10px; }
+  tr.section td { padding-top: 14px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  tr.dim td { color: var(--muted); }
+  .notes { display: grid; gap: 8px; padding: 14px 18px; border-top: 1px solid var(--line); }
+  .note { margin: 0; font-size: 13px; padding: 8px 10px; border-radius: 8px; background: var(--accent-soft); }
+  .note.warn { background: transparent; border: 1px solid var(--bad); color: var(--fg); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 18px 18px; }
+  button {
+    font: 600 14px var(--font-body); border-radius: 8px; padding: 9px 14px; cursor: pointer;
+    background: var(--accent); color: var(--surface); border: 1px solid var(--accent);
+  }
+  button.ghost { background: transparent; color: var(--accent); }
+  .status { font-size: 13px; color: var(--good); padding: 0 18px 12px; margin: 0; min-height: 1em; }
+
+  section.saved, section.explain { margin-top: 28px; }
+  h2 { font-size: 20px; margin: 0 0 10px; }
+  .table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .saved table td, .saved table th { padding: 8px 12px; white-space: nowrap; }
+  .saved th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border-bottom: 1px solid var(--line); }
+  .saved th.n, .saved td.n { text-align: right; font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+  .saved td:last-child { text-align: right; }
+  .saved td { font-family: var(--font-body); }
+  .saved button { padding: 4px 10px; font-size: 13px; }
+  .empty { color: var(--muted); margin: 0; }
+  .explain { display: grid; gap: 14px; }
+  .explain details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+  .explain summary { font-weight: 700; cursor: pointer; }
+  .explain p, .explain li { max-width: 68ch; color: var(--fg); }
+  .explain p:last-child { margin-bottom: 0; }
+  footer { margin-top: 28px; color: var(--muted); font-size: 13px; max-width: 70ch; }
+  @media (prefers-reduced-motion: no-preference) {
+    .price { transition: color .2s; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Ghana → UK · landed cost</span>
+    <h1>What does it really cost, and what should I charge?</h1>
+    <p class="lede">Enter what the designer charges and how heavy the item is. The calculator adds the courier, customs duty, import VAT, posting to the customer and card fees, then suggests a price that leaves the profit you want.</p>
+  </header>
+
+  <div class="layout">
+    <form id="calc" novalidate>
+      <fieldset>
+        <legend>The item</legend>
+        <label>Item name <span class="hint">For your saved list, for example “Kente wrap dress”.</span>
+          <input type="text" id="name" maxlength="80" value="Kente wrap dress (example)">
+        </label>
+        <div class="grid">
+          <div style="display:grid;gap:4px">
+            <span style="font-weight:600;font-size:14px">Designer's price is in</span>
+            <div class="seg" role="radiogroup" aria-label="Currency of designer's price">
+              <label><input type="radio" name="currency" id="cur-gbp" value="GBP" checked><span>£ pounds</span></label>
+              <label><input type="radio" name="currency" id="cur-ghs" value="GHS"><span>₵ cedis</span></label>
+            </div>
+          </div>
+          <label>Designer's price
+            <span class="money"><span id="price-symbol">£</span><input type="number" id="designerPrice" min="0" step="0.01" inputmode="decimal" value="40"></span>
+          </label>
+          <label id="rate-wrap" hidden>Cedis to £1 <span class="hint">Today's rate from your bank or Wise.</span>
+            <input type="number" id="ghsPerGbp" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 15.20">
+          </label>
+          <label>Money transfer fee <span class="hint">% your bank or Wise charges to pay the designer.</span>
+            <input type="number" id="transferFeePct" min="0" step="0.1" inputmode="decimal" value="1.5">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Getting it to the UK</legend>
+        <div class="grid">
+          <label>Weight packed <span class="hint">kg. A dress is about 0.5, boxed shoes about 1.2.</span>
+            <input type="number" id="weightKg" min="0" step="0.1" inputmode="decimal" value="0.5">
+          </label>
+          <label>Courier rate <span class="hint">£ per kg, Ghana to UK.</span>
+            <span class="money"><span>£</span><input type="number" id="courierPerKg" min="0" step="0.5" inputmode="decimal" value="12"></span>
+          </label>
+        </div>
+        <label class="switch"><input type="checkbox" id="courierIncludesTaxes">
+          <span>The courier's price already includes customs duty and import VAT
+            <span class="hint">Ask them. Many Ghana–UK cargo firms quote “all-in”. If so, tick this and nothing extra is added.</span></span>
+        </label>
+      </fieldset>
+
+      <fieldset id="tax-fields">
+        <legend>Customs and VAT</legend>
+        <div class="grid">
+          <label>What is it?
+            <select id="dutyPreset">
+              <option value="12" selected>Clothing (12% duty)</option>
+              <option value="8">Leather shoes (8%)</option>
+              <option value="16">Fabric or canvas shoes (16%)</option>
+              <option value="8">Fabric by the yard (8%)</option>
+              <option value="custom">Other (enter rate)</option>
+            </select>
+          </label>
+          <label id="duty-wrap" hidden>Duty rate <span class="hint">% from the UK Trade Tariff.</span>
+            <input type="number" id="dutyPct" min="0" step="0.1" inputmode="decimal" value="12">
+          </label>
+        </div>
+        <label class="switch"><input type="checkbox" id="hasOriginProof">
+          <span>Made in Ghana, and the designer's invoice says so
+            <span class="hint">A one-line “statement on origin” on the invoice makes it duty-free under the UK–Ghana trade agreement.</span></span>
+        </label>
+        <label class="switch"><input type="checkbox" id="vatRegistered">
+          <span>He is registered for VAT
+            <span class="hint">Only needed once sales pass £90,000 a year. Leave unticked until then.</span></span>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Selling it</legend>
+        <div class="grid">
+          <label>Packaging <span class="hint">Mailing bag, tissue, label.</span>
+            <span class="money"><span>£</span><input type="number" id="packaging" min="0" step="0.1" inputmode="decimal" value="1"></span>
+          </label>
+          <label>Posting to the customer <span class="hint">Royal Mail, Evri or similar.</span>
+            <span class="money"><span>£</span><input type="number" id="ukDelivery" min="0" step="0.1" inputmode="decimal" value="3.5"></span>
+          </label>
+          <label>Delivery you charge <span class="hint">£0 for free delivery.</span>
+            <span class="money"><span>£</span><input type="number" id="deliveryCharge" min="0" step="0.1" inputmode="decimal" value="0"></span>
+          </label>
+          <label>Card fee <span class="hint">% per sale (Stripe UK cards: 1.5%).</span>
+            <input type="number" id="paymentFeePct" min="0" step="0.1" inputmode="decimal" value="1.5">
+          </label>
+          <label>Card fee per sale <span class="hint">Fixed part (Stripe: 20p).</span>
+            <span class="money"><span>£</span><input type="number" id="paymentFeeFixed" min="0" step="0.01" inputmode="decimal" value="0.2"></span>
+          </label>
+          <label>Profit margin wanted <span class="hint">% of what he keeps from each sale.</span>
+            <input type="number" id="targetMarginPct" min="0" max="95" step="1" inputmode="numeric" value="35">
+          </label>
+        </div>
+        <label>His own selling price (optional) <span class="hint">Leave empty to use the suggested price, or type a price to see the profit at that price.</span>
+          <span class="money"><span>£</span><input type="number" id="sellingPrice" min="0" step="0.01" inputmode="decimal" placeholder="Use suggested price"></span>
+        </label>
+      </fieldset>
+    </form>
+
+    <aside class="ticket" aria-live="polite">
+      <div class="ticket-head">
+        <span class="eyebrow" id="price-label">Suggested selling price</span>
+        <div class="price" id="out-price">£0.00</div>
+        <p class="sub" id="out-price-sub"></p>
+      </div>
+      <div class="profit-row">
+        <span>Profit per sale <span class="pill" id="out-margin">0%</span></span>
+        <strong id="out-profit">£0.00</strong>
+      </div>
+      <table>
+        <tbody id="breakdown"></tbody>
+      </table>
+      <div class="notes" id="notes"></div>
+      <p class="status" id="status" role="status"></p>
+      <div class="actions">
+        <button type="button" id="save">Save to my list</button>
+        <button type="button" class="ghost" id="copy">Copy summary</button>
+      </div>
+    </aside>
+  </div>
+
+  <section class="saved">
+    <h2>My price list</h2>
+    <p class="empty" id="saved-empty">Saved items appear here. They're kept on this phone or computer only.</p>
+    <div class="table-scroll" id="saved-wrap" hidden>
+      <table>
+        <thead><tr><th>Item</th><th class="n">Landed cost</th><th class="n">Price</th><th class="n">Profit</th><th></th></tr></thead>
+        <tbody id="saved-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="explain">
+    <h2>Questions</h2>
+    <details>
+      <summary>Why pay import VAT? When I buy from Shein the VAT is already paid.</summary>
+      <p>Right. VAT is only paid once, but someone has to collect it. When you buy from Shein UK, Shein adds the 20% VAT to its price and pays it to HMRC for you. That's why you don't pay anything extra.</p>
+      <p>A designer in Ghana doesn't charge UK VAT, so their price has none in it. The UK collects that same 20% when the goods come in. That is import VAT. It isn't a second VAT. It's the one VAT, collected at the border instead of at the till.</p>
+      <p>When he then sells the item to a UK customer, there are two cases:</p>
+      <ul>
+        <li><strong>Not VAT registered (the normal start):</strong> he doesn't add VAT to his price. The import VAT he paid is simply one of his costs, and the calculator counts it.</li>
+        <li><strong>VAT registered:</strong> he adds 20% VAT on his selling price and claims back the import VAT he paid. In the end, VAT is only charged once on the full selling price.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>The courier only goes Ghana to UK. Why does origin matter?</summary>
+      <p>Customs duty depends on where the item was <em>made</em>, not where it was sent from. Items made in Ghana are duty-free under the UK–Ghana trade agreement, but only if the paperwork says so. Without it, UK customs charges the normal rate (about 12% on clothing).</p>
+      <p>The fix is one sentence on the designer's invoice, the “statement on origin”. GOV.UK has the exact wording for the UK–Ghana agreement. If the courier clears customs and quotes an all-in price, ask whether they already handle this.</p>
+    </details>
+    <details>
+      <summary>Why send items from Ghana in batches?</summary>
+      <p>Shipments worth £135 or less follow different VAT rules: the overseas seller is meant to charge UK VAT at the point of sale, which a Ghanaian designer can't easily do. Sending one combined shipment a week worth more than £135 keeps it simple, with import VAT paid once at the border. Most couriers also price better per kg on larger loads.</p>
+    </details>
+    <details>
+      <summary>How is the customs value worked out?</summary>
+      <p>UK customs charge duty and import VAT on the item's price plus the cost of getting it to the UK. The calculator works it out like this:</p>
+      <ul>
+        <li>Customs value = designer's price + courier cost</li>
+        <li>Duty = customs value × duty rate</li>
+        <li>Import VAT = 20% × (customs value + duty)</li>
+      </ul>
+      <p>The transfer fee, packaging and UK posting are his costs, but customs don't charge on them.</p>
+    </details>
+  </section>
+
+  <footer>
+    A planning tool, not tax advice. Rates were correct to the best of our knowledge in October 2026: UK VAT 20%, VAT registration threshold £90,000, typical UK duty rates for clothing and shoes. Check with an accountant before relying on it. Nothing you type leaves this device.
+  </footer>
+</div>
+
+<script src="calc.js"></script>
+<script>
+(function () {
+  'use strict';
+  var calc = window.PriceCalc;
+  var STORAGE_KEY = 'ghana-uk-price-list-v1';
+  var gbp = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) { return gbp.format(n || 0); };
+  var lastResult = null;
+
+  var fields = ['designerPrice', 'ghsPerGbp', 'transferFeePct', 'weightKg', 'courierPerKg', 'dutyPct',
+    'packaging', 'ukDelivery', 'deliveryCharge', 'paymentFeePct', 'paymentFeeFixed', 'targetMarginPct', 'sellingPrice'];
+  var checks = ['courierIncludesTaxes', 'hasOriginProof', 'vatRegistered'];
+
+  function readInput() {
+    var input = { currency: $('cur-ghs').checked ? 'GHS' : 'GBP' };
+    fields.forEach(function (f) { input[f] = $(f).value; });
+    checks.forEach(function (c) { input[c] = $(c).checked; });
+    return input;
+  }
+
+  function row(label, value, cls) {
+    var tr = document.createElement('tr');
+    if (cls) tr.className = cls;
+    var a = document.createElement('td'); a.textContent = label;
+    var b = document.createElement('td'); b.textContent = value;
+    tr.appendChild(a); tr.appendChild(b);
+    return tr;
+  }
+
+  function note(text, warn) {
+    var p = document.createElement('p');
+    p.className = 'note' + (warn ? ' warn' : '');
+    p.textContent = text;
+    return p;
+  }
+
+  function render() {
+    var input = readInput();
+    var r = calc.calculate(input);
+    lastResult = { name: $('name').value.trim() || 'Untitled item', r: r };
+
+    $('rate-wrap').hidden = input.currency !== 'GHS';
+    $('price-symbol').textContent = input.currency === 'GHS' ? '₵' : '£';
+    $('duty-wrap').hidden = $('dutyPreset').value !== 'custom';
+
+    $('price-label').textContent = r.usingSuggestedPrice ? 'Suggested selling price' : 'His selling price';
+    $('out-price').textContent = r.sellingPrice ? money(r.sellingPrice) : '—';
+    var sub = [];
+    if (!r.usingSuggestedPrice && r.suggestedPrice) sub.push('Suggested: ' + money(r.suggestedPrice));
+    if (r.deliveryCharge) sub.push('plus ' + money(r.deliveryCharge) + ' delivery');
+    if (input.vatRegistered) sub.push('includes ' + money(r.outputVat) + ' VAT');
+    $('out-price-sub').textContent = sub.join(' · ');
+
+    $('out-profit').textContent = money(r.profit);
+    $('out-profit').style.color = r.profit < 0 ? 'var(--bad)' : '';
+    var marginPill = $('out-margin');
+    marginPill.textContent = Math.round(r.marginPct) + '% margin';
+    marginPill.className = 'pill ' + (r.profit < 0 ? 'bad' : r.marginPct >= num(input.targetMarginPct) ? 'good' : '');
+
+    var body = $('breakdown');
+    body.textContent = '';
+    body.appendChild(row('Costs per item', '', 'section'));
+    body.appendChild(row('Designer’s price', money(r.itemCost)));
+    if (r.transferFee) body.appendChild(row('Transfer fee', money(r.transferFee)));
+    body.appendChild(row('Courier to UK', money(r.freight)));
+    if (input.courierIncludesTaxes) {
+      body.appendChild(row('Duty and import VAT', 'in courier price', 'dim'));
+    } else {
+      body.appendChild(row(r.dutyRate ? 'Customs duty (' + +(r.dutyRate * 100).toFixed(1) + '%)' : 'Customs duty', money(r.duty), r.duty ? '' : 'dim'));
+      if (input.vatRegistered) body.appendChild(row('Import VAT ' + money(r.importVat) + ', claimed back', money(0), 'dim'));
+      else body.appendChild(row('Import VAT (20%)', money(r.importVat)));
+    }
+    body.appendChild(row('Packaging', money(r.packaging)));
+    body.appendChild(row('Posting to customer', money(r.ukDelivery)));
+    body.appendChild(row('Landed cost', money(r.costs), 'total'));
+    body.appendChild(row('From each sale', '', 'section'));
+    body.appendChild(row('Customer pays', money(r.takings)));
+    if (input.vatRegistered) body.appendChild(row('VAT to HMRC', '− ' + money(r.outputVat)));
+    body.appendChild(row('Card fee', '− ' + money(r.paymentFee)));
+    body.appendChild(row('Landed cost', '− ' + money(r.costs)));
+    body.appendChild(row('Profit', money(r.profit), 'total'));
+
+    var notes = $('notes');
+    notes.textContent = '';
+    if (r.notes.indexOf('needsRate') >= 0) notes.appendChild(note('Enter how many cedis make £1 to convert the designer’s price.', true));
+    if (r.notes.indexOf('marginTooHigh') >= 0) notes.appendChild(note('No price can reach that margin once the card fee is taken. Lower the profit margin wanted.', true));
+    if (r.profit < 0) notes.appendChild(note('At this price he loses ' + money(-r.profit) + ' on every sale.', true));
+    if (r.notes.indexOf('lowValueShipments') >= 0) notes.appendChild(note('Send items from Ghana in shipments worth over £' + calc.LOW_VALUE_LIMIT + ' in total, so import VAT is paid once at the border. See “Why send items in batches?” below.'));
+    if (r.notes.indexOf('enterCostsWithoutVat') >= 0) notes.appendChild(note('VAT registered: enter packaging and postage without VAT, because he claims that VAT back.'));
+    notes.hidden = !notes.childNodes.length;
+  }
+
+  function num(v) { var n = parseFloat(v); return isFinite(n) ? n : 0; }
+
+  function summaryText() {
+    if (!lastResult) return '';
+    var r = lastResult.r;
+    return [
+      lastResult.name,
+      'Landed cost: ' + money(r.costs),
+      'Selling price: ' + money(r.sellingPrice),
+      'Profit: ' + money(r.profit) + ' (' + Math.round(r.marginPct) + '% margin)'
+    ].join('\n');
+  }
+
+  function flash(msg) {
+    $('status').textContent = msg;
+    clearTimeout(flash.t);
+    flash.t = setTimeout(function () { $('status').textContent = ''; }, 3000);
+  }
+
+  function loadList() {
+    try {
+      var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+
+  function saveList(list) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); return true; }
+    catch (e) { return false; }
+  }
+
+  var memoryList = null; // used when the browser blocks storage
+
+  function renderList() {
+    var list = memoryList || loadList();
+    var body = $('saved-body');
+    body.textContent = '';
+    $('saved-empty').hidden = list.length > 0;
+    $('saved-wrap').hidden = list.length === 0;
+    list.forEach(function (item, index) {
+      var tr = document.createElement('tr');
+      var cells = [
+        [String(item.name || ''), ''],
+        [money(item.cost), 'n'],
+        [money(item.price), 'n'],
+        [money(item.profit), 'n']
+      ];
+      cells.forEach(function (c) {
+        var td = document.createElement('td');
+        td.textContent = c[0];
+        if (c[1]) td.className = c[1];
+        tr.appendChild(td);
+      });
+      var td = document.createElement('td');
+      var del = document.createElement('button');
+      del.type = 'button'; del.className = 'ghost'; del.textContent = 'Remove';
+      del.setAttribute('aria-label', 'Remove ' + (item.name || 'item'));
+      del.addEventListener('click', function () {
+        var current = memoryList || loadList();
+        current.splice(index, 1);
+        if (!saveList(current)) memoryList = current;
+        renderList();
+      });
+      td.appendChild(del);
+      tr.appendChild(td);
+      body.appendChild(tr);
+    });
+  }
+
+  $('calc').addEventListener('input', render);
+  $('calc').addEventListener('change', render);
+  $('calc').addEventListener('submit', function (e) { e.preventDefault(); });
+  $('dutyPreset').addEventListener('change', function () {
+    if (this.value !== 'custom') $('dutyPct').value = this.value;
+    render();
+  });
+
+  $('save').addEventListener('click', function () {
+    if (!lastResult) return;
+    var list = memoryList || loadList();
+    list.unshift({
+      name: lastResult.name.slice(0, 80),
+      cost: Math.round(lastResult.r.costs * 100) / 100,
+      price: Math.round(lastResult.r.sellingPrice * 100) / 100,
+      profit: Math.round(lastResult.r.profit * 100) / 100
+    });
+    list = list.slice(0, 200);
+    if (saveList(list)) { memoryList = null; flash('Saved to your list.'); }
+    else { memoryList = list; flash('Added for now. This browser won’t keep it after you close the page.'); }
+    renderList();
+  });
+
+  $('copy').addEventListener('click', function () {
+    var text = summaryText();
+    var done = function () { flash('Summary copied.'); };
+    var fallback = function () { $('status').textContent = text.replace(/\n/g, ' · '); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    } catch (e) { fallback(); }
+  });
+
+  render();
+  renderList();
+})();
+</script>
+<!-- page-end -->
+</body>
+</html>
