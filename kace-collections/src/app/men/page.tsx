@@ -7,7 +7,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
   return (
     <Listing
       title="Men"
-      intro="Smocks, shirts, tailoring and leather slides from Ghanaian designers."
+      intro="Patchwork, denim sets, leather jackets and shirts from Ghanaian designers."
       basePath="/men"
       filter={{ gender: "men" }}
       searchParams={await searchParams}

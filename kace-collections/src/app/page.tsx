@@ -9,9 +9,9 @@ export const revalidate = 3600;
 export default function Home() {
   const newest = findProducts({ sort: "newest" }).slice(0, 4);
   const onSale = findProducts({ sale: true }).slice(0, 4);
-  const heroPieces = ["adwoa-kente-wrap-dress", "kwame-fugu-smock", "ama-woven-tote"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
-  const women = PRODUCTS.find((p) => p.slug === "efua-wax-print-maxi")!;
-  const men = PRODUCTS.find((p) => p.slug === "yaw-kente-trim-shirt")!;
+  const heroPieces = ["patchwork-corduroy-jacket", "raw-denim-co-ord", "patchwork-corduroy-trousers"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
+  const women = PRODUCTS.find((p) => p.slug === "print-trim-tunic-set")!;
+  const men = PRODUCTS.find((p) => p.slug === "brown-denim-cargo-set")!;
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function Home() {
             Made in Ghana.<br />Worn <span className="text-gold">everywhere.</span>
           </h1>
           <p className="max-w-md text-lg text-muted">
-            Kente, wax print, smocks, shoes and bags from independent designers in Ghana, delivered to your door in the UK and Ghana.
+            Patchwork, denim, leather, tailored sets and kaftans, made by independent designers in Ghana and delivered to your door in the UK and Ghana.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/women" className="bg-ink px-7 py-4 font-semibold text-paper hover:bg-forest">Shop women</Link>
@@ -55,8 +55,8 @@ export default function Home() {
 
       <section className="gutter mx-auto mt-20 grid max-w-7xl gap-4 md:grid-cols-2">
         {[
-          { href: "/women", label: "Women", sub: "Dresses, tops, sandals and more", product: women },
-          { href: "/men", label: "Men", sub: "Smocks, shirts, trousers and slides", product: men },
+          { href: "/women", label: "Women", sub: "Sets, kaftans, dresses and jackets", product: women },
+          { href: "/men", label: "Men", sub: "Patchwork, denim, leather and shirts", product: men },
         ].map((tile) => (
           <Link key={tile.href} href={tile.href} className="group relative block overflow-hidden bg-sand">
             <ProductArt product={tile.product} className="aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-[1.03]" />
@@ -79,8 +79,8 @@ export default function Home() {
           <h2 className="display text-4xl md:text-6xl">From the workshop to your wardrobe</h2>
           <div className="space-y-4 text-paper/80">
             <p>
-              KACE COLLECTIONS works directly with designers, tailors and weavers across Ghana, from kente weavers in
-              Bonwire to shoemakers in Tema. When you order, we buy from the maker, check every piece, and send it to you.
+              KACE COLLECTIONS works directly with designers, tailors and weavers across Ghana, from patchwork and denim
+              workshops in Accra to leather workers in Tema. When you order, we buy from the maker, check every piece, and send it to you.
             </p>
             <Link href="/about" className="inline-block font-semibold text-gold underline underline-offset-4">Our story</Link>
           </div>

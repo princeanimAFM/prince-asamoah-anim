@@ -18,8 +18,8 @@ export default function About() {
             you live in London, Manchester, Accra or Kumasi.
           </p>
           <p>
-            We work directly with independent makers: kente weavers, wax print tailors, smock makers from the north,
-            and leather workers. When you place an order, we buy the piece from its maker, check it by hand, and send
+            We work directly with independent makers: patchwork and denim workshops, tailors, weavers and leather
+            workers. When you place an order, we buy the piece from its maker, check it by hand, and send
             it to you with tracking.
           </p>
           <p>

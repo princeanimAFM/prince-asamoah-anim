@@ -8,7 +8,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: `${SITE.name} · Ghanaian designer fashion`, template: `%s · ${SITE.name}` },
-  description: `${SITE.tagline}. Kente, wax print, smocks, shoes and bags from designers in Ghana.`,
+  description: `${SITE.tagline}. Patchwork, denim, leather, tailored sets and kaftans from designers in Ghana.`,
   // Keep the preview out of search engines until the shop opens.
   robots: SITE.preview ? { index: false, follow: false } : undefined,
 };
