@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export default function Home() {
   const newest = findProducts({ sort: "newest" }).slice(0, 4);
   const onSale = findProducts({ sale: true }).slice(0, 4);
-  const heroPieces = ["patchwork-corduroy-jacket", "raw-denim-co-ord", "patchwork-corduroy-trousers"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
+  const heroPieces = ["patchwork-corduroy-set", "patchwork-denim-jacket", "patchwork-corduroy-trousers"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
   const women = PRODUCTS.find((p) => p.slug === "print-trim-tunic-set")!;
   const men = PRODUCTS.find((p) => p.slug === "brown-denim-cargo-set")!;
 
@@ -75,9 +75,14 @@ export default function Home() {
       )}
 
       <section className="gutter mx-auto mt-20 max-w-7xl">
-        <div className="grid gap-8 bg-ink p-8 text-paper md:grid-cols-[1fr_1.2fr] md:p-14">
-          <h2 className="display text-4xl md:text-6xl">From the workshop to your wardrobe</h2>
+        <div className="grid gap-8 bg-ink p-8 text-paper md:grid-cols-[1fr_1.2fr] md:items-center md:p-14">
+          <figure className="space-y-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/products/kwadwoman-patchwork-shoot.jpg" alt="Two models in Kwadwo Man patchwork corduroy jackets and trousers" loading="lazy" className="w-full" />
+            <figcaption className="text-xs text-paper/60">Patchwork corduroy by Kwadwo Man</figcaption>
+          </figure>
           <div className="space-y-4 text-paper/80">
+            <h2 className="display text-4xl text-paper md:text-6xl">From the workshop to your wardrobe</h2>
             <p>
               KACE COLLECTIONS works directly with designers, tailors and weavers across Ghana, from patchwork and denim
               workshops in Accra to leather workers in Tema. When you order, we buy from the maker, check every piece, and send it to you.

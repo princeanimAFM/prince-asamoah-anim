@@ -37,7 +37,9 @@ export default async function ProductPage({ params }: Params) {
       <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div className="bg-sand">
           <ProductArt product={product} className="aspect-[3/4] w-full" />
-          <p className="px-4 py-3 text-xs text-muted">Illustration. Product photos coming soon.</p>
+          <p className="px-4 py-3 text-xs text-muted">
+            {product.photo ? `Photo: ${product.designer}` : "Illustration. Product photos coming soon."}
+          </p>
         </div>
 
         <div className="space-y-6 md:sticky md:top-28 md:self-start">

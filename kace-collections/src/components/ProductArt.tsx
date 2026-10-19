@@ -96,7 +96,11 @@ function Fill({ id, kind, colors }: { id: string; kind: PatternKind; colors: str
   }
 }
 
-export function ProductArt({ product, className }: { product: Product; className?: string }) {
+export function ProductArt({ product, className = "" }: { product: Product; className?: string }) {
+  if (product.photo) {
+    // eslint-disable-next-line @next/next/no-img-element -- plain img keeps the photo crisp at every card size
+    return <img src={product.photo.src} alt={product.photo.alt} loading="lazy" className={`${className} object-cover`} />;
+  }
   const { silhouette, pattern, colors } = product.art;
   const id = `cloth-${product.slug}`;
   const [a, b = a, c = b, d = "#141414", e = c] = colors;

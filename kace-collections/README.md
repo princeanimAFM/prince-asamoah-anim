@@ -34,5 +34,9 @@ npx next build
 Settings are in `.env.example`. On Netlify, create a site from this repo with the base directory set to
 `kace-collections`.
 
-Fonts (Archivo, Hanken Grotesk) are SIL Open Font Licence and served from `public/fonts`. Product images
-are drawn illustrations until real photos arrive.
+Fonts (Archivo, Hanken Grotesk) are SIL Open Font Licence and served from `public/fonts`.
+
+Product photos in `public/products` belong to the designer Kwadwo Man and are used with his permission for
+selling his pieces on this site; they are credited on each product page. Location and camera data are
+removed before adding a photo. Products without a photo show a drawn illustration. Never add photos
+from other brands, influencers or AI generators as product photos.
