@@ -7,8 +7,9 @@ export const NAV = [
   { href: "/new-arrivals", label: "New in" },
   { href: "/women", label: "Women" },
   { href: "/men", label: "Men" },
+  { href: "/lookbook", label: "Lookbook" },
+  { href: "/custom", label: "Made for you" },
   { href: "/sale", label: "Sale" },
-  { href: "/about", label: "About" },
 ];
 
 export function Wordmark({ className = "" }: { className?: string }) {
@@ -43,6 +44,7 @@ export function Header() {
                   <Link href={item.href} className="display block py-3 text-2xl">{item.label}</Link>
                 </li>
               ))}
+              <li><Link href="/about" className="block py-3 font-semibold">About</Link></li>
               <li><Link href="/contact" className="block py-3 font-semibold">Contact</Link></li>
               <li><Link href="/faq" className="block py-3 font-semibold">FAQ</Link></li>
             </ul>

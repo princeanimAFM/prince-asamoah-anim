@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { findProducts, PRODUCTS } from "@/lib/catalogue";
+import { LOOKS } from "@/lib/lookbook";
 import { ProductArt } from "@/components/ProductArt";
 import { ProductGrid } from "@/components/ProductCard";
 
@@ -66,6 +67,25 @@ export default function Home() {
             </div>
           </Link>
         ))}
+      </section>
+
+      <section className="gutter mx-auto mt-20 grid max-w-7xl items-center gap-8 md:grid-cols-[1fr_1.1fr]">
+        <Link href="/lookbook" className="group block overflow-hidden bg-sand">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={LOOKS[0].photos[0].src} alt={LOOKS[0].photos[0].alt} loading="lazy" className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+        </Link>
+        <div className="space-y-5">
+          <p className="eyebrow text-forest">Lookbook and custom orders</p>
+          <h2 className="display text-5xl md:text-7xl">Seen a look you love? We&apos;ll make it for you.</h2>
+          <p className="max-w-md text-lg text-muted">
+            Browse how we style our pieces, then shop them, or ask our designers in Ghana to make your own version, in your
+            size and colours. Got your own design? Send it to us.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/lookbook" className="bg-ink px-7 py-4 font-semibold text-paper hover:bg-forest">See the Lookbook</Link>
+            <Link href="/custom" className="border border-ink px-7 py-4 font-semibold hover:bg-ink hover:text-paper">How custom orders work</Link>
+          </div>
+        </div>
       </section>
 
       {onSale.length > 0 && (

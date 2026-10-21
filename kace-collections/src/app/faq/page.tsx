@@ -34,6 +34,7 @@ const FAQS: { group: string; items: [string, React.ReactNode][] }[] = [
     group: "Products",
     items: [
       ["How do the sizes fit?", "Each designer cuts slightly differently, so check the details on each product. If you're unsure, contact us and we'll measure the piece for you."],
+      ["Can you make something to my design?", <>Yes. Send us a picture or sketch, or pick a look from our Lookbook, and our designers in Ghana will make it to your measurements. <Link href="/custom" className="underline underline-offset-4">See how custom orders work</Link>.</>],
       ["A piece is sold out. Can I still get it?", "Often, yes. Many designers make to order. Contact us and we'll ask the maker. Back-in-stock alerts are coming soon."],
     ],
   },
