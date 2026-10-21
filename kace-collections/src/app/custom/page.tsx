@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Photo } from "@/components/Photo";
 import { PageHeader } from "@/components/Prose";
 import { getLook } from "@/lib/lookbook";
 import { SITE } from "@/lib/site";
@@ -29,8 +30,7 @@ export default async function Custom({ searchParams }: { searchParams: Promise<{
 
       {look && (
         <div className="mt-8 flex items-center gap-4 border border-line p-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={look.photos[0].src} alt="" className="h-24 w-16 object-cover" />
+          <Photo src={look.photos[0].src} alt="" className="h-24 w-16 shrink-0" sizes="64px" />
           <p>
             You&apos;re asking about <strong>{look.title}</strong>.{" "}
             <Link href={`/lookbook#${look.slug}`} className="underline underline-offset-4">See the look</Link>

@@ -1,6 +1,7 @@
 // Drawn artwork standing in for product photos until real ones arrive:
 // the garment's outline filled with its cloth.
 import type { PatternKind, Product, Silhouette } from "@/lib/catalogue";
+import { Photo } from "./Photo";
 
 const SHAPES: Record<Silhouette, string> = {
   dress: "M116 56 Q150 80 184 56 L236 76 L262 158 L226 168 L214 132 L230 352 L70 352 L86 132 L74 168 L38 158 L64 76 Z",
@@ -96,10 +97,11 @@ function Fill({ id, kind, colors }: { id: string; kind: PatternKind; colors: str
   }
 }
 
-export function ProductArt({ product, className = "" }: { product: Product; className?: string }) {
+const CARD_SIZES = "(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 50vw";
+
+export function ProductArt({ product, className = "", sizes = CARD_SIZES, priority }: { product: Product; className?: string; sizes?: string; priority?: boolean }) {
   if (product.photo) {
-    // eslint-disable-next-line @next/next/no-img-element -- plain img keeps the photo crisp at every card size
-    return <img src={product.photo.src} alt={product.photo.alt} loading="lazy" className={`${className} object-cover`} />;
+    return <Photo src={product.photo.src} alt={product.photo.alt} className={className} sizes={sizes} priority={priority} />;
   }
   const { silhouette, pattern, colors } = product.art;
   const id = `cloth-${product.slug}`;

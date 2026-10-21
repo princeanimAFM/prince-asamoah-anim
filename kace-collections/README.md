@@ -38,5 +38,9 @@ Fonts (Archivo, Hanken Grotesk) are SIL Open Font Licence and served from `publi
 
 Product photos in `public/products` belong to the designer Kwadwo Man and are used with his permission for
 selling his pieces on this site; they are credited on each product page. Location and camera data are
-removed before adding a photo. Products without a photo show a drawn illustration. Never add photos
+removed before adding a photo.
+To add or re-process photos, list them in `scripts/prepare_photos.py` and run
+`python3 -I scripts/prepare_photos.py <folder of originals>` (needs Pillow). It lifts phone photos
+gently, keeps professional shoots as shot, and saves high-quality JPEGs; the site serves them as
+AVIF/WebP sized for each screen. Products without a photo show a drawn illustration. Never add photos
 from other brands, influencers or AI generators as product photos.

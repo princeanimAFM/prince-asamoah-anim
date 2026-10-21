@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { findProducts, PRODUCTS } from "@/lib/catalogue";
 import { LOOKS } from "@/lib/lookbook";
+import { Photo } from "@/components/Photo";
 import { ProductArt } from "@/components/ProductArt";
 import { ProductGrid } from "@/components/ProductCard";
 
@@ -10,7 +11,8 @@ export const revalidate = 3600;
 export default function Home() {
   const newest = findProducts({ sort: "newest" }).slice(0, 4);
   const onSale = findProducts({ sale: true }).slice(0, 4);
-  const heroPieces = ["patchwork-corduroy-set", "patchwork-denim-jacket", "patchwork-corduroy-trousers"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
+  const heroPieces = ["patchwork-corduroy-set", "patchwork-denim-jacket"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
+  const heroLook = LOOKS.find((l) => l.slug === "cream-and-black")!;
   const women = PRODUCTS.find((p) => p.slug === "print-trim-tunic-set")!;
   const men = PRODUCTS.find((p) => p.slug === "brown-denim-cargo-set")!;
 
@@ -31,12 +33,12 @@ export default function Home() {
           </div>
         </div>
         <div className="grid grid-cols-[1.3fr_1fr] gap-3">
-          <Link href={`/products/${heroPieces[0].slug}`} className="row-span-2 bg-sand">
-            <ProductArt product={heroPieces[0]} className="h-full w-full" />
+          <Link href={`/lookbook#${heroLook.slug}`} className="row-span-2">
+            <Photo src={heroLook.photos[0].src} alt={heroLook.photos[0].alt} className="h-full min-h-80 w-full" sizes="(min-width: 768px) 30vw, 58vw" priority focus="50% 30%" />
           </Link>
-          {heroPieces.slice(1).map((p) => (
-            <Link key={p.slug} href={`/products/${p.slug}`} className="bg-sand">
-              <ProductArt product={p} className="aspect-[3/4] w-full" />
+          {heroPieces.map((p) => (
+            <Link key={p.slug} href={`/products/${p.slug}`}>
+              <ProductArt product={p} className="aspect-[3/4] w-full" sizes="(min-width: 768px) 20vw, 40vw" priority />
             </Link>
           ))}
         </div>
@@ -71,8 +73,7 @@ export default function Home() {
 
       <section className="gutter mx-auto mt-20 grid max-w-7xl items-center gap-8 md:grid-cols-[1fr_1.1fr]">
         <Link href="/lookbook" className="group block overflow-hidden bg-sand">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={LOOKS[0].photos[0].src} alt={LOOKS[0].photos[0].alt} loading="lazy" className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          <Photo src={LOOKS[0].photos[0].src} alt={LOOKS[0].photos[0].alt} className="aspect-[4/5] w-full transition-transform duration-500 group-hover:scale-[1.03]" sizes="(min-width: 768px) 45vw, 100vw" focus="50% 35%" />
         </Link>
         <div className="space-y-5">
           <p className="eyebrow text-forest">Lookbook and custom orders</p>
@@ -97,8 +98,7 @@ export default function Home() {
       <section className="gutter mx-auto mt-20 max-w-7xl">
         <div className="grid gap-8 bg-ink p-8 text-paper md:grid-cols-[1fr_1.2fr] md:items-center md:p-14">
           <figure className="space-y-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/products/kwadwoman-patchwork-shoot.jpg" alt="Two models in Kwadwo Man patchwork corduroy jackets and trousers" loading="lazy" className="w-full" />
+            <Photo src="/products/kwadwoman-patchwork-shoot.jpg" alt="Two models in Kwadwo Man patchwork corduroy jackets and trousers" className="aspect-[1656/1748] w-full" sizes="(min-width: 768px) 40vw, 100vw" />
             <figcaption className="text-xs text-paper/60">Patchwork corduroy by Kwadwo Man</figcaption>
           </figure>
           <div className="space-y-4 text-paper/80">

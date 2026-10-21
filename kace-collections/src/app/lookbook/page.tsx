@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Photo } from "@/components/Photo";
 import { PageHeader } from "@/components/Prose";
 import { ProductCard } from "@/components/ProductCard";
 import { getProduct } from "@/lib/catalogue";
@@ -20,13 +21,11 @@ export default function Lookbook() {
           return (
             <article key={look.slug} id={look.slug} className="grid scroll-mt-32 items-center gap-8 md:grid-cols-2 md:gap-14">
               <figure className={i % 2 ? "md:order-2" : undefined}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={look.photos[0].src} alt={look.photos[0].alt} loading={i ? "lazy" : "eager"} className="aspect-[2/3] w-full object-cover" />
+                <Photo src={look.photos[0].src} alt={look.photos[0].alt} className="aspect-[2/3] w-full" sizes="(min-width: 768px) 48vw, 100vw" priority={i === 0} />
                 {look.photos.length > 1 && (
                   <div className="mt-3 grid grid-cols-3 gap-3">
                     {look.photos.slice(1).map((photo) => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img key={photo.src} src={photo.src} alt={photo.alt} loading="lazy" className="aspect-[3/4] w-full object-cover" />
+                      <Photo key={photo.src} src={photo.src} alt={photo.alt} className="aspect-[3/4] w-full" sizes="(min-width: 768px) 16vw, 33vw" />
                     ))}
                   </div>
                 )}
