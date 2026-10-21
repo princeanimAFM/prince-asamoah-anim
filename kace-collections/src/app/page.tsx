@@ -5,9 +5,6 @@ import { Photo } from "@/components/Photo";
 import { ProductImage } from "@/components/ProductImage";
 import { ProductGrid } from "@/components/ProductCard";
 
-// Rebuilt hourly so "New" tags and new arrivals stay current.
-export const revalidate = 3600;
-
 export default function Home() {
   const newest = findProducts({ sort: "newest" }).slice(0, 4);
   const onSale = findProducts({ sale: true }).slice(0, 4);

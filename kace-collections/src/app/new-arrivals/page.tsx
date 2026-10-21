@@ -1,16 +1,8 @@
 import type { Metadata } from "next";
-import { Listing } from "@/components/Listing";
+import { NewArrivals } from "@/components/NewArrivals";
 
 export const metadata: Metadata = { title: "New in" };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string | string[]; sort?: string | string[]; availability?: string | string[] }> }) {
-  return (
-    <Listing
-      title="New in"
-      intro="Pieces added in the last 30 days."
-      basePath="/new-arrivals"
-      filter={{ newSince: new Date() }}
-      searchParams={await searchParams}
-    />
-  );
+export default function Page() {
+  return <NewArrivals />;
 }

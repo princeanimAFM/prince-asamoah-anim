@@ -1,4 +1,8 @@
+"use client";
+// Reads filters from the address bar in the browser, so listing pages can also be built as plain
+// static files (the catalogue is small and lives in the code).
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AVAILABILITY_LABELS, CATEGORY_LABELS, categoriesFor, findProducts, parseAvailability, parseCategory, parseSort, type Availability, type Filter } from "@/lib/catalogue";
 import { ProductGrid } from "./ProductCard";
 
@@ -7,7 +11,6 @@ type Props = {
   intro: string;
   basePath: string;
   filter: Omit<Filter, "category" | "availability" | "sort">;
-  searchParams: { category?: string | string[]; sort?: string | string[]; availability?: string | string[] };
 };
 
 const SORTS = [
@@ -16,10 +19,11 @@ const SORTS = [
   ["price-desc", "Price: high to low"],
 ] as const;
 
-export function Listing({ title, intro, basePath, filter, searchParams }: Props) {
-  const category = parseCategory(searchParams.category);
-  const sort = parseSort(searchParams.sort);
-  const availability = parseAvailability(searchParams.availability);
+export function Listing({ title, intro, basePath, filter }: Props) {
+  const params = useSearchParams();
+  const category = parseCategory(params.get("category") ?? undefined);
+  const sort = parseSort(params.get("sort") ?? undefined);
+  const availability = parseAvailability(params.get("availability") ?? undefined);
   const products = findProducts({ ...filter, category, availability, sort });
   const categories = categoriesFor(filter);
   const href = (c?: string, s?: string, a: Availability | undefined = availability) => {

@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Listing } from "@/components/Listing";
 
 export const metadata: Metadata = { title: "Sale" };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string | string[]; sort?: string | string[]; availability?: string | string[] }> }) {
+export default function Page() {
   return (
-    <Listing
-      title="Sale"
-      intro="Reduced pieces while stock lasts."
-      basePath="/sale"
-      filter={{ sale: true }}
-      searchParams={await searchParams}
-    />
+    <Suspense>
+      <Listing title="Sale" intro="Reduced pieces while stock lasts." basePath="/sale" filter={{ sale: true }} />
+    </Suspense>
   );
 }
