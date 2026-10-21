@@ -13,8 +13,11 @@ export type CartAction =
 
 export const MAX_QTY_PER_LINE = 10;
 
+// Made-to-order pieces can't go in the bag: they're requested and quoted instead.
 function stockFor(slug: string, size: string, products?: Product[]): number {
-  return getProduct(slug, products)?.sizes.find((s) => s.label === size)?.stock ?? 0;
+  const product = getProduct(slug, products);
+  if (!product || product.availability !== "in-stock") return 0;
+  return product.sizes.find((s) => s.label === size)?.stock ?? 0;
 }
 
 function clamp(qty: number, slug: string, size: string, products?: Product[]): number {

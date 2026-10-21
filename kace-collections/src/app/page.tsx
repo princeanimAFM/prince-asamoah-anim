@@ -2,7 +2,7 @@ import Link from "next/link";
 import { findProducts, PRODUCTS } from "@/lib/catalogue";
 import { LOOKS } from "@/lib/lookbook";
 import { Photo } from "@/components/Photo";
-import { ProductArt } from "@/components/ProductArt";
+import { ProductImage } from "@/components/ProductImage";
 import { ProductGrid } from "@/components/ProductCard";
 
 // Rebuilt hourly so "New" tags and new arrivals stay current.
@@ -13,8 +13,8 @@ export default function Home() {
   const onSale = findProducts({ sale: true }).slice(0, 4);
   const heroPieces = ["patchwork-corduroy-set", "patchwork-denim-jacket"].map((s) => PRODUCTS.find((p) => p.slug === s)!);
   const heroLook = LOOKS.find((l) => l.slug === "cream-and-black")!;
-  const women = PRODUCTS.find((p) => p.slug === "print-trim-tunic-set")!;
-  const men = PRODUCTS.find((p) => p.slug === "brown-denim-cargo-set")!;
+  const readyNow = PRODUCTS.find((p) => p.slug === "patchwork-denim-jacket")!;
+  const madeForYou = PRODUCTS.find((p) => p.slug === "patchwork-corduroy-set")!;
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function Home() {
             Made in Ghana.<br />Worn <span className="text-gold">everywhere.</span>
           </h1>
           <p className="max-w-md text-lg text-muted">
-            Patchwork, denim, leather, tailored sets and kaftans, made by independent designers in Ghana and delivered to your door in the UK and Ghana.
+            Patchwork corduroy, denim and more from independent designers in Ghana. Buy pieces ready to send, or have them made for you, delivered in the UK and Ghana.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/women" className="bg-ink px-7 py-4 font-semibold text-paper hover:bg-forest">Shop women</Link>
@@ -38,7 +38,7 @@ export default function Home() {
           </Link>
           {heroPieces.map((p) => (
             <Link key={p.slug} href={`/products/${p.slug}`}>
-              <ProductArt product={p} className="aspect-[3/4] w-full" sizes="(min-width: 768px) 20vw, 40vw" priority />
+              <ProductImage product={p} className="aspect-[3/4] w-full" sizes="(min-width: 768px) 20vw, 40vw" priority />
             </Link>
           ))}
         </div>
@@ -46,7 +46,7 @@ export default function Home() {
 
       <section className="border-y border-line bg-sand">
         <ul className="gutter mx-auto grid max-w-7xl gap-6 py-6 text-sm sm:grid-cols-3">
-          <li><strong className="block">Straight from the makers</strong><span className="text-muted">Every piece comes from a designer or weaver in Ghana.</span></li>
+          <li><strong className="block">In stock or made for you</strong><span className="text-muted">Buy what&apos;s ready now, or have a piece made in your size.</span></li>
           <li><strong className="block">UK and Ghana delivery</strong><span className="text-muted">Tracked delivery, with updates at every step.</span></li>
           <li><strong className="block">Secure checkout</strong><span className="text-muted">Pay by card or Apple Pay. Mobile money coming soon.</span></li>
         </ul>
@@ -58,11 +58,11 @@ export default function Home() {
 
       <section className="gutter mx-auto mt-20 grid max-w-7xl gap-4 md:grid-cols-2">
         {[
-          { href: "/women", label: "Women", sub: "Sets, kaftans, dresses and jackets", product: women },
-          { href: "/men", label: "Men", sub: "Patchwork, denim, leather and shirts", product: men },
+          { href: "/shop?availability=in-stock", label: "Ready to send", sub: "In stock and posted within days", product: readyNow },
+          { href: "/shop?availability=made-to-order", label: "Made to order", sub: "Made for you by the designer, in your size", product: madeForYou },
         ].map((tile) => (
           <Link key={tile.href} href={tile.href} className="group relative block overflow-hidden bg-sand">
-            <ProductArt product={tile.product} className="aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-[1.03]" />
+            <ProductImage product={tile.product} className="aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-[1.03]" sizes="(min-width: 768px) 50vw, 100vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-6 text-paper">
               <p className="display text-5xl">{tile.label}</p>
               <p className="mt-1 text-sm">{tile.sub} →</p>

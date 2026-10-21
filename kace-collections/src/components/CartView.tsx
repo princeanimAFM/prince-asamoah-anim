@@ -3,7 +3,7 @@ import Link from "next/link";
 import { priceCart, MAX_QTY_PER_LINE } from "@/lib/cart";
 import { SITE } from "@/lib/site";
 import { Price } from "./Price";
-import { ProductArt } from "./ProductArt";
+import { ProductImage } from "./ProductImage";
 import { useShop } from "./ShopProvider";
 
 export function CartView() {
@@ -31,7 +31,7 @@ export function CartView() {
           return (
             <li key={`${product.slug}-${size}`} className="flex gap-4 py-5">
               <Link href={`/products/${product.slug}`} className="w-24 shrink-0 bg-sand sm:w-28">
-                <ProductArt product={product} className="aspect-[3/4] w-full" />
+                <ProductImage product={product} className="aspect-[3/4] w-full" sizes="112px" />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <div className="flex justify-between gap-3">

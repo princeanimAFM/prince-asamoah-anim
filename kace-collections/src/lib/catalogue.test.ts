@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { categoriesFor, findProducts, isNewArrival, isOnSale, parseCategory, parseSort, type Product } from "./catalogue";
+import { categoriesFor, findProducts, isNewArrival, isOnSale, isSoldOut, parseAvailability, parseCategory, parseSort, PRODUCTS, type Product } from "./catalogue";
 
 const base: Product = {
   slug: "a", name: "A", designer: "D", gender: "women", category: "dresses", price: 5000,
   description: "", details: [], sizes: [{ label: "M", stock: 1 }], addedAt: "2026-10-01",
-  art: { silhouette: "dress", pattern: "solid", colors: ["#000"] },
+  availability: "in-stock", photo: { src: "/x.jpg", alt: "x" },
 };
 const products: Product[] = [
   base,
@@ -44,5 +44,28 @@ describe("helpers", () => {
     expect(parseCategory("<script>")).toBeUndefined();
     expect(parseSort("price-desc")).toBe("price-desc");
     expect(parseSort("drop table")).toBe("newest");
+  });
+});
+
+describe("availability", () => {
+  const made: Product = { ...base, slug: "m", availability: "made-to-order", sizes: [{ label: "M", stock: 0 }] };
+  it("filters in stock and made to order", () => {
+    expect(findProducts({ availability: "made-to-order" }, [...products, made]).map((p) => p.slug)).toEqual(["m"]);
+    expect(findProducts({ availability: "in-stock" }, [...products, made])).toHaveLength(3);
+  });
+  it("never shows made-to-order pieces as sold out", () => {
+    expect(isSoldOut(made)).toBe(false);
+    expect(isSoldOut({ ...base, sizes: [{ label: "M", stock: 0 }] })).toBe(true);
+  });
+  it("parses availability from the URL safely", () => {
+    expect(parseAvailability("made-to-order")).toBe("made-to-order");
+    expect(parseAvailability(["in-stock"])).toBeUndefined();
+    expect(parseAvailability("toString")).toBeUndefined();
+  });
+  it("every real product has a photo, and made-to-order ones a making time", () => {
+    for (const p of PRODUCTS) {
+      expect(p.photo.src).toMatch(/^\/products\/.+\.jpg$/);
+      if (p.availability === "made-to-order") expect(p.makingTime).toBeTruthy();
+    }
   });
 });

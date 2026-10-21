@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Photo } from "@/components/Photo";
 import { PageHeader } from "@/components/Prose";
+import { getProduct } from "@/lib/catalogue";
 import { getLook } from "@/lib/lookbook";
 import { SITE } from "@/lib/site";
 
@@ -19,16 +20,38 @@ const STEPS: [string, string][] = [
   ["Delivered to you", "Pay the balance, and we send it to you in the UK or Ghana with tracking."],
 ];
 
-export default async function Custom({ searchParams }: { searchParams: Promise<{ look?: string | string[] }> }) {
-  const look = getLook((await searchParams).look);
+type Search = { look?: string | string[]; product?: string | string[]; size?: string | string[] };
+
+export default async function Custom({ searchParams }: { searchParams: Promise<Search> }) {
+  const params = await searchParams;
+  const look = getLook(params.look);
+  const found = typeof params.product === "string" ? getProduct(params.product) : undefined;
+  const product = found?.availability === "made-to-order" ? found : undefined;
+  // Only accept a size the product is actually made in.
+  const size = product && typeof params.size === "string" ? product.sizes.find((s) => s.label === params.size)?.label : undefined;
   const wa = SITE.whatsapp.replace(/[^\d]/g, "");
-  const message = look ? `Hi KACE, I'd like the "${look.title}" look from your Lookbook made for me.` : "Hi KACE, I'd like something made for me.";
+  const message = product
+    ? `Hi KACE, I'd like to order the ${product.name}${size ? ` in size ${size}` : ""}, made to order.`
+    : look
+      ? `Hi KACE, I'd like the "${look.title}" look from your Lookbook made for me.`
+      : "Hi KACE, I'd like something made for me.";
 
   return (
     <div className="gutter mx-auto max-w-7xl">
       <PageHeader title="Made for you" intro="Your design, your measurements, made by hand in Ghana." />
 
-      {look && (
+      {product && (
+        <div className="mt-8 flex items-center gap-4 border border-line p-4">
+          <Photo src={product.photo.src} alt="" className="h-24 w-16 shrink-0" sizes="64px" />
+          <p>
+            You&apos;re asking about the <strong>{product.name}</strong>{size && <> in size <strong>{size}</strong></>}
+            {product.makingTime && <>, usually ready in about {product.makingTime}</>}.{" "}
+            <Link href={`/products/${product.slug}`} className="underline underline-offset-4">See the piece</Link>
+          </p>
+        </div>
+      )}
+
+      {!product && look && (
         <div className="mt-8 flex items-center gap-4 border border-line p-4">
           <Photo src={look.photos[0].src} alt="" className="h-24 w-16 shrink-0" sizes="64px" />
           <p>

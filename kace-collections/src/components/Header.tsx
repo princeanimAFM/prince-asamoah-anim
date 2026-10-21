@@ -4,6 +4,7 @@ import { CartLink } from "./CartLink";
 import { CurrencySwitch } from "./CurrencySwitch";
 
 export const NAV = [
+  { href: "/shop", label: "Shop" },
   { href: "/new-arrivals", label: "New in" },
   { href: "/women", label: "Women" },
   { href: "/men", label: "Men" },

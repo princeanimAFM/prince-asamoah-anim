@@ -5,7 +5,7 @@ import type { Product } from "./catalogue";
 const p = (slug: string, price: number, stock: number): Product => ({
   slug, name: slug, designer: "D", gender: "women", category: "dresses", price,
   description: "", details: [], sizes: [{ label: "M", stock }, { label: "L", stock: 0 }], addedAt: "2026-10-01",
-  art: { silhouette: "dress", pattern: "solid", colors: ["#000"] },
+  availability: "in-stock", photo: { src: "/x.jpg", alt: "x" },
 });
 const products = [p("a", 5000, 3), p("b", 2500, 20)];
 const run = (lines: CartLine[], action: Parameters<typeof cartReducer>[1]) => cartReducer(lines, action, products);
@@ -28,6 +28,14 @@ describe("cartReducer", () => {
     expect(run(lines, { type: "setQty", slug: "b", size: "M", qty: 4 })[0].qty).toBe(4);
     expect(run(lines, { type: "setQty", slug: "b", size: "M", qty: 0 })).toEqual([]);
     expect(run(lines, { type: "remove", slug: "b", size: "M" })).toEqual([]);
+  });
+});
+
+describe("made-to-order pieces", () => {
+  it("can't be added to the bag", () => {
+    const made = { ...p("m", 9000, 5), availability: "made-to-order" as const };
+    expect(cartReducer([], { type: "add", slug: "m", size: "M" }, [made])).toEqual([]);
+    expect(sanitiseLines([{ slug: "m", size: "M", qty: 1 }], [made])).toEqual([]);
   });
 });
 

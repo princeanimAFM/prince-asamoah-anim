@@ -42,5 +42,8 @@ removed before adding a photo.
 To add or re-process photos, list them in `scripts/prepare_photos.py` and run
 `python3 -I scripts/prepare_photos.py <folder of originals>` (needs Pillow). It lifts phone photos
 gently, keeps professional shoots as shot, and saves high-quality JPEGs; the site serves them as
-AVIF/WebP sized for each screen. Products without a photo show a drawn illustration. Never add photos
+AVIF/WebP sized for each screen.
+Flat-lay product photos then go on a clean studio background with `scripts/studio_background.py`
+(saves `<name>-studio.jpg`; delete the plain `<name>.jpg` afterwards and point the catalogue at the
+`-studio` file). Never add photos
 from other brands, influencers or AI generators as product photos.

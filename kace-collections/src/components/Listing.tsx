@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { CATEGORY_LABELS, categoriesFor, findProducts, parseCategory, parseSort, type Filter } from "@/lib/catalogue";
+import { AVAILABILITY_LABELS, CATEGORY_LABELS, categoriesFor, findProducts, parseAvailability, parseCategory, parseSort, type Availability, type Filter } from "@/lib/catalogue";
 import { ProductGrid } from "./ProductCard";
 
 type Props = {
   title: string;
   intro: string;
   basePath: string;
-  filter: Omit<Filter, "category" | "sort">;
-  searchParams: { category?: string; sort?: string };
+  filter: Omit<Filter, "category" | "availability" | "sort">;
+  searchParams: { category?: string | string[]; sort?: string | string[]; availability?: string | string[] };
 };
 
 const SORTS = [
@@ -19,10 +19,12 @@ const SORTS = [
 export function Listing({ title, intro, basePath, filter, searchParams }: Props) {
   const category = parseCategory(searchParams.category);
   const sort = parseSort(searchParams.sort);
-  const products = findProducts({ ...filter, category, sort });
+  const availability = parseAvailability(searchParams.availability);
+  const products = findProducts({ ...filter, category, availability, sort });
   const categories = categoriesFor(filter);
-  const href = (c?: string, s?: string) => {
+  const href = (c?: string, s?: string, a: Availability | undefined = availability) => {
     const q = new URLSearchParams();
+    if (a) q.set("availability", a);
     if (c) q.set("category", c);
     if (s && s !== "newest") q.set("sort", s);
     const qs = q.toString();
@@ -35,6 +37,13 @@ export function Listing({ title, intro, basePath, filter, searchParams }: Props)
         <h1 className="display text-5xl md:text-7xl">{title}</h1>
         <p className="mt-3 max-w-xl text-muted">{intro}</p>
       </header>
+
+      <nav aria-label="Availability" className="flex flex-wrap gap-2 pt-5">
+        <FilterLink href={href(category, sort, undefined)} active={!availability}>Everything</FilterLink>
+        {(Object.keys(AVAILABILITY_LABELS) as Availability[]).map((a) => (
+          <FilterLink key={a} href={href(category, sort, a)} active={availability === a}>{AVAILABILITY_LABELS[a]}</FilterLink>
+        ))}
+      </nav>
 
       <div className="flex flex-wrap items-center justify-between gap-4 py-5">
         <nav aria-label="Categories" className="-mx-1 flex max-w-full gap-2 overflow-x-auto px-1 pb-1">

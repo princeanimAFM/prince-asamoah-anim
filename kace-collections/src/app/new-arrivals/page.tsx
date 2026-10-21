@@ -3,7 +3,7 @@ import { Listing } from "@/components/Listing";
 
 export const metadata: Metadata = { title: "New in" };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string; sort?: string }> }) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string | string[]; sort?: string | string[]; availability?: string | string[] }> }) {
   return (
     <Listing
       title="New in"

@@ -3,11 +3,11 @@ import { Listing } from "@/components/Listing";
 
 export const metadata: Metadata = { title: "Men" };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string; sort?: string }> }) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string | string[]; sort?: string | string[]; availability?: string | string[] }> }) {
   return (
     <Listing
       title="Men"
-      intro="Patchwork, denim sets, leather jackets and shirts from Ghanaian designers."
+      intro="Patchwork, denim and sets from Ghanaian designers, ready to send or made for you."
       basePath="/men"
       filter={{ gender: "men" }}
       searchParams={await searchParams}

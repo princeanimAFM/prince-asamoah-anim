@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/AddToCart";
 import { Price } from "@/components/Price";
-import { ProductArt } from "@/components/ProductArt";
+import { ProductImage } from "@/components/ProductImage";
+import { RequestMadeToOrder } from "@/components/RequestMadeToOrder";
 import { ProductGrid } from "@/components/ProductCard";
 import { CATEGORY_LABELS, findProducts, getProduct, PRODUCTS } from "@/lib/catalogue";
 
@@ -36,21 +37,26 @@ export default async function ProductPage({ params }: Params) {
 
       <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div className="bg-sand">
-          <ProductArt product={product} className="aspect-[3/4] w-full" sizes="(min-width: 768px) 55vw, 100vw" priority />
-          <p className="px-4 py-3 text-xs text-muted">
-            {product.photo ? `Photo: ${product.designer}` : "Illustration. Product photos coming soon."}
-          </p>
+          <ProductImage product={product} className="aspect-[3/4] w-full" sizes="(min-width: 768px) 55vw, 100vw" priority />
+          <p className="px-4 py-3 text-xs text-muted">Photo: {product.designer}</p>
         </div>
 
         <div className="space-y-6 md:sticky md:top-28 md:self-start">
           <div className="space-y-2">
             <p className="text-sm text-muted">{product.designer}</p>
             <h1 className="display text-4xl md:text-5xl">{product.name}</h1>
-            <Price pence={product.price} compareAt={product.compareAt} className="text-xl font-semibold" />
-            <p className="text-xs text-muted">Charged in pounds. Delivery worked out at checkout.</p>
+            <p className="text-xl font-semibold">
+              {product.availability === "made-to-order" && <span className="font-normal text-muted">From </span>}
+              <Price pence={product.price} compareAt={product.compareAt} />
+            </p>
+            <p className="text-xs text-muted">
+              {product.availability === "made-to-order"
+                ? "Final price confirmed in your quote. Charged in pounds."
+                : "Charged in pounds. Delivery worked out at checkout."}
+            </p>
           </div>
           <p className="max-w-prose">{product.description}</p>
-          <AddToCart product={product} />
+          {product.availability === "made-to-order" ? <RequestMadeToOrder product={product} /> : <AddToCart product={product} />}
           <details className="border-t border-line py-4" open>
             <summary className="cursor-pointer font-semibold">Details</summary>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
