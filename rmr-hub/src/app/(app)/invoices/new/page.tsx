@@ -67,7 +67,7 @@ export default async function NewInvoice({
           <h2 id="hours-h" className="text-xl font-extrabold">
             Unbilled hours
           </h2>
-          <p className="mb-3 text-sm text-grey">Charged at your rate of {formatGBP(settings.hourlyRate)} an hour.</p>
+          <p className="mb-3 text-sm text-grey">Tick the hours to bill, charged at your rate of {formatGBP(settings.hourlyRate)} an hour. For a payment agreed in a contract, use Create invoice on the contract instead.</p>
           {unbilled.length === 0 ? (
             <p className="text-sm text-grey">No unbilled hours for this client.</p>
           ) : (
@@ -75,7 +75,7 @@ export default async function NewInvoice({
               {unbilled.map(({ entry }) => (
                 <li key={entry.id}>
                   <label className="flex min-h-11 items-center gap-3 py-2">
-                    <input type="checkbox" name="entry" value={entry.id} defaultChecked className="size-5 accent-blue" />
+                    <input type="checkbox" name="entry" value={entry.id} className="size-5 accent-blue" />
                     <span className="flex-1">
                       {entry.description || "Software development"}
                       <span className="block text-xs text-grey">{formatDate(entry.date)}</span>

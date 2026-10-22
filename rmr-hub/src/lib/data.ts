@@ -57,6 +57,20 @@ export async function listInvoices(filter?: { clientId?: number }): Promise<Invo
   }));
 }
 
+/** Invoices raised for a contract's agreed payments. */
+export async function listContractInvoices(contractId: number) {
+  const db = await getDb();
+  return db
+    .select({
+      id: schema.invoices.id,
+      number: schema.invoices.number,
+      status: schema.invoices.status,
+      contractPayment: schema.invoices.contractPayment,
+    })
+    .from(schema.invoices)
+    .where(eq(schema.invoices.contractId, contractId));
+}
+
 export async function getInvoice(id: number) {
   const db = await getDb();
   const [invoice] = await db.select().from(schema.invoices).where(eq(schema.invoices.id, id));

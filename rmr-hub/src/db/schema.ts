@@ -59,9 +59,12 @@ export const invoices = pgTable(
     /** Payment reminders sent (by hand or automatically), and the date of the last one. */
     reminderCount: integer("reminder_count").notNull().default(0),
     lastReminderDate: text("last_reminder_date"),
+    /** Set when the invoice is for one of a contract's agreed payments (1 = first payment). */
+    contractId: integer("contract_id"),
+    contractPayment: integer("contract_payment"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (t) => [uniqueIndex("invoices_number_idx").on(t.number)],
+  (t) => [uniqueIndex("invoices_number_idx").on(t.number), index("invoices_contract_idx").on(t.contractId)],
 );
 
 export const invoiceItems = pgTable("invoice_items", {
