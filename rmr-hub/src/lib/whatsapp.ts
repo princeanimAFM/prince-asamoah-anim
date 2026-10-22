@@ -1,4 +1,5 @@
 import { formatDate } from "./dates";
+import { bankLines, type BankDetails } from "./email";
 import { formatGBP } from "./money";
 
 /**
@@ -18,10 +19,16 @@ export interface InvoiceMessageInput {
   dueDate: string;
   clientName: string;
   ownerName: string;
+  bank?: BankDetails;
 }
 
 /** Short WhatsApp message to go with the invoice PDF. */
 export function invoiceWhatsApp(i: InvoiceMessageInput): string {
   const first = i.clientName.trim().split(/\s+/)[0] || "there";
-  return `Hi ${first}, here's invoice ${i.number} for ${formatGBP(i.amountDue)}, due on ${formatDate(i.dueDate)}. The payment details are on the PDF. Please use ${i.number} as the payment reference. Thank you, ${i.ownerName}`;
+  const bank = bankLines(i.bank, i.ownerName);
+  const opening = `Hi ${first}, here's invoice ${i.number} for ${formatGBP(i.amountDue)}, due on ${formatDate(i.dueDate)}.`;
+  const reference = `Please use ${i.number} as the payment reference.`;
+  return bank.length
+    ? `${opening}\n\nYou can pay by bank transfer to:\n${bank.join("\n")}\n\n${reference}\n\nThank you,\n${i.ownerName}`
+    : `${opening} The payment details are on the PDF. ${reference} Thank you, ${i.ownerName}`;
 }
