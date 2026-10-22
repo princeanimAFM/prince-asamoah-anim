@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createContract } from "@/app/contract-actions";
 import { SubmitButton } from "@/components/buttons";
+import { ContractPriceFields } from "@/components/ContractPriceFields";
 import { Empty, Notice, PageHeader } from "@/components/ui";
 import { getSettings, listClients } from "@/lib/data";
 import { todayISO } from "@/lib/dates";
@@ -57,65 +58,7 @@ export default async function NewContract({ searchParams }: { searchParams: Prom
           </label>
         </section>
 
-        <fieldset className="card grid gap-3 sm:grid-cols-2">
-          <legend className="sr-only">Price</legend>
-          <h2 className="text-xl font-extrabold sm:col-span-2">Price</h2>
-          <div className="flex flex-col gap-2 sm:col-span-2" role="radiogroup" aria-label="Payment plan">
-            <label className="flex min-h-11 items-center gap-2 font-semibold">
-              <input type="radio" name="model" value="one_off" defaultChecked className="size-5 accent-blue" /> Buy it (paid
-              in stages, theirs at launch)
-            </label>
-            <label className="flex min-h-11 items-center gap-2 font-semibold">
-              <input type="radio" name="model" value="monthly" className="size-5 accent-blue" /> Start fee + monthly (care
-              included, theirs at the end)
-            </label>
-          </div>
-          <label className="field">
-            Price, or start fee (monthly) £
-            <input name="price" required inputMode="decimal" className="input" placeholder="3000" />
-          </label>
-          <label className="field">
-            Paid in (buying)
-            <select name="stages" defaultValue="3" className="input">
-              <option value="3">3 payments: start, first working version, launch</option>
-              <option value="2">2 payments: start, launch</option>
-              <option value="1">1 payment before work starts</option>
-            </select>
-          </label>
-          <label className="field">
-            Care plan £/month (after buying, or after the monthly term; 0 for none, fixes charged per job)
-            <input name="careMonthly" inputMode="decimal" defaultValue="50" className="input" />
-          </label>
-          <label className="field">
-            Free fixes after launch (days, buying)
-            <input name="warrantyDays" type="number" min="0" defaultValue="30" className="input" />
-          </label>
-          <label className="field">
-            Small fix without care £
-            <input name="smallFix" inputMode="decimal" defaultValue="150" className="input" />
-          </label>
-          <label className="field">
-            Bigger change without care £
-            <input name="biggerChange" inputMode="decimal" defaultValue="300" className="input" />
-          </label>
-          <h3 className="mt-2 font-extrabold sm:col-span-2">Monthly plan only</h3>
-          <label className="field">
-            Monthly fee £ (care included)
-            <input name="monthly" inputMode="decimal" className="input" placeholder="155" />
-          </label>
-          <label className="field">
-            Monthly payments until it's theirs
-            <input name="termMonths" type="number" min="1" defaultValue="24" className="input" />
-          </label>
-          <label className="field">
-            Minimum months
-            <input name="minimumMonths" type="number" min="1" defaultValue="12" className="input" />
-          </label>
-          <label className="field">
-            Early buy-out £ per month left
-            <input name="buyoutPerMonth" inputMode="decimal" className="input" placeholder="105" />
-          </label>
-        </fieldset>
+        <ContractPriceFields />
 
         <section className="card grid gap-3 sm:grid-cols-2">
           <h2 className="text-xl font-extrabold sm:col-span-2">Timing and terms</h2>
