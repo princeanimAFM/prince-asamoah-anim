@@ -43,6 +43,17 @@ describe("buildContract", () => {
     expect(text).not.toContain("undefined");
   });
 
+  it("offers per-job fixes instead of a care plan when the care fee is 0", () => {
+    const text = buildContract({ ...base, price: 50000, stages: 2, careMonthly: 0, smallFix: 5000, biggerChange: 10000 });
+    expect(text).toContain("- £250.00 before work starts");
+    expect(text).toContain("For 30 days after launch we fix, free of charge");
+    expect(text).toContain("there is no monthly fee: fixes and changes are charged per job, at £50.00 for a small fix");
+    expect(text).toContain("£100.00 for a bigger change");
+    expect(text).toContain("rates for fixes and changes are fixed for the first 12 months");
+    expect(text).not.toContain("£0.00");
+    expect(text).not.toContain("care fee");
+  });
+
   it("splits two payments and puts odd pence on the last", () => {
     const text = buildContract({ ...base, price: 250001, stages: 2 });
     expect(text).toContain("- £1,250.00 before work starts");
