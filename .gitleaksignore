@@ -1,0 +1,3 @@
+# Known false positives (gitleaks fingerprints). Each must be a made-up value, never a real key.
+# A fake Stripe live key used in a test that proves live keys are refused during the preview.
+7cfcfd3649c7ea031b90a91cb5a09e05470539ab:kace-collections/src/lib/checkout-config.test.ts:generic-api-key:18
