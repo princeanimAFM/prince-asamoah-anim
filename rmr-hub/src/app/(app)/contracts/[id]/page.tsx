@@ -9,12 +9,15 @@ import {
   voidContract,
   withdrawContract,
 } from "@/app/contract-actions";
+import { createContractInvoice } from "@/app/actions";
 import { ContractText } from "@/components/ContractText";
 import { CopyButton } from "@/components/CopyButton";
 import { ActionButton, ResultButton, SubmitButton } from "@/components/buttons";
 import { Icon } from "@/components/icons";
 import { Notice, PageHeader } from "@/components/ui";
-import { getSettings } from "@/lib/data";
+import { contractPayments } from "@/lib/contract-payments";
+import { getSettings, listContractInvoices } from "@/lib/data";
+import { formatGBP } from "@/lib/money";
 import { getContract, siteUrl } from "@/lib/contracts";
 import { driveLink, driveStatus } from "@/lib/google";
 
@@ -31,8 +34,15 @@ export default async function ContractPage({
   searchParams: Promise<{ saved?: string; error?: string }>;
 }) {
   const id = Number((await params).id);
-  const [row, settings, drive, sp] = await Promise.all([getContract(id), getSettings(), driveStatus(), searchParams]);
+  const [row, settings, drive, sp, invoices] = await Promise.all([
+    getContract(id),
+    getSettings(),
+    driveStatus(),
+    searchParams,
+    listContractInvoices(id),
+  ]);
   if (!row) notFound();
+  const payments = contractPayments(row.contract.body);
   const { contract, client } = row;
   const who = client.company || client.name;
   const link = contract.token ? `${await siteUrl()}/sign/${contract.token}` : "";
@@ -177,6 +187,46 @@ export default async function ContractPage({
             </ActionButton>
           )}
           {contract.status === "void" && <Notice tone="warn">This contract is void.</Notice>}
+
+          {contract.status !== "void" && payments.length > 0 && (
+            <section className="card flex flex-col gap-3" aria-labelledby="payments-h">
+              <h2 id="payments-h" className="text-xl font-extrabold">
+                Payments
+              </h2>
+              <p className="text-sm text-grey">
+                {contract.status === "signed"
+                  ? "Invoice each payment when it's due. The amount and description come from the agreement."
+                  : "Once it's signed, invoice each payment when it's due. The amount and description come from the agreement."}
+              </p>
+              <ul className="divide-y divide-line">
+                {payments.map((p) => {
+                  const inv = invoices.find((i) => i.contractPayment === p.n && i.status !== "void");
+                  return (
+                    <li key={p.n} className="flex flex-col gap-2 py-3">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="font-bold">{p.of > 1 ? `Payment ${p.n} of ${p.of}` : p.label.replace(/ \(.*\)$/, "")}</span>
+                        <span className="font-bold tabular-nums">{formatGBP(p.amount)}</span>
+                      </div>
+                      <span className="text-sm text-grey">Due {p.when}</span>
+                      {inv ? (
+                        <Link href={`/invoices/${inv.id}`} className="link text-sm font-bold">
+                          {inv.number} · {inv.status === "paid" ? "Paid" : inv.status === "sent" ? "Sent" : "Draft"}
+                        </Link>
+                      ) : (
+                        <form action={createContractInvoice}>
+                          <input type="hidden" name="contractId" value={id} />
+                          <input type="hidden" name="payment" value={p.n} />
+                          <SubmitButton className="btn-secondary" pendingText="Creating…">
+                            Create invoice
+                          </SubmitButton>
+                        </form>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
         </aside>
       </div>
     </>

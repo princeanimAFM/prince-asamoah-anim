@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, ne, sql } from "drizzle-orm";
 import { auth, signOut, skipAuth } from "@/auth";
 import { getDb, schema } from "@/db";
 import { restoreBackup, runBackup } from "@/lib/backup";
@@ -11,6 +11,7 @@ import { CompaniesHouseError, searchCompanies } from "@/lib/companies-house";
 import type { CompanyMatch } from "@/lib/companies-house-map";
 import { csvCell } from "@/lib/csv";
 import { applyPayment, importBankRows } from "@/lib/bank-import";
+import { contractPayments, projectName } from "@/lib/contract-payments";
 import { getInvoice, getSettings, listTimeEntries, listTransactions } from "@/lib/data";
 import { addDays, taxYearOf, todayISO } from "@/lib/dates";
 import { driveLink, saveToDrive } from "@/lib/google";
@@ -203,6 +204,55 @@ export async function createInvoice(f: FormData) {
       .set({ invoiceId: inv.id })
       .where(inArray(schema.timeEntries.id, entries.map((e) => e.entry.id)));
   }
+  refresh();
+  redirect(`/invoices/${inv.id}`);
+}
+
+/** Invoice one of a contract's agreed payments, or open its invoice if it already has one. */
+export async function createContractInvoice(f: FormData) {
+  await requireUser();
+  const db = await getDb();
+  const contractId = num(f, "contractId");
+  const n = num(f, "payment");
+  const [contract] = contractId ? await db.select().from(schema.contracts).where(eq(schema.contracts.id, contractId)) : [];
+  if (!contract || contract.status === "void") redirect("/contracts");
+  const payment = contractPayments(contract.body).find((p) => p.n === n);
+  if (!payment) redirect(`/contracts/${contractId}`);
+
+  const [existing] = await db
+    .select({ id: schema.invoices.id })
+    .from(schema.invoices)
+    .where(
+      and(
+        eq(schema.invoices.contractId, contractId),
+        eq(schema.invoices.contractPayment, n),
+        ne(schema.invoices.status, "void"),
+      ),
+    );
+  if (existing) redirect(`/invoices/${existing.id}`);
+
+  const settings = await getSettings();
+  const issueDate = todayISO();
+  const number = await nextInvoiceNumber();
+  const [inv] = await db
+    .insert(schema.invoices)
+    .values({
+      number,
+      clientId: contract.clientId,
+      issueDate,
+      dueDate: addDays(issueDate, settings.paymentTermsDays),
+      notes: `${payment.label} under our agreement for ${projectName(contract.title)}.`,
+      contractId,
+      contractPayment: n,
+    })
+    .returning({ id: schema.invoices.id });
+  await db.insert(schema.invoiceItems).values({
+    invoiceId: inv.id,
+    position: 0,
+    description: `${projectName(contract.title)}: ${payment.label.charAt(0).toLowerCase()}${payment.label.slice(1)}`,
+    quantity: 100,
+    unitPrice: payment.amount,
+  });
   refresh();
   redirect(`/invoices/${inv.id}`);
 }
