@@ -1,6 +1,7 @@
 # Working rules for Claude Code
 
-This repo holds Prince's portfolio site (root) and RMR Hub (`rmr-hub/`), the RMR Dev Works business app.
+This repo holds Prince's portfolio site (root), RMR Hub (`rmr-hub/`), the RMR Dev Works business app, and
+KACE COLLECTIONS (`kace-collections/`), an online fashion store built for a client.
 These rules apply to every project in the repo, including new ones.
 
 ## Security review is required
@@ -40,3 +41,9 @@ words. In particular:
 ## RMR Hub checks
 
 From `rmr-hub/`: `npm test`, `npm run typecheck` and `npx next build` must all pass before a commit.
+
+## KACE COLLECTIONS checks
+
+From `kace-collections/`: `npm test`, `npm run typecheck` and `npx next build` must all pass before a commit.
+It sells to consumers in the UK and Ghana, so the consumer-contract and privacy points in `COMPLIANCE.md`
+apply to every feature that takes orders, payments, accounts or emails.

@@ -83,7 +83,7 @@ export default async function NewContract({ searchParams }: { searchParams: Prom
             </select>
           </label>
           <label className="field">
-            Care plan £/month (after buying, or after the monthly term)
+            Care plan £/month (after buying, or after the monthly term; 0 for none, fixes charged per job)
             <input name="careMonthly" inputMode="decimal" defaultValue="50" className="input" />
           </label>
           <label className="field">

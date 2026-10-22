@@ -94,16 +94,24 @@ export function buildContract(i: ContractInput): string {
           i.termMonths
         }th monthly payment the software is yours (section 6) and the monthly fee ends.`;
 
+  // A care fee of 0 means no monthly care plan is offered: later work is charged per job.
+  const offersCare = i.careMonthly > 0;
+  const perJob = `After that there is no monthly fee: fixes and changes are charged per job, at ${formatGBP(
+    i.smallFix,
+  )} for a small fix (up to 2 hours) and ${formatGBP(i.biggerChange)} for a bigger change (up to half a day). Anything larger is quoted first, and work only starts once you agree the price.`;
   const support =
     i.model === "one_off"
-      ? `For ${i.warrantyDays} days after launch we fix, free of charge, any fault where the software does not work as agreed. After that you can choose ${care} for ${formatGBP(
-          i.careMonthly,
-        )} a month. ${extraWork}`
+      ? `For ${i.warrantyDays} days after launch we fix, free of charge, any fault where the software does not work as agreed. ${
+          offersCare ? `After that you can choose ${care} for ${formatGBP(i.careMonthly)} a month. ${extraWork}` : perJob
+        }`
       : `The monthly fee includes ${care}. Once the software is yours, you can keep care for ${formatGBP(
           i.careMonthly,
         )} a month, or end it. ${extraWork}`;
 
-  const priceReview = `Our prices are fixed for the first 24 months. After that we may increase the care fee once a year in line with inflation, by no more than 5%, with 60 days' written notice. If you do not accept an increase you may end care without charge.`;
+  const priceReview =
+    i.model === "one_off" && !offersCare
+      ? `Our rates for fixes and changes are fixed for the first 12 months. After that we may change them with 30 days' written notice.`
+      : `Our prices are fixed for the first 24 months. After that we may increase the care fee once a year in line with inflation, by no more than 5%, with 60 days' written notice. If you do not accept an increase you may end care without charge.`;
 
   const ownership =
     i.model === "one_off"

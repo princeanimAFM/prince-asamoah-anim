@@ -1,0 +1,10 @@
+# Netlify settings for KACE COLLECTIONS. In Netlify, set the base directory to "kace-collections".
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
