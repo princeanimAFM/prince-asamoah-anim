@@ -66,15 +66,6 @@ describe("invoice wording", () => {
     expect(late.subject).toBe("Reminder: invoice RMR-0003 is overdue");
     expect(late.text).toContain("still unpaid");
   });
-
-  it("puts the bank details in the email when they're set", () => {
-    const bank = { bankName: "Monzo", accountName: "", sortCode: "04-00-04", accountNumber: "12345678" };
-    const e = invoiceEmail({ ...inv, bank });
-    expect(e.text).toContain(`Account name: ${inv.ownerName}\nBank: Monzo\nSort code: 04-00-04\nAccount number: 12345678`);
-    expect(e.text).not.toContain("on the invoice");
-    expect(reminderEmail({ ...inv, bank }).text).toContain("Sort code: 04-00-04");
-    expect(invoiceEmail(inv).text).toContain("Payment details are on the invoice");
-  });
 });
 
 describe("automatic reminders", () => {

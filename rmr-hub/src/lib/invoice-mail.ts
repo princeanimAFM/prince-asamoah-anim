@@ -110,7 +110,6 @@ export async function runAutoReminders(): Promise<{ sent: string[]; failed: stri
         ownerName: settings.ownerName,
         businessName: settings.businessName,
         today,
-        bank: settings,
       });
       await sendInvoiceEmail({ invoiceId: invoice.id, kind: "reminder", to: client.email, ...mail });
       result.sent.push(invoice.number);

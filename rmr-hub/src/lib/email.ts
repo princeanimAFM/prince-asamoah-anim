@@ -101,40 +101,9 @@ export interface InvoiceEmailInput {
   ownerName: string;
   businessName: string;
   today: string;
-  bank?: BankDetails;
-}
-
-export interface BankDetails {
-  bankName: string;
-  accountName: string;
-  sortCode: string;
-  accountNumber: string;
-}
-
-/**
- * The bank details as text lines, or [] when the sort code or account number hasn't been
- * filled in yet (the message then points to the invoice instead).
- */
-export function bankLines(b: BankDetails | undefined, fallbackName: string): string[] {
-  if (!b?.sortCode.trim() || !b.accountNumber.trim()) return [];
-  const name = oneLine(b.accountName) || oneLine(fallbackName);
-  return [
-    ...(name ? [`Account name: ${name}`] : []),
-    ...(b.bankName.trim() ? [`Bank: ${oneLine(b.bankName)}`] : []),
-    `Sort code: ${oneLine(b.sortCode)}`,
-    `Account number: ${oneLine(b.accountNumber)}`,
-  ];
 }
 
 const firstName = (name: string) => name.trim().split(/\s+/)[0] || "there";
-
-/** How to pay: the bank details when they're set, otherwise a pointer to the invoice. */
-function payBy(i: InvoiceEmailInput, reference: string): string {
-  const lines = bankLines(i.bank, i.ownerName);
-  return lines.length
-    ? `You can pay by bank transfer to:\n${lines.join("\n")}\n\n${reference}`
-    : `Payment details are on the invoice. ${reference}`;
-}
 
 export function invoiceEmail(i: InvoiceEmailInput): { subject: string; text: string } {
   return {
@@ -143,7 +112,7 @@ export function invoiceEmail(i: InvoiceEmailInput): { subject: string; text: str
 
 Please find attached invoice ${i.number} for ${formatGBP(i.amountDue)}, due on ${formatDate(i.dueDate)}.
 
-${payBy(i, `Please use ${i.number} as the payment reference so it's matched straight away.`)}
+Payment details are on the invoice. Please use ${i.number} as the payment reference so it's matched straight away.
 
 Thank you,
 ${i.ownerName}
@@ -165,7 +134,7 @@ ${
     : `A friendly reminder that invoice ${i.number} for ${formatGBP(i.amountDue)} is due on ${formatDate(i.dueDate)}.`
 } I've attached it again for you.
 
-${payBy(i, `Please use ${i.number} as the reference.`)} If you've already paid, thank you, and please ignore this email.
+Payment details are on the invoice; please use ${i.number} as the reference. If you've already paid, thank you, and please ignore this email.
 
 Kind regards,
 ${i.ownerName}

@@ -44,7 +44,6 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
     ownerName: settings.ownerName,
     businessName: settings.businessName,
     today: todayISO(),
-    bank: settings,
   };
   const first = invoiceEmail(wording);
   const reminder = reminderEmail(wording);
