@@ -13,13 +13,16 @@ import {
 } from "@/app/actions";
 import { ActionButton, ResultButton, SubmitButton } from "@/components/buttons";
 import { EmailPanel } from "@/components/EmailForm";
+import { WhatsAppInvoice } from "@/components/WhatsAppInvoice";
 import { Icon } from "@/components/icons";
 import { Notice, PageHeader, StatusBadge } from "@/components/ui";
 import { getInvoice, getSettings, lineAmount } from "@/lib/data";
 import { formatDate, todayISO } from "@/lib/dates";
 import { invoiceEmail, reminderEmail } from "@/lib/email";
 import { driveLink, driveStatus } from "@/lib/google";
+import { invoiceFileName } from "@/lib/invoice-pdf";
 import { formatGBP } from "@/lib/money";
+import { invoiceWhatsApp, whatsAppNumber } from "@/lib/whatsapp";
 
 export const metadata: Metadata = { title: "Invoice" };
 
@@ -44,6 +47,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   };
   const first = invoiceEmail(wording);
   const reminder = reminderEmail(wording);
+  const whatsApp = invoiceWhatsApp(wording);
 
   return (
     <>
@@ -67,13 +71,23 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
                 Email client
               </a>
             )}
+            {canEmail && (
+              <WhatsAppInvoice
+                invoiceId={id}
+                fileName={invoiceFileName(invoice, client)}
+                message={whatsApp}
+                phone={whatsAppNumber(client.phone)}
+                markSent={draft ? setInvoiceStatus.bind(null, id, "sent") : undefined}
+              />
+            )}
           </div>
         }
       />
 
       {draft && (
         <Notice>
-          This is a draft. Check the lines, then email it to your client below. Emailing it marks it as sent.
+          This is a draft. Check the lines, then email it to your client below, or send it on WhatsApp. Emailing it marks it
+          as sent; after sending on WhatsApp, tap Mark as sent.
         </Notice>
       )}
 

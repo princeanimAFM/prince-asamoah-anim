@@ -18,6 +18,7 @@ import { Notice, PageHeader } from "@/components/ui";
 import { contractPayments } from "@/lib/contract-payments";
 import { getSettings, listContractInvoices } from "@/lib/data";
 import { formatGBP } from "@/lib/money";
+import { whatsAppNumber } from "@/lib/whatsapp";
 import { getContract, siteUrl } from "@/lib/contracts";
 import { driveLink, driveStatus } from "@/lib/google";
 
@@ -47,7 +48,7 @@ export default async function ContractPage({
   const who = client.company || client.name;
   const link = contract.token ? `${await siteUrl()}/sign/${contract.token}` : "";
   const message = `Hi ${client.name.split(" ")[0]}, here is our agreement for "${contract.title.replace(/^Software Development Agreement: /, "")}". Please read it and sign here: ${link}\n\nThanks,\n${settings.ownerName}\n${settings.businessName}`;
-  const phone = client.phone.replace(/\D/g, "").replace(/^0(?=7\d{9}$)/, "44").replace(/^0(?=\d{9}$)/, "233");
+  const phone = whatsAppNumber(client.phone);
 
   return (
     <>
