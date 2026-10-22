@@ -12,7 +12,7 @@ export function Footer() {
           <p className="max-w-xs text-sm text-paper/70">{SITE.tagline}.</p>
         </div>
         <FooterList title="Shop" links={[["/shop", "Shop all"], ["/new-arrivals", "New in"], ["/women", "Women"], ["/men", "Men"], ["/lookbook", "Lookbook"], ["/custom", "Made for you"], ["/sale", "Sale"]]} />
-        <FooterList title="Help" links={[["/faq", "FAQ and delivery"], ["/contact", "Contact us"], ["/about", "About KACE"]]} />
+        <FooterList title="Help" links={[["/faq", "FAQ and delivery"], ["/contact", "Contact us"], ["/about", "About KACE"], ["/terms", "Terms of sale"], ["/privacy", "Privacy notice"]]} />
         <div className="space-y-2 text-sm text-paper/70">
           <p className="eyebrow text-paper">We deliver to</p>
           <p>{SITE.deliveryCountries.join(" and ")}</p>

@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import { priceCart, MAX_QTY_PER_LINE } from "@/lib/cart";
-import { SITE } from "@/lib/site";
+import { Checkout } from "./Checkout";
 import { Price } from "./Price";
 import { ProductImage } from "./ProductImage";
 import { useShop } from "./ShopProvider";
 
-export function CartView() {
+export function CartView({ checkoutEnabled, testMode }: { checkoutEnabled: boolean; testMode: boolean }) {
   const { lines, dispatch, ready, format, currency } = useShop();
   const cart = priceCart(lines);
 
@@ -64,15 +64,11 @@ export function CartView() {
         <h2 className="display text-2xl">Order summary</h2>
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between"><dt>Subtotal ({cart.count} {cart.count === 1 ? "item" : "items"})</dt><dd className="font-semibold tabular-nums">{format(cart.subtotal)}</dd></div>
-          <div className="flex justify-between text-muted"><dt>Delivery</dt><dd>At checkout</dd></div>
         </dl>
         {currency === "GHS" && (
           <p className="text-xs text-muted">Cedi prices are a guide. You pay £{(cart.subtotal / 100).toFixed(2)} in pounds; your bank converts it.</p>
         )}
-        <button type="button" disabled={SITE.preview} className="w-full bg-ink px-6 py-4 font-semibold text-paper disabled:cursor-not-allowed disabled:opacity-50">
-          {SITE.preview ? "Checkout opens soon" : "Checkout"}
-        </button>
-        <p className="text-xs text-muted">Pay by Visa, Mastercard, Amex or Apple Pay. Mobile money coming soon.</p>
+        <Checkout lines={lines} subtotal={cart.subtotal} format={format} enabled={checkoutEnabled} testMode={testMode} />
       </aside>
     </div>
   );

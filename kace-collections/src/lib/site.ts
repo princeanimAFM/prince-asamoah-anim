@@ -9,6 +9,9 @@ export const SITE = {
   whatsapp: "", // TODO before launch, in international format, e.g. +44 7…
   instagram: "",
   deliveryCountries: ["United Kingdom", "Ghana"],
-  /** True until the shop takes real orders. Shows the preview banner and disables checkout. */
+  /**
+   * True until the shop takes real orders. Shows the preview banner, keeps search engines away,
+   * and only lets checkout run with Stripe test keys.
+   */
   preview: true,
 };
