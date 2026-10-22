@@ -130,6 +130,7 @@
   .gallery a { display: block; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--tint); box-shadow: 0 8px 24px rgba(16,42,51,.06); transition: transform .2s ease; }
   .gallery a:hover { transform: translateY(-3px); }
   .gallery img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .gallery img.top { object-position: top; }
   .gallery .wide { grid-column: 1 / -1; }
   .gallery .wide img { aspect-ratio: 16 / 9; }
   .gcap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; font-size: 14.5px; color: var(--ink-2); }
@@ -205,7 +206,7 @@
       <span class="tag care"><i></i>UK Registered Nurse (NMC)</span>
       <span class="tag care"><i></i>Basic Life Support trainer</span>
       <span class="tag"><i></i>Master Data Scientist, 10Alytics</span>
-      <span class="tag"><i></i>Built and shipped a live app</span>
+      <span class="tag"><i></i>Built a live app on Google Play</span>
     </div>
 
     <div class="trace" aria-hidden="true">
@@ -230,7 +231,7 @@
         <div class="fact"><dt>Based</dt><dd>Scotland, United Kingdom</dd></div>
         <div class="fact"><dt>Certified</dt><dd>Master Data Scientist, 10Alytics (Jan 2026)</dd></div>
         <div class="fact"><dt>Trainer</dt><dd>Basic Life Support Train the Trainer (Feb 2025)</dd></div>
-        <div class="fact"><dt>Built</dt><dd>The AFM HUB, a live Android and web app</dd></div>
+        <div class="fact"><dt>Built</dt><dd>The AFM HUB, live on Google Play and the web, and theafmchurch.org</dd></div>
         <div class="fact"><dt>Interests</dt><dd>Health data, analytics, dashboards, practical apps</dd></div>
       </dl>
     </div>
@@ -311,7 +312,7 @@
         <div class="k">Data &amp; technology</div>
         <h3>Data Science</h3>
         <p>Certified Master Data Scientist (10Alytics), and applied by building a real product used by a community of members.</p>
-        <div class="skills"><span>Python</span><span>SQL</span><span>Excel</span><span>Tableau</span><span>Statistics</span><span>Exploratory data analysis</span><span>Data visualisation</span><span>Machine learning</span><span>Computer vision</span><span>React Native</span><span>Supabase</span></div>
+        <div class="skills"><span>Python</span><span>SQL</span><span>Excel</span><span>Tableau</span><span>Statistics</span><span>Exploratory data analysis</span><span>Data visualisation</span><span>Machine learning</span><span>Computer vision</span><span>React Native</span><span>TypeScript</span><span>Supabase</span></div>
       </article>
     </div>
   </section>
@@ -326,8 +327,10 @@
         <p>The official app for a faith community with members across Ghana, the UK and beyond. I planned, built and launched it end to end, from sign-in and content to publishing and launch materials.</p>
         <ul>
           <li>500+ audio sermons pulled in automatically from a podcast feed</li>
-          <li>Live services, a daily quote, prayer requests, a free e-book library and announcements</li>
-          <li>Accounts with Google or email sign-in, with optional profile photos</li>
+          <li>A full Bible in 17 versions, including Akuapem Twi, Asante Twi and Ewe: downloads once and reads offline, with search, highlights, notes and a Verse of the Day</li>
+          <li>Live services, a daily quote and Bible verse notification, prayer requests, a free e-book library and announcements</li>
+          <li>An AI assistant that answers questions about the ministry and helps members find their way around the app</li>
+          <li>Accounts with Google or email sign-in, optional profile photos, and two colour themes in light or dark</li>
           <li>An owner dashboard that sends newsletters by email and phone notification, from the church&rsquo;s own verified email domain</li>
           <li>Automatic in-app updates, so most changes reach members without reinstalling</li>
           <li>Live on Google Play and the web, with notifications for new Telegram posts and times shown in each member&rsquo;s own time zone</li>
@@ -340,9 +343,9 @@
       </div>
       <div class="metrics">
         <div class="metric"><b>500+</b><span>sermons available</span></div>
+        <div class="metric"><b>17</b><span>Bible versions, readable offline</span></div>
+        <div class="metric"><b>3</b><span>Ghanaian languages in the Bible</span></div>
         <div class="metric"><b>2</b><span>platforms: Android and web</span></div>
-        <div class="metric"><b>2</b><span>ways to sign in</span></div>
-        <div class="metric"><b>10</b><span>features at launch</span></div>
       </div>
     </article>
     <article class="project">
@@ -354,6 +357,7 @@
           <li>Weekly services, the Zoom prayer meeting with automatic local times, biography, handbook, books and giving</li>
           <li>Live announcements, e-book library, perfume catalogue and newsletter sign-up, all fed from the app</li>
           <li>Custom domain with HTTPS, registered with Google Search Console, with structured church data for search</li>
+          <li>Links visitors to the app on Google Play with a button and a branded QR code, and hosts the Bible text the app downloads</li>
         </ul>
         <div class="links">
           <a class="btn primary" href="https://theafmchurch.org" target="_blank" rel="noopener">Visit theafmchurch.org ↗</a>
@@ -366,9 +370,12 @@
   </section>
 
   <section id="design">
-    <div class="sh"><h2>Design work</h2><span class="eyebrow">Launch campaign · September 2026</span></div>
-    <p class="work-intro">The launch materials for The AFM HUB: flyers, a branded QR code that downloads the app, and the Google Play store header. Tap any image to view it full size.</p>
+    <div class="sh"><h2>Design work</h2><span class="eyebrow">Launch campaigns · September–October 2026</span></div>
+    <p class="work-intro">Launch materials for The AFM HUB: the Bible launch flier and WhatsApp Status, a graphic for the two colour themes, the app launch flyers, a branded QR code that downloads the app, and the Google Play store header. Tap any image to view it full size.</p>
     <div class="gallery">
+      <a href="work-bible.jpg" target="_blank" rel="noopener"><img src="work-bible.jpg" alt="Flier announcing the Holy Bible in The AFM HUB, with three app screens"></a>
+      <a href="work-bible-status.jpg" target="_blank" rel="noopener"><img class="top" src="work-bible-status.jpg" alt="WhatsApp Status version of the Bible launch flier"></a>
+      <a href="work-themes.jpg" target="_blank" rel="noopener"><img src="work-themes.jpg" alt="The app's Home screen in AFM Green and in Church Blue and White"></a>
       <a href="work-launch.jpg" target="_blank" rel="noopener"><img src="work-launch.jpg" alt="Official app launch flyer for The AFM HUB"></a>
       <a href="work-features.jpg" target="_blank" rel="noopener"><img src="work-features.jpg" alt="Flyer listing everything in The AFM HUB app"></a>
       <a href="work-qr.jpg" target="_blank" rel="noopener"><img src="work-qr.jpg" alt="Branded QR code poster to download the app"></a>
@@ -419,7 +426,9 @@
 <script>
   // Learning log — newest first. To add an entry, add one line here.
   const LOG = [
+    { date: 'Oct 2026', kind: 'data', title: 'Added the Holy Bible to The AFM HUB', text: 'Built a Bible reader with 17 openly licensed versions, including Akuapem Twi, Asante Twi and Ewe. Each downloads once for offline reading, with search, highlights, notes, a Verse of the Day and a daily verse notification. Designed the launch flier and WhatsApp Status for it.' },
     { date: 'Oct 2026', kind: 'data', title: 'Released The AFM HUB on Google Play', text: 'Took the app through closed testing and Google review to a public production release, with code shrinking for a smaller, safer app.' },
+    { date: 'Oct 2026', kind: 'data', title: 'Colour themes, local times and Telegram alerts', text: 'Let members choose AFM Green or Church Blue & White in light or dark, show service and event times in each member’s own time zone, and send a notification for each new Telegram post.' },
     { date: 'Sep 2026', kind: 'data', title: 'Launched theafmchurch.org', text: 'Built and published the church website on its own domain, connected live to the app’s database, and registered it with Google Search Console.' },
     { date: 'Sep 2026', kind: 'data', title: 'Launched The AFM HUB', text: 'Shipped a live Android and web app with Google sign-in, 500+ sermons and live services, and fixed a sign-in bug found during testing.' },
     { date: 'Sep 2026', kind: 'data', title: 'Designed the launch campaign', text: 'Created launch and features flyers, branded QR codes and Google Play store images for the app.' },
