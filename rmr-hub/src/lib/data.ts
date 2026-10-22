@@ -73,20 +73,27 @@ export async function listContractInvoices(contractId: number) {
 
 export async function getInvoice(id: number) {
   const db = await getDb();
-  const [invoice] = await db.select().from(schema.invoices).where(eq(schema.invoices.id, id));
-  if (!invoice) return null;
-  const [client] = await db.select().from(schema.clients).where(eq(schema.clients.id, invoice.clientId));
-  const items = await db
-    .select()
-    .from(schema.invoiceItems)
-    .where(eq(schema.invoiceItems.invoiceId, id))
-    .orderBy(asc(schema.invoiceItems.position), asc(schema.invoiceItems.id));
-  const payments = await db
-    .select()
-    .from(schema.transactions)
-    .where(eq(schema.transactions.invoiceId, id))
-    .orderBy(asc(schema.transactions.date));
-  return { invoice, client, items, payments, total: invoiceTotal(items) };
+  // One round trip for the invoice and client, then the lines and payments together: the
+  // database is in London and the app's server isn't, so every round trip counts.
+  const [[row], items, payments] = await Promise.all([
+    db
+      .select({ invoice: schema.invoices, client: schema.clients })
+      .from(schema.invoices)
+      .innerJoin(schema.clients, eq(schema.invoices.clientId, schema.clients.id))
+      .where(eq(schema.invoices.id, id)),
+    db
+      .select()
+      .from(schema.invoiceItems)
+      .where(eq(schema.invoiceItems.invoiceId, id))
+      .orderBy(asc(schema.invoiceItems.position), asc(schema.invoiceItems.id)),
+    db
+      .select()
+      .from(schema.transactions)
+      .where(eq(schema.transactions.invoiceId, id))
+      .orderBy(asc(schema.transactions.date)),
+  ]);
+  if (!row) return null;
+  return { invoice: row.invoice, client: row.client, items, payments, total: invoiceTotal(items) };
 }
 
 /** Hours per week for the visa limit, most recent week first. */
