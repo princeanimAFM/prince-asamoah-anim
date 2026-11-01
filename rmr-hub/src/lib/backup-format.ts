@@ -47,7 +47,7 @@ export function parseBackup(text: string): Backup {
     throw new Error("That file isn't an RMR Hub backup (it isn't valid JSON).");
   }
   const b = data as Partial<Backup>;
-  if (!b || b.format !== BACKUP_FORMAT || typeof b.tables !== "object" || !b.tables) {
+  if (!b || b.format !== BACKUP_FORMAT || typeof b.tables !== "object" || !b.tables || Array.isArray(b.tables)) {
     throw new Error("That file isn't an RMR Hub backup.");
   }
   if (typeof b.version !== "number" || b.version > BACKUP_VERSION) {
@@ -55,7 +55,9 @@ export function parseBackup(text: string): Backup {
   }
   const tables = {} as Backup["tables"];
   for (const name of TABLE_NAMES) {
-    const rows = (b.tables as Record<string, unknown>)[name] ?? [];
+    // Every backup has every section. Restoring empties all tables first, so a missing
+    // section must not be read as "no records".
+    const rows = (b.tables as Record<string, unknown>)[name];
     if (!Array.isArray(rows)) throw new Error(`The backup's ${name} section is damaged.`);
     const columns = getTableColumns(BACKUP_TABLES[name]);
     tables[name] = rows.map((row, i) => {
