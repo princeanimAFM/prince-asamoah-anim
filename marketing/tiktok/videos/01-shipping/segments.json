@@ -1,0 +1,37 @@
+[
+ {
+  "id": "hook",
+  "text": "Do you run a shipping business, and spend your whole day chasing payments?",
+  "cap": "Run a shipping business? <mark>Chasing payments all day?</mark>"
+ },
+ {
+  "id": "pain",
+  "text": "Customers asking, where's my parcel? Payment screenshots everywhere. And everything written in a notebook.",
+  "cap": "\"Where's my parcel?\" · payment screenshots · <mark>a notebook</mark>"
+ },
+ {
+  "id": "intro",
+  "text": "Here's a simple app built for exactly that. Every parcel, every customer, and who still owes you, all on one screen.",
+  "cap": "Every parcel and <mark>who still owes you</mark>, on one screen"
+ },
+ {
+  "id": "update",
+  "text": "When the ship lands, tap once, and the customer gets a message straight away.",
+  "cap": "Ship landed? <mark>One tap</mark> and the customer is told"
+ },
+ {
+  "id": "track",
+  "text": "They can check their own tracking link, any time. No more calls.",
+  "cap": "Their own tracking link. <mark>No more calls.</mark>"
+ },
+ {
+  "id": "remind",
+  "text": "Who hasn't paid? Send them all a reminder, in one tap.",
+  "cap": "Who hasn't paid? <mark>Remind them in one tap</mark>"
+ },
+ {
+  "id": "cta",
+  "text": "Want an app like this for your business? I'm R M R Dev Works. Send me a message, or email me. It's in my bio.",
+  "cap": ""
+ }
+]

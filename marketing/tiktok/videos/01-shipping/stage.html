@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sam's Shipping demo video</title>
+<style>
+  :root {
+    --ink: #0f172a; --muted: #64748b; --line: #e2e8f0; --bg: #f8fafc;
+    --brand: #0e7490; --brand-2: #155e75; --ok: #16a34a; --warn: #d97706; --bad: #dc2626;
+    --wa: #334155; --wa-bg: #eef2f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  #root { position: relative; width: 540px; height: 960px; overflow: hidden; transform: scale(2); transform-origin: 0 0; background: #0b1220; font-family: Inter, system-ui, sans-serif; color: var(--ink); }
+  .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+  .scene.on { opacity: 1; }
+
+  /* Captions: kept in the upper-middle, clear of TikTok's buttons on the right and text at the bottom */
+  #cap { position: absolute; left: 28px; right: 72px; top: 76px; z-index: 50; text-align: center;
+    font: 800 25px/1.25 Inter, sans-serif; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.6); min-height: 64px; }
+  #cap span { background: rgba(15,23,42,.78); padding: 6px 12px; border-radius: 10px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  #cap mark { background: none; color: #fde047; }
+
+  /* 1. Hook */
+  #hook { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 22px; padding: 40px; }
+  #hook .big { font: 900 54px/1.05 Inter, sans-serif; color: #fff; text-align: center; letter-spacing: -1px; }
+  #hook .big em { font-style: normal; color: #fde047; }
+  #hook .emoji { font-size: 88px; animation: bob 1.2s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-10px) rotate(-6deg); } }
+
+  /* 2. Pain: message chaos */
+  #pain { background: var(--wa-bg); }
+  .wa-top { background: var(--wa); color: #fff; padding: 52px 20px 14px; font-weight: 700; font-size: 19px; display: flex; gap: 12px; align-items: center; }
+  .wa-top .av { width: 38px; height: 38px; border-radius: 50%; background: #64748b; display: grid; place-items: center; font-size: 18px; }
+  .wa-top small { display: block; font-weight: 400; font-size: 13px; opacity: .85; }
+  .chat { padding: 190px 22px 0; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 82%; background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 19px; box-shadow: 0 1px 1px rgba(0,0,0,.15);
+    transform: scale(.6); opacity: 0; transition: all .25s cubic-bezier(.3,1.6,.6,1); }
+  .msg.show { transform: scale(1); opacity: 1; }
+  .msg b { display: block; font-size: 14px; color: #c2410c; }
+  .msg .t { font-size: 12px; color: var(--muted); text-align: right; }
+  .msg.shot { background: #fff; padding: 6px; }
+  .shot .rcpt { background: linear-gradient(#fefce8, #fef9c3); border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 15px; width: 240px; }
+  .shot .rcpt b { color: #854d0e; font-size: 13px; }
+  .note { position: absolute; right: 24px; bottom: 120px; width: 230px; background: #fffbeb; border-radius: 6px; padding: 14px 16px; transform: rotate(4deg) scale(.6);
+    box-shadow: 0 10px 25px rgba(0,0,0,.25); font: 20px/1.5 "Comic Sans MS", cursive; color: #1e3a8a; opacity: 0; transition: all .35s;
+    background-image: repeating-linear-gradient(#fffbeb 0 29px, #bfdbfe 29px 30px); }
+  .note.show { opacity: 1; transform: rotate(4deg) scale(1); }
+  .note s { color: #b91c1c; }
+  .badge-count { position: absolute; top: 58px; right: 26px; background: #ef4444; color: #fff; font-weight: 800; border-radius: 99px; padding: 4px 12px; font-size: 18px; }
+
+  /* 3. The app, in a phone */
+  #app { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); }
+  .phone { position: absolute; left: 50%; top: 168px; width: 380px; height: 640px; margin-left: -190px; transform: scale(1.24); transform-origin: top center; background: #111; border-radius: 44px; padding: 12px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.5); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 34px; overflow: hidden; background: var(--bg); }
+  .view { position: absolute; inset: 0; transition: transform .35s ease, opacity .35s; background: var(--bg); overflow: hidden; }
+  .view.off { transform: translateX(100%); opacity: 0; }
+  .bar { background: var(--brand); color: #fff; padding: 34px 16px 12px; }
+  .bar h1 { font-size: 19px; display: flex; align-items: center; gap: 8px; }
+  .bar p { font-size: 12px; opacity: .85; }
+  .demo { background: #fde047; color: #713f12; font: 800 10px/1 Inter; padding: 4px 6px; border-radius: 4px; letter-spacing: .5px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .stat small { color: var(--muted); font-size: 11px; }
+  .stat div { font-size: 20px; font-weight: 800; }
+  .stat.bad div { color: var(--bad); }
+  .tabs { display: flex; gap: 6px; padding: 0 12px 8px; }
+  .tab { font-size: 12px; font-weight: 700; padding: 6px 10px; border-radius: 99px; background: #e2e8f0; color: #334155; }
+  .tab.on { background: var(--ink); color: #fff; }
+  .list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+  .row { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; transition: background .3s; }
+  .row b { font-size: 14px; }
+  .row small { color: var(--muted); font-size: 11px; }
+  .pill { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 99px; align-self: center; text-transform: uppercase; letter-spacing: .3px; }
+  .p-sea { background: #dbeafe; color: #1d4ed8; } .p-port { background: #fef3c7; color: #92400e; } .p-ready { background: #dcfce7; color: #166534; } .p-wh { background: #f1f5f9; color: #475569; }
+  .owe { color: var(--bad); font-weight: 700; } .paid { color: var(--ok); font-weight: 700; }
+  .back { font-size: 13px; opacity: .9; }
+  .card { margin: 12px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .card h2 { font-size: 16px; }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; margin-top: 8px; }
+  .kv span:nth-child(odd) { color: var(--muted); }
+  .steps { list-style: none; margin-top: 4px; }
+  .steps li { position: relative; padding: 0 0 14px 30px; font-size: 13px; color: var(--muted); }
+  .steps li::before { content: ""; position: absolute; left: 6px; top: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #cbd5e1; background: #fff; transition: all .3s; }
+  .steps li::after { content: ""; position: absolute; left: 12px; top: 18px; bottom: 0; width: 2px; background: #e2e8f0; }
+  .steps li:last-child::after { display: none; }
+  .steps li.done { color: var(--ink); font-weight: 600; }
+  .steps li.done::before { background: var(--ok); border-color: var(--ok); }
+  .steps li.now::before { box-shadow: 0 0 0 5px rgba(22,163,74,.25); }
+  .steps small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+  .btn { display: block; width: calc(100% - 24px); margin: 8px 12px 0; padding: 12px; border-radius: 12px; border: 0; font: 700 14px Inter; color: #fff; background: var(--brand); text-align: center; transition: transform .1s; }
+  .btn.alt { background: #fff; color: var(--brand); border: 2px solid var(--brand); }
+  .btn.wa { background: var(--brand); }
+  .btn.small { display: inline-block; width: auto; margin: 0; padding: 6px 10px; font-size: 11px; border-radius: 8px; grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .btn.sent { background: #94a3b8 !important; }
+  .press { transform: scale(.94); }
+  .toast { position: absolute; left: 12px; right: 12px; top: 40px; background: #14532d; color: #fff; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 700;
+    transform: translateY(calc(-100% - 60px)); transition: transform .35s cubic-bezier(.3,1.4,.6,1); z-index: 5; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+  .toast.show { transform: translateY(0); }
+  .toast small { display: block; font-weight: 400; opacity: .85; }
+  .cust .bar { background: #0f172a; }
+  .big-status { text-align: center; padding: 18px 0 6px; }
+  .big-status div { font-size: 44px; }
+  .big-status b { display: block; font-size: 20px; margin-top: 4px; }
+  .big-status small { color: var(--muted); font-size: 12px; }
+  .url { margin: 8px 12px 0; font: 12px ui-monospace, monospace; background: #e2e8f0; padding: 8px 10px; border-radius: 8px; color: #334155; }
+
+  /* Fake finger */
+  #finger { position: absolute; z-index: 60; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.45); border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35); transform: translate(-50%, -50%) scale(1); transition: left .5s ease, top .5s ease, transform .12s, opacity .3s; opacity: 0; left: 400px; top: 800px; }
+  #finger.down { transform: translate(-50%, -50%) scale(.75); background: rgba(255,255,255,.8); }
+
+  /* 4. Call to action */
+  #cta { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 50px; gap: 20px; color: #fff; }
+  #cta .q { font: 900 46px/1.08 Inter; letter-spacing: -1px; }
+  #cta .q em { font-style: normal; color: #fde047; }
+  #cta .logo { display: flex; align-items: center; gap: 14px; background: #fff; color: #1e2a44; padding: 14px 22px 14px 16px; border-radius: 20px; box-shadow: 0 12px 30px rgba(0,0,0,.3); text-align: left; }
+  #cta .logo b { display: block; font: 800 30px/1 'Baloo 2'; } #cta .logo b span { color: #2b6ce0; }
+  #cta .logo small { display: block; font: 600 14px Nunito, Inter; color: #4a5878; margin-top: 4px; }
+  @font-face { font-family: 'Baloo 2'; src: url(../../../../rmr-hub/src/app/fonts/baloo-800.woff2); font-weight: 800; }
+  @font-face { font-family: Nunito; src: url(../../../../rmr-hub/src/app/fonts/nunito.woff2); font-weight: 200 1000; }
+  #cta .sub { font: 600 21px/1.4 Inter; opacity: .92; }
+  #cta .wa-btn { background: #fff; color: #1e2a44; font: 800 22px Inter; padding: 14px 24px; border-radius: 99px; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { transform: scale(1.06); } }
+  #cta .fine { font-size: 13px; opacity: .6; }
+</style>
+</head>
+<body>
+<div id="root">
+<div id="cap"></div>
+<div id="finger"></div>
+<div id="mk" style="position:absolute;right:0;bottom:0;width:4px;height:4px;background:#000;z-index:99"></div>
+
+<section id="hook" class="scene">
+  <div class="emoji">📦</div>
+  <div class="big">Run a <em>shipping</em> business?</div>
+  <div class="big" style="font-size:40px">Chasing payments <em>all day?</em></div>
+</section>
+
+<section id="pain" class="scene">
+  <div class="wa-top"><div class="av">💬</div><div>Messages<small>12 unread</small></div></div>
+  <div class="badge-count">47</div>
+  <div class="chat">
+    <div class="msg"><b>Sarah K.</b>Boss, where's my parcel?? 😩<div class="t">08:02</div></div>
+    <div class="msg"><b>Daniel M.</b>Has the ship landed? It's been 3 weeks<div class="t">08:15</div></div>
+    <div class="msg shot"><b>Priya S.</b><div class="rcpt"><b>BANK TRANSFER</b><br>1,200.00<br><small>Ref: parcel?? pls check</small></div><div class="t">09:40</div></div>
+    <div class="msg"><b>James O.</b>I sent the money yesterday. Check again<div class="t">10:11</div></div>
+    <div class="msg"><b>Maria L.</b>Hello?? 📞 Missed call (3)<div class="t">10:30</div></div>
+  </div>
+  <div class="note">Sarah – 2 boxes – <s>paid?</s><br>Daniel – owes 800??<br>James – check bank</div>
+</section>
+
+<section id="app" class="scene">
+  <div class="phone"><div class="screen">
+
+    <div class="view" id="v-home">
+      <div class="bar"><h1>🚢 Sam's Shipping <span class="demo">DEMO</span></h1><p>Sea &amp; air freight · sample data</p></div>
+      <div class="stats">
+        <div class="stat"><small>Parcels in transit</small><div>38</div></div>
+        <div class="stat bad"><small>Unpaid</small><div id="owed">6,350</div></div>
+      </div>
+      <div class="tabs"><span class="tab on" id="t-all">All parcels</span><span class="tab" id="t-unpaid">Unpaid (3)</span><span class="tab">Ready</span></div>
+      <div class="list" id="l-all">
+        <div class="row" id="r-esi"><b>KS-2041 · Sarah K.</b><span class="pill p-sea" id="esi-pill">On the ship</span><small>2 boxes · 0.4 CBM · Sea</small><small class="paid" style="text-align:right">Paid</small></div>
+        <div class="row"><b>KS-2038 · Daniel M.</b><span class="pill p-port">At port</span><small>Phone accessories · 0.2 CBM</small><small class="owe" style="text-align:right">Owes 800</small></div>
+        <div class="row"><b>KS-2035 · Priya S.</b><span class="pill p-ready">Ready for pickup</span><small>Beauty products · Air 12kg</small><small class="paid" style="text-align:right">Paid</small></div>
+        <div class="row"><b>KS-2033 · James O.</b><span class="pill p-sea">On the ship</span><small>Shoes · 0.6 CBM</small><small class="owe" style="text-align:right">Owes 2,750</small></div>
+        <div class="row"><b>KS-2030 · Maria L.</b><span class="pill p-wh">At warehouse</span><small>Fabric · 0.3 CBM</small><small class="owe" style="text-align:right">Owes 2,800</small></div>
+      </div>
+    </div>
+
+    <div class="view off" id="v-parcel">
+      <div class="bar"><p class="back">‹ All parcels</p><h1>KS-2041 <span class="demo">DEMO</span></h1><p>Sarah K. · 2 boxes · Sea freight</p></div>
+      <div class="card">
+        <h2>Where it is</h2>
+        <ul class="steps" style="margin-top:10px">
+          <li class="done">Collected from supplier<small>12 Oct</small></li>
+          <li class="done now" id="s-ship">On the ship<small>18 Oct · ETA 9 Nov</small></li>
+          <li id="s-port">Arrived at port<small id="s-port-d">–</small></li>
+          <li>Ready for pickup<small>–</small></li>
+        </ul>
+      </div>
+      <button class="btn" id="b-update">Mark as arrived at port ✓</button>
+      <button class="btn alt" id="b-share">Share tracking link</button>
+    </div>
+
+    <div class="view off cust" id="v-track">
+      <div class="bar"><h1>Track your parcel <span class="demo">DEMO</span></h1><p>Sam's Shipping</p></div>
+      <div class="url">samsshipping.app/track/KS-2041</div>
+      <div class="big-status"><div>⚓</div><b>Arrived at port</b><small>Ready for pickup in about 2 days</small></div>
+      <div class="card">
+        <div class="kv"><span>Parcel</span><span>KS-2041 · 2 boxes</span><span>Customer</span><span>Sarah K.</span><span>Payment</span><span class="paid">Paid in full ✓</span><span>Pickup</span><span>Main depot</span></div>
+      </div>
+      <div class="card" style="font-size:12px;color:#64748b">You'll get a text message when it's ready. No need to call.</div>
+    </div>
+
+    <div class="view off" id="v-unpaid">
+      <div class="bar"><h1>🚢 Sam's Shipping <span class="demo">DEMO</span></h1><p>Who hasn't paid</p></div>
+      <div class="stats"><div class="stat bad" style="grid-column: span 2"><small>Still to collect</small><div id="owed2">6,350</div></div></div>
+      <div class="list">
+        <div class="row"><b>Daniel M. · owes 800</b><small>KS-2038 · at port</small><button class="btn small wa" id="rem-1">Remind</button></div>
+        <div class="row"><b>James O. · owes 2,750</b><small>KS-2033 · on the ship</small><button class="btn small wa" id="rem-2">Remind</button></div>
+        <div class="row"><b>Maria L. · owes 2,800</b><small>KS-2030 · at warehouse</small><button class="btn small wa" id="rem-3">Remind</button></div>
+      </div>
+      <button class="btn wa" id="rem-all" style="margin-top:14px">Remind everyone by text</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div></div>
+</section>
+
+<section id="cta" class="scene">
+  <div class="q">Want an app like this for <em>your</em> business?</div>
+  <div class="logo"><svg viewBox="0 0 100 100" width="64" height="64" aria-hidden="true"><rect x="31" y="8" width="38" height="38" rx="10" fill="#9DC0F7"/><rect x="10" y="52" width="38" height="38" rx="10" fill="#2B6CE0"/><rect x="52" y="52" width="38" height="38" rx="10" fill="#5A92EE"/></svg><div><b>RMR <span>Dev Works</span></b><small>Where ideas take shape</small></div></div>
+  <div class="sub">Apps &amp; websites for small businesses</div>
+  <div class="wa-btn">Message me · email in bio</div>
+  <div class="fine">Demo app with made-up data</div>
+</section>
+
+</div>
+<script>
+  const $ = (s) => document.querySelector(s);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  window.scene = (id) => { document.querySelectorAll(".scene").forEach((s) => s.classList.toggle("on", s.id === id)); };
+  window.caption = (html) => { $("#cap").innerHTML = html ? `<span>${html}</span>` : ""; };
+  window.view = (id) => { document.querySelectorAll(".view").forEach((v) => v.classList.toggle("off", v.id !== id)); };
+  window.toast = async (html, ms = 1800) => { const t = $("#toast"); t.innerHTML = html; t.classList.add("show"); await sleep(ms); t.classList.remove("show"); };
+  window.tap = async (sel) => {
+    const el = $(sel), f = $("#finger"), r = el.getBoundingClientRect();
+    f.style.opacity = 1; f.style.left = `${(r.left + r.width / 2) / 2}px`; f.style.top = `${(r.top + r.height / 2) / 2}px`;
+    await sleep(550); f.classList.add("down"); el.classList.add("press");
+    await sleep(160); f.classList.remove("down"); el.classList.remove("press");
+  };
+  window.mark = (c) => { $("#mk").style.background = c; };
+  window.hideFinger = () => { $("#finger").style.opacity = 0; };
+  window.painPop = async (gap) => { for (const m of document.querySelectorAll(".msg")) { m.classList.add("show"); await sleep(gap); } $(".note").classList.add("show"); };
+  window.markArrived = () => {
+    $("#s-ship").classList.remove("now"); const p = $("#s-port"); p.classList.add("done", "now"); $("#s-port-d").textContent = "Today";
+    $("#esi-pill").className = "pill p-port"; $("#esi-pill").textContent = "At port";
+  };
+  window.remind = (id) => { const b = $(id); b.classList.add("sent"); b.textContent = "Sent ✓"; };
+</script>
+</body>
+</html>
