@@ -56,3 +56,5 @@ Use the same brand everywhere (RMR Hub, invoices, contracts, TikTok, the `apps/`
 - Colours: blue `#2B6CE0`, light blues `#5A92EE` / `#9DC0F7`, navy `#1E2A44`.
 - Fonts: Baloo 2 (headings) and Nunito (text), in `rmr-hub/src/app/fonts/`.
 - Marketing is for small businesses in general: don't name a country or nationality.
+- Contact: customers reach Prince by TikTok messages or email (animasamoahprince@gmail.com) only.
+  Never show WhatsApp or a phone number in marketing, videos or the link page.
