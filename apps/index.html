@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RMR Dev Works · Apps &amp; websites</title>
+<meta name="description" content="Custom apps and websites that save small businesses time. See a demo, then message me on WhatsApp.">
+<meta property="og:title" content="RMR Dev Works · Apps & websites for small businesses">
+<meta property="og:description" content="Custom apps that fix everyday business headaches. See a demo, then message me on WhatsApp.">
+<meta property="og:image" content="https://princeanimafm.github.io/prince-asamoah-anim/apps/demo-shipping.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1e2a44">
+<link rel="icon" href="rmr-logo.png">
+<style>
+  @font-face { font-family: "Baloo 2"; src: url(fonts/baloo-800.woff2) format("woff2"); font-weight: 800; font-display: swap; }
+  @font-face { font-family: Nunito; src: url(fonts/nunito.woff2) format("woff2"); font-weight: 200 1000; font-display: swap; }
+  :root {
+    --bg: #f7f9fd; --card: #ffffff; --ink: #1e2a44; --ink-2: #4a5878; --line: #e3e9f5;
+    --brand: #2b6ce0; --brand-ink: #ffffff; --accent: #9dc0f7; --wa: #25d366; --wa-ink: #052e16;
+    --hero: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 85%);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111827; --card: #1a2335; --ink: #eef2fb; --ink-2: #a9b6cf; --line: #263149; --brand: #9dc0f7; --brand-ink: #10203f; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font: 17px/1.55 Nunito, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  a:focus-visible, video:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+
+  header { background: var(--hero); color: #fff; text-align: center; padding: 44px 16px 36px; }
+  header img { width: 96px; height: 96px; border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,.35); border: 3px solid rgba(255,255,255,.85); }
+  .tagline { font-size: 15px !important; opacity: .8; margin-top: 2px !important; }
+  header h1 { font: 800 34px/1.1 "Baloo 2", Nunito, sans-serif; letter-spacing: -.01em; margin-top: 14px; }
+  header p { color: #dbe6fb; font-size: 18px; margin-top: 4px; }
+  header p strong { color: #fff; text-decoration: underline; text-decoration-color: #9dc0f7; text-decoration-thickness: 3px; text-underline-offset: 4px; font-weight: 700; }
+
+  .cta { display: grid; gap: 10px; margin-top: 22px; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 14px 18px; border-radius: 14px;
+    font-weight: 800; font-size: 18px; text-decoration: none; transition: transform .1s; }
+  .btn:active { transform: scale(.98); }
+  .btn.wa { background: var(--wa); color: var(--wa-ink); }
+  .btn.mail { background: rgba(255,255,255,.1); color: #fff; border: 1.5px solid rgba(255,255,255,.35); font-weight: 700; }
+  .btn svg { width: 24px; height: 24px; flex: none; }
+
+  section { margin-top: 30px; }
+  h2 { font: 800 23px/1.2 "Baloo 2", Nunito, sans-serif; margin-bottom: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
+
+  .demo video { display: block; width: 100%; max-width: 320px; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 16px; background: #1e2a44; }
+  .demo p { text-align: center; color: var(--ink-2); font-size: 15px; margin-top: 10px; }
+
+  .builds { list-style: none; display: grid; gap: 10px; }
+  .builds li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: grid; grid-template-columns: 34px 1fr; gap: 2px 10px; }
+  .builds .i { font-size: 24px; grid-row: span 2; line-height: 1.3; }
+  .builds b { font-size: 16px; }
+  .builds span { color: var(--ink-2); font-size: 15px; }
+
+  .steps { list-style: none; counter-reset: s; display: grid; gap: 12px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+  .steps li::before { content: counter(s); width: 34px; height: 34px; border-radius: 50%; background: var(--brand); color: var(--brand-ink); display: grid; place-items: center; font-weight: 800; }
+  .steps b { display: block; }
+  .steps span { color: var(--ink-2); font-size: 15px; }
+
+  .final { text-align: center; }
+  .final p { color: var(--ink-2); margin-bottom: 14px; }
+  footer { text-align: center; color: var(--ink-2); font-size: 14px; padding: 34px 16px 44px; }
+  footer a { color: var(--brand); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img src="rmr-logo.png" alt="RMR Dev Works logo" width="96" height="96">
+    <h1>RMR Dev Works</h1>
+    <p class="tagline">Where ideas take shape</p>
+    <p>Apps &amp; websites that <strong>save small businesses time</strong></p>
+    <div class="cta">
+      <a class="btn wa" href="https://wa.me/447879438525?text=Hi%20Prince%2C%20I%20saw%20your%20TikTok.%20I'd%20like%20an%20app%20for%20my%20business." target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.4-.3Z"/></svg>
+        Message me on WhatsApp
+      </a>
+      <a class="btn mail" href="mailto:prince@rmrdevworks.co.uk?subject=App%20for%20my%20business">Email prince@rmrdevworks.co.uk</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="demo" aria-labelledby="demo-h">
+    <h2 id="demo-h">See one in action</h2>
+    <div class="card">
+      <video src="demo-shipping.mp4" poster="demo-shipping.jpg" controls playsinline preload="none" aria-label="42-second demo of a parcel tracking and payment reminder app for a shipping business"></video>
+      <p>A shipping business app: parcel tracking, customer updates and payment reminders.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="build-h">
+    <h2 id="build-h">What I can build for you</h2>
+    <ul class="builds">
+      <li><span class="i">📦</span><b>Tracking &amp; payment reminders</b><span>For shipping, delivery and courier businesses</span></li>
+      <li><span class="i">👗</span><b>Online catalogue &amp; orders</b><span>Share one link instead of posting every item</span></li>
+      <li><span class="i">📅</span><b>Bookings with reminders</b><span>Salons, barbers, rentals: fewer no-shows</span></li>
+      <li><span class="i">🧾</span><b>Who's paid, who owes</b><span>Rent, fees and invoices with automatic reminders</span></li>
+      <li><span class="i">📊</span><b>Stock &amp; orders</b><span>Low-stock alerts before you run out</span></li>
+      <li><span class="i">🌐</span><b>A website that brings in customers</b><span>Simple, fast and easy to update</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="how-h">
+    <h2 id="how-h">How it works</h2>
+    <ol class="steps card">
+      <li><div><b>Message me</b><span>Tell me what slows your business down.</span></div></li>
+      <li><div><b>Free chat</b><span>We work out what the app needs to do. No jargon.</span></div></li>
+      <li><div><b>I build it</b><span>You see it working and give feedback along the way.</span></div></li>
+      <li><div><b>Launch &amp; support</b><span>I set it up for you and stay on hand for changes.</span></div></li>
+    </ol>
+  </section>
+
+  <section class="final">
+    <p>Have a business headache an app could fix?</p>
+    <div class="cta">
+      <a class="btn wa" href="https://wa.me/447879438525?text=Hi%20Prince%2C%20I%20saw%20your%20TikTok.%20I'd%20like%20an%20app%20for%20my%20business." target="_blank" rel="noopener">Message me on WhatsApp</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Demo apps use made-up businesses and data.</p>
+  <p>RMR Dev Works · <a href="../">About Prince</a></p>
+</footer>
+</body>
+</html>

@@ -47,3 +47,12 @@ From `rmr-hub/`: `npm test`, `npm run typecheck` and `npx next build` must all p
 From `kace-collections/`: `npm test`, `npm run typecheck` and `npx next build` must all pass before a commit.
 It sells to consumers in the UK and Ghana, so the consumer-contract and privacy points in `COMPLIANCE.md`
 apply to every feature that takes orders, payments, accounts or emails.
+
+## RMR Dev Works brand
+
+Use the same brand everywhere (RMR Hub, invoices, contracts, TikTok, the `apps/` link page):
+- Logo: the three blue blocks with "RMR Dev Works · Where ideas take shape" (`rmr-hub/public/logo-invoice.png`,
+  the `Blocks` component in `rmr-hub/src/components/icons.tsx`, `rmr-hub/public/icon-512.png`).
+- Colours: blue `#2B6CE0`, light blues `#5A92EE` / `#9DC0F7`, navy `#1E2A44`.
+- Fonts: Baloo 2 (headings) and Nunito (text), in `rmr-hub/src/app/fonts/`.
+- Marketing is for small businesses in general: don't name a country or nationality.
