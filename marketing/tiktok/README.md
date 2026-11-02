@@ -8,6 +8,7 @@ demo app that fixes it. The demo apps are for made-up businesses with sample dat
   and Nunito, no country or nationality. Customers contact Prince by TikTok messages or email only, so
   never show WhatsApp or a phone number. Demo apps send "messages" or "texts".
 - Never use real clients, AFM HUB, Church Care or real people in the videos.
+- Prince doesn't appear on camera: use the AI voice-over or captions and music, never a face-to-camera script.
 
 ## Making a video
 One-time setup (Python venv with the free Kokoro voice and its model files, ~350 MB):
