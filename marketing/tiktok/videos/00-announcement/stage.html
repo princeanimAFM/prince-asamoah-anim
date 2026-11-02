@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RMR Dev Works announcement</title>
+<style>
+  @font-face { font-family: 'Baloo 2'; src: url(../../../../rmr-hub/src/app/fonts/baloo-800.woff2); font-weight: 800; }
+  @font-face { font-family: Nunito; src: url(../../../../rmr-hub/src/app/fonts/nunito.woff2); font-weight: 200 1000; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  #root { position: relative; width: 540px; height: 960px; overflow: hidden; transform: scale(2); transform-origin: 0 0;
+    background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); font-family: Nunito, sans-serif; color: #fff; }
+  #cap { display: none; }
+  .scene { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px; padding: 0 56px 60px; text-align: center; opacity: 0; transform: translateY(18px); transition: opacity .4s, transform .4s; }
+  .scene.on { opacity: 1; transform: none; }
+  .big { font: 800 58px/1.05 'Baloo 2', sans-serif; letter-spacing: -.5px; }
+  .mid { font: 800 42px/1.1 'Baloo 2', sans-serif; }
+  .big em, .mid em { font-style: normal; color: #9dc0f7; }
+  .sub { font: 600 22px/1.4 Nunito, sans-serif; color: #dbe6fb; }
+  .emoji { font-size: 84px; animation: bob 1.2s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-10px) rotate(-6deg); } }
+  .logo { display: flex; align-items: center; gap: 14px; background: #fff; color: #1e2a44; padding: 16px 24px 16px 18px; border-radius: 22px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.3); text-align: left; transform: scale(.85); transition: transform .5s cubic-bezier(.3,1.6,.6,1); }
+  .scene.on .logo { transform: scale(1); }
+  .logo b { display: block; font: 800 34px/1 'Baloo 2'; } .logo b span { color: #2b6ce0; }
+  .logo small { display: block; font: 600 15px Nunito; color: #4a5878; margin-top: 5px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 420px; }
+  .chip { background: rgba(255,255,255,.14); border: 1.5px solid rgba(255,255,255,.35); border-radius: 99px; padding: 8px 16px; font: 700 18px Nunito;
+    opacity: 0; transform: scale(.7); transition: all .3s cubic-bezier(.3,1.6,.6,1); }
+  .chip.show { opacity: 1; transform: scale(1); }
+  .phone { width: 250px; height: 444px; background: #111; border-radius: 34px; padding: 9px; box-shadow: 0 24px 50px rgba(0,0,0,.45); }
+  .phone video { width: 100%; height: 100%; border-radius: 26px; object-fit: cover; display: block; background: #1e2a44; }
+  .handle { font: 800 40px 'Baloo 2'; background: #fff; color: #2b6ce0; padding: 6px 22px; border-radius: 16px; }
+  .arrow { font-size: 44px; animation: bob 1s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div id="root">
+<div id="cap"></div>
+
+<section class="scene" id="s1">
+  <div class="emoji">👀</div>
+  <div class="big">Some <em>news</em>…</div>
+</section>
+
+<section class="scene" id="s2">
+  <div class="mid">I've started a business</div>
+  <div class="logo"><svg viewBox="0 0 100 100" width="70" height="70" aria-hidden="true"><rect x="31" y="8" width="38" height="38" rx="10" fill="#9DC0F7"/><rect x="10" y="52" width="38" height="38" rx="10" fill="#2B6CE0"/><rect x="52" y="52" width="38" height="38" rx="10" fill="#5A92EE"/></svg><div><b>RMR <span>Dev Works</span></b><small>Where ideas take shape</small></div></div>
+</section>
+
+<section class="scene" id="s3">
+  <div class="mid">I build <em>apps &amp; websites</em> for small businesses</div>
+  <div class="chips">
+    <span class="chip">📦 Tracking</span><span class="chip">🛒 Online shops</span><span class="chip">📅 Bookings</span>
+    <span class="chip">🧾 Payment reminders</span><span class="chip">📊 Stock</span>
+  </div>
+</section>
+
+<section class="scene" id="s4">
+  <div class="mid">Like this one 👇</div>
+  <div class="phone"><video id="demo" src="build/demo.webm" muted playsinline preload="auto"></video></div>
+</section>
+
+<section class="scene" id="s5">
+  <div class="sub">See what I build next</div>
+  <div class="big">Follow</div>
+  <div class="handle">@rmrdevworks</div>
+  <div class="sub" style="font-size:19px">Tap the @ in the caption 👇</div>
+  <div class="sub" style="font-size:18px">Know a business that needs an app? Tag them 🙏</div>
+</section>
+
+<div id="mk" style="position:absolute;right:0;bottom:0;width:4px;height:4px;background:#000;z-index:99"></div>
+</div>
+<script>
+  const $ = (s) => document.querySelector(s);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  window.scene = (id) => { document.querySelectorAll(".scene").forEach((s) => s.classList.toggle("on", s.id === id)); };
+  window.caption = () => {};
+  window.mark = (c) => { $("#mk").style.background = c; };
+  window.tap = async () => {};
+  window.chips = async (gap) => { for (const c of document.querySelectorAll(".chip")) { c.classList.add("show"); await sleep(gap); } };
+  window.playDemo = (from) => { const v = $("#demo"); v.currentTime = from; return v.play(); };
+</script>
+</body>
+</html>

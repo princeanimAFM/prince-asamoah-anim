@@ -31,6 +31,8 @@ A video folder has:
   functions `scene`, `caption`, `mark`, `tap` and the `#mk` corner marker that `record.mjs` uses.
 - `scenes.mjs`: what happens on screen during each segment.
 - `script.md`: the script with timings, the post caption and posting notes.
+- Optional `prep.sh`: run by `make.sh` first, for anything the stage needs (e.g. a clip converted to WebM,
+  since the recording browser can't play H.264). A segment with empty `text` is silent for its `dur`.
 
 How it works: `tts.py` voices each segment. `record.mjs` plays the stage in Chromium in time with the
 voice and records it. The recording runs slightly slow, so `sync.py` finds each segment's start from
@@ -41,6 +43,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 `am_michael`; pass another as the third argument to `make.sh`.
 
 ## Video plan
+0. ✅ Announcement for the personal account (`videos/00-announcement`)
 1. ✅ Shipping / freight: chasing payments, "where's my parcel?" (`videos/01-shipping`)
 2. Clothing brand / tailor: re-posting every item; an online catalogue customers order from with their size
 3. Restaurant / food vendor: orders by voice note; menu link and neat orders, sold-out items hidden
