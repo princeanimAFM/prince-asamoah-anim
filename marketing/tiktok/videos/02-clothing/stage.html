@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lena's Studio demo video</title>
+<style>
+
+  :root {
+    --ink: #0f172a; --muted: #64748b; --line: #e2e8f0; --bg: #f8fafc;
+    --brand: #0e7490; --brand-2: #155e75; --ok: #16a34a; --warn: #d97706; --bad: #dc2626;
+    --wa: #334155; --wa-bg: #eef2f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  #root { position: relative; width: 540px; height: 960px; overflow: hidden; transform: scale(2); transform-origin: 0 0; background: #0b1220; font-family: Inter, system-ui, sans-serif; color: var(--ink); }
+  .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+  .scene.on { opacity: 1; }
+
+  /* Captions: kept in the upper-middle, clear of TikTok's buttons on the right and text at the bottom */
+  #cap { position: absolute; left: 28px; right: 72px; top: 76px; z-index: 50; text-align: center;
+    font: 800 25px/1.25 Inter, sans-serif; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.6); min-height: 64px; }
+  #cap span { background: rgba(15,23,42,.78); padding: 6px 12px; border-radius: 10px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  #cap mark { background: none; color: #fde047; }
+
+  /* 1. Hook */
+  #hook { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 22px; padding: 40px; }
+  #hook .big { font: 900 54px/1.05 Inter, sans-serif; color: #fff; text-align: center; letter-spacing: -1px; }
+  #hook .big em { font-style: normal; color: #fde047; }
+  #hook .emoji { font-size: 88px; animation: bob 1.2s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-10px) rotate(-6deg); } }
+
+  /* 2. Pain: status posts and the same questions */
+  #pain { background: var(--wa-bg); }
+  .wa-top { background: var(--wa); color: #fff; padding: 52px 20px 14px; font-weight: 700; font-size: 19px; display: flex; gap: 12px; align-items: center; }
+  .wa-top .av { width: 38px; height: 38px; border-radius: 50%; background: #64748b; display: grid; place-items: center; font-size: 18px; }
+  .wa-top small { display: block; font-weight: 400; font-size: 13px; opacity: .85; }
+  .badge-count { position: absolute; top: 58px; right: 26px; background: #ef4444; color: #fff; font-weight: 800; border-radius: 99px; padding: 4px 12px; font-size: 18px; }
+  .status { position: absolute; top: 172px; left: 22px; right: 22px; display: flex; gap: 8px; }
+  .status div { flex: 1; aspect-ratio: 3/4; border-radius: 10px; display: grid; place-items: center; font-size: 30px; border: 3px solid #22c55e; }
+  .status-l { position: absolute; top: 152px; left: 22px; font-size: 12px; font-weight: 700; color: #475569; }
+  .chat { padding: 300px 22px 0; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 82%; background: #fff; border-radius: 12px; padding: 9px 14px; font-size: 18px; box-shadow: 0 1px 1px rgba(0,0,0,.15);
+    transform: scale(.6); opacity: 0; transition: all .25s cubic-bezier(.3,1.6,.6,1); }
+  .msg.show { transform: scale(1); opacity: 1; }
+  .msg b { display: block; font-size: 13px; color: #c2410c; }
+  .msg .t { font-size: 11px; color: var(--muted); text-align: right; }
+  .note { position: absolute; right: 22px; bottom: 70px; width: 220px; border-radius: 6px; padding: 12px 14px; transform: rotate(4deg) scale(.6);
+    box-shadow: 0 10px 25px rgba(0,0,0,.25); font: 19px/1.5 "Comic Sans MS", cursive; color: #1e3a8a; opacity: 0; transition: all .35s;
+    background: #fffbeb repeating-linear-gradient(#fffbeb 0 27px, #bfdbfe 27px 28px); }
+  .note.show { opacity: 1; transform: rotate(4deg) scale(1); }
+  .note s { color: #b91c1c; }
+
+  /* 3. The app, in a phone */
+  #app { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); }
+  .phone { position: absolute; left: 50%; top: 168px; width: 380px; height: 640px; margin-left: -190px; transform: scale(1.24); transform-origin: top center; background: #111; border-radius: 44px; padding: 12px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.5); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 34px; overflow: hidden; background: var(--bg); }
+  .view { position: absolute; inset: 0; transition: transform .35s ease, opacity .35s; background: var(--bg); overflow: hidden; }
+  .view.off { transform: translateX(100%); opacity: 0; }
+  .bar { background: var(--brand); color: #fff; padding: 34px 16px 12px; }
+  .bar h1 { font-size: 19px; display: flex; align-items: center; gap: 8px; }
+  .bar p { font-size: 12px; opacity: .85; }
+  .demo { background: #fde047; color: #713f12; font: 800 10px/1 Inter; padding: 4px 6px; border-radius: 4px; letter-spacing: .5px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .stat small { color: var(--muted); font-size: 11px; }
+  .stat div { font-size: 20px; font-weight: 800; }
+  .stat.bad div { color: var(--bad); }
+  .tabs { display: flex; gap: 6px; padding: 0 12px 8px; }
+  .tab { font-size: 12px; font-weight: 700; padding: 6px 10px; border-radius: 99px; background: #e2e8f0; color: #334155; }
+  .tab.on { background: var(--ink); color: #fff; }
+  .list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+  .row { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; transition: background .3s; }
+  .row b { font-size: 14px; }
+  .row small { color: var(--muted); font-size: 11px; }
+  .pill { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 99px; align-self: center; text-transform: uppercase; letter-spacing: .3px; }
+  .p-sea { background: #dbeafe; color: #1d4ed8; } .p-port { background: #fef3c7; color: #92400e; } .p-ready { background: #dcfce7; color: #166534; } .p-wh { background: #f1f5f9; color: #475569; }
+  .owe { color: var(--bad); font-weight: 700; } .paid { color: var(--ok); font-weight: 700; }
+  .back { font-size: 13px; opacity: .9; }
+  .card { margin: 12px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .card h2 { font-size: 16px; }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; margin-top: 8px; }
+  .kv span:nth-child(odd) { color: var(--muted); }
+  .steps { list-style: none; margin-top: 4px; }
+  .steps li { position: relative; padding: 0 0 14px 30px; font-size: 13px; color: var(--muted); }
+  .steps li::before { content: ""; position: absolute; left: 6px; top: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #cbd5e1; background: #fff; transition: all .3s; }
+  .steps li::after { content: ""; position: absolute; left: 12px; top: 18px; bottom: 0; width: 2px; background: #e2e8f0; }
+  .steps li:last-child::after { display: none; }
+  .steps li.done { color: var(--ink); font-weight: 600; }
+  .steps li.done::before { background: var(--ok); border-color: var(--ok); }
+  .steps li.now::before { box-shadow: 0 0 0 5px rgba(22,163,74,.25); }
+  .steps small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+  .btn { display: block; width: calc(100% - 24px); margin: 8px 12px 0; padding: 12px; border-radius: 12px; border: 0; font: 700 14px Inter; color: #fff; background: var(--brand); text-align: center; transition: transform .1s; }
+  .btn.alt { background: #fff; color: var(--brand); border: 2px solid var(--brand); }
+  .btn.wa { background: var(--brand); }
+  .btn.small { display: inline-block; width: auto; margin: 0; padding: 6px 10px; font-size: 11px; border-radius: 8px; grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .btn.sent { background: #94a3b8 !important; }
+  .press { transform: scale(.94); }
+  .toast { position: absolute; left: 12px; right: 12px; top: 40px; background: #14532d; color: #fff; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 700;
+    transform: translateY(calc(-100% - 60px)); transition: transform .35s cubic-bezier(.3,1.4,.6,1); z-index: 5; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+  .toast.show { transform: translateY(0); }
+  .toast small { display: block; font-weight: 400; opacity: .85; }
+  .cust .bar { background: #0f172a; }
+  .big-status { text-align: center; padding: 18px 0 6px; }
+  .big-status div { font-size: 44px; }
+  .big-status b { display: block; font-size: 20px; margin-top: 4px; }
+  .big-status small { color: var(--muted); font-size: 12px; }
+  .url { margin: 8px 12px 0; font: 12px ui-monospace, monospace; background: #e2e8f0; padding: 8px 10px; border-radius: 8px; color: #334155; }
+
+  /* Fake finger */
+  #finger { position: absolute; z-index: 60; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.45); border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35); transform: translate(-50%, -50%) scale(1); transition: left .5s ease, top .5s ease, transform .12s, opacity .3s; opacity: 0; left: 400px; top: 800px; }
+  #finger.down { transform: translate(-50%, -50%) scale(.75); background: rgba(255,255,255,.8); }
+
+  /* 4. Call to action */
+  #cta { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 50px; gap: 20px; color: #fff; }
+  #cta .q { font: 900 46px/1.08 Inter; letter-spacing: -1px; }
+  #cta .q em { font-style: normal; color: #fde047; }
+  #cta .logo { display: flex; align-items: center; gap: 14px; background: #fff; color: #1e2a44; padding: 14px 22px 14px 16px; border-radius: 20px; box-shadow: 0 12px 30px rgba(0,0,0,.3); text-align: left; }
+  #cta .logo b { display: block; font: 800 30px/1 'Baloo 2'; } #cta .logo b span { color: #2b6ce0; }
+  #cta .logo small { display: block; font: 600 14px Nunito, Inter; color: #4a5878; margin-top: 4px; }
+  @font-face { font-family: 'Baloo 2'; src: url(../../../../rmr-hub/src/app/fonts/baloo-800.woff2); font-weight: 800; }
+  @font-face { font-family: Nunito; src: url(../../../../rmr-hub/src/app/fonts/nunito.woff2); font-weight: 200 1000; }
+  #cta .sub { font: 600 21px/1.4 Inter; opacity: .92; }
+  #cta .wa-btn { background: #fff; color: #1e2a44; font: 800 22px Inter; padding: 14px 24px; border-radius: 99px; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { transform: scale(1.06); } }
+  #cta .fine { font-size: 13px; opacity: .6; }
+
+  /* Catalogue */
+  .shop .bar { background: #1e2a44; }
+  .url { margin: 8px 12px 0; }
+  .cats { display: flex; gap: 6px; padding: 10px 12px 8px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px; }
+  .item { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 12px; position: relative; transition: opacity .3s; }
+  .item .pic { aspect-ratio: 1/1; display: grid; place-items: center; font-size: 46px; }
+  .item div.t { padding: 6px 8px 8px; } .item b { display: block; font-size: 12px; } .item span { color: var(--muted); font-size: 11px; }
+  .item .price { position: absolute; top: 6px; right: 6px; background: #fff; border-radius: 99px; padding: 2px 8px; font-weight: 800; font-size: 11px; color: var(--ink); }
+  .item .gone { position: absolute; inset: 0 0 auto 0; aspect-ratio: 1/1; display: none; place-items: center; background: rgba(255,255,255,.65); font-weight: 800; color: #b91c1c; font-size: 13px; letter-spacing: .5px; }
+  .item.sold .gone { display: grid; } .item.sold .pic { filter: grayscale(1); }
+  .detail .pic { height: 230px; display: grid; place-items: center; font-size: 110px; }
+  .sizes { display: flex; gap: 8px; padding: 6px 12px; }
+  .size { width: 44px; height: 40px; border-radius: 10px; border: 2px solid var(--line); background: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px; transition: all .2s; }
+  .size.na { color: #cbd5e1; text-decoration: line-through; }
+  .size.sel { border-color: #2b6ce0; background: #2b6ce0; color: #fff; }
+  .lbl { padding: 10px 12px 0; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .switch { width: 42px; height: 24px; border-radius: 99px; background: var(--ok); position: relative; grid-column: 2; grid-row: 1 / span 2; align-self: center; transition: background .2s; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 21px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .2s; }
+  .switch.off { background: #cbd5e1; } .switch.off::after { left: 3px; }
+  .row .ic { font-size: 22px; }
+  .row.new { background: #eff6ff; border-color: #93c5fd; }
+  #cta .logo { display: flex; }
+</style>
+</head>
+<body>
+<div id="root">
+<div id="cap"></div>
+<div id="finger"></div>
+<div id="mk" style="position:absolute;right:0;bottom:0;width:4px;height:4px;background:#000;z-index:99"></div>
+
+<section id="hook" class="scene">
+  <div class="emoji">👗</div>
+  <div class="big">Selling <em>clothes?</em></div>
+  <div class="big" style="font-size:40px">Posting every item <em>one by one?</em></div>
+</section>
+
+<section id="pain" class="scene">
+  <div class="wa-top"><div class="av">💬</div><div>Messages<small>18 unread</small></div></div>
+  <div class="badge-count">63</div>
+  <div class="status-l">My status · 24 updates today</div>
+  <div class="status"><div style="background:#dbeafe">👗</div><div style="background:#fce7f3">👚</div><div style="background:#dcfce7">👔</div><div style="background:#fef3c7">🧥</div><div style="background:#ede9fe">👖</div></div>
+  <div class="chat">
+    <div class="msg"><b>Grace N.</b>How much is the blue dress? 😍<div class="t">09:02</div></div>
+    <div class="msg"><b>Tom R.</b>Do you have it in a large?<div class="t">09:05</div></div>
+    <div class="msg"><b>Aisha B.</b>Is the green one still available??<div class="t">09:11</div></div>
+    <div class="msg"><b>Leo F.</b>Price pls 🙏<div class="t">09:20</div></div>
+  </div>
+  <div class="note">Grace – blue dress – <s>M?</s> L?<br>Aisha – green – sold??<br>Leo – which one??</div>
+</section>
+
+<section id="app" class="scene">
+  <div class="phone"><div class="screen">
+
+    <div class="view shop" id="v-cat">
+      <div class="bar"><h1>👗 Lena's Studio <span class="demo">DEMO</span></h1><p>New in · sample data</p></div>
+      <div class="url">lenasstudio.app</div>
+      <div class="cats"><span class="tab on">All</span><span class="tab">Dresses</span><span class="tab">Shirts</span><span class="tab">Jackets</span></div>
+      <div class="grid">
+        <div class="item" id="i-dress"><div class="pic" style="background:#dbeafe">👗</div><span class="price">85</span><div class="gone">SOLD OUT</div><div class="t"><b>Wrap dress</b><span>Blue · S–XL</span></div></div>
+        <div class="item"><div class="pic" style="background:#fce7f3">👚</div><span class="price">40</span><div class="gone">SOLD OUT</div><div class="t"><b>Silk blouse</b><span>Pink · S–L</span></div></div>
+        <div class="item" id="i-shirt"><div class="pic" style="background:#dcfce7">👔</div><span class="price">55</span><div class="gone">SOLD OUT</div><div class="t"><b>Linen shirt</b><span>Green · M–XL</span></div></div>
+        <div class="item"><div class="pic" style="background:#fef3c7">🧥</div><span class="price">120</span><div class="gone">SOLD OUT</div><div class="t"><b>Tailored jacket</b><span>Sand · S–XL</span></div></div>
+      </div>
+    </div>
+
+    <div class="view shop detail off" id="v-item">
+      <div class="bar"><p class="back">‹ Lena's Studio</p><h1>Wrap dress <span class="demo">DEMO</span></h1><p>Blue · made to fit</p></div>
+      <div class="pic" style="background:#dbeafe">👗</div>
+      <div class="lbl">Choose your size</div>
+      <div class="sizes"><span class="size">S</span><span class="size" id="sz-m">M</span><span class="size" id="sz-l">L</span><span class="size na">XL</span></div>
+      <div class="lbl" style="display:flex;justify-content:space-between"><span>Price</span><span style="color:var(--ink);font-size:16px">85</span></div>
+      <button class="btn" id="b-order" style="background:#2b6ce0">Order · size <span id="sz-out">–</span></button>
+    </div>
+
+    <div class="view" id="v-items">
+      <div class="bar" style="background:#2b6ce0"><h1>👗 Lena's Studio <span class="demo">DEMO</span></h1><p>Your items · in stock</p></div>
+      <div class="list" style="padding-top:12px">
+        <div class="row"><b>👗 Wrap dress · Blue</b><small>S, M, L in stock</small><span class="switch"></span></div>
+        <div class="row"><b>👚 Silk blouse · Pink</b><small>S, M, L in stock</small><span class="switch"></span></div>
+        <div class="row"><b>👔 Linen shirt · Green</b><small id="shirt-s">Last one: M</small><span class="switch" id="sw-shirt"></span></div>
+        <div class="row"><b>🧥 Tailored jacket · Sand</b><small>S, M, L, XL in stock</small><span class="switch"></span></div>
+      </div>
+    </div>
+
+    <div class="view off" id="v-orders">
+      <div class="bar" style="background:#2b6ce0"><h1>👗 Lena's Studio <span class="demo">DEMO</span></h1><p>Orders to pack</p></div>
+      <div class="stats"><div class="stat"><small>New today</small><div>5</div></div><div class="stat"><small>To pack</small><div>5</div></div></div>
+      <div class="list">
+        <div class="row new"><b>Grace N. · Wrap dress</b><span class="pill p-sea">New</span><small>Blue · size L · 85</small></div>
+        <div class="row"><b>Tom R. · Tailored jacket</b><span class="pill p-port">Packing</span><small>Sand · size L · 120</small></div>
+        <div class="row"><b>Aisha B. · Linen shirt</b><span class="pill p-port">Packing</span><small>Green · size M · 55</small></div>
+        <div class="row"><b>Leo F. · Silk blouse</b><span class="pill p-ready">Sent</span><small>Pink · size S · 40</small></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div></div>
+</section>
+
+<section id="cta" class="scene">
+  <div class="q">Want an app like this for <em>your</em> business?</div>
+  <div class="logo"><svg viewBox="0 0 100 100" width="64" height="64" aria-hidden="true"><rect x="31" y="8" width="38" height="38" rx="10" fill="#9DC0F7"/><rect x="10" y="52" width="38" height="38" rx="10" fill="#2B6CE0"/><rect x="52" y="52" width="38" height="38" rx="10" fill="#5A92EE"/></svg><div><b>RMR <span>Dev Works</span></b><small>Where ideas take shape</small></div></div>
+  <div class="sub">Apps &amp; websites for small businesses</div>
+  <div class="wa-btn">Message me · email in bio</div>
+  <div class="fine">Demo app with made-up data</div>
+</section>
+
+</div>
+<script>
+
+  const $ = (s) => document.querySelector(s);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  window.scene = (id) => { document.querySelectorAll(".scene").forEach((s) => s.classList.toggle("on", s.id === id)); };
+  window.caption = (html) => { $("#cap").innerHTML = html ? `<span>${html}</span>` : ""; };
+  window.view = (id) => { document.querySelectorAll(".view").forEach((v) => v.classList.toggle("off", v.id !== id)); };
+  window.toast = async (html, ms = 1800) => { const t = $("#toast"); t.innerHTML = html; t.classList.add("show"); await sleep(ms); t.classList.remove("show"); };
+  window.tap = async (sel) => {
+    const el = $(sel), f = $("#finger"), r = el.getBoundingClientRect();
+    f.style.opacity = 1; f.style.left = `${(r.left + r.width / 2) / 2}px`; f.style.top = `${(r.top + r.height / 2) / 2}px`;
+    await sleep(550); f.classList.add("down"); el.classList.add("press");
+    await sleep(160); f.classList.remove("down"); el.classList.remove("press");
+  };
+  window.mark = (c) => { $("#mk").style.background = c; };
+  window.hideFinger = () => { $("#finger").style.opacity = 0; };
+  window.painPop = async (gap) => { for (const m of document.querySelectorAll(".msg")) { m.classList.add("show"); await sleep(gap); } $(".note").classList.add("show"); };
+  window.pickSize = (id, s) => { document.querySelectorAll(".size").forEach((x) => x.classList.remove("sel")); $(id).classList.add("sel"); $("#sz-out").textContent = s; };
+  window.soldOut = () => { $("#sw-shirt").classList.add("off"); $("#shirt-s").textContent = "Sold out"; $("#i-shirt").classList.add("sold"); };
+</script>
+</body>
+</html>

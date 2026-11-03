@@ -1,0 +1,9 @@
+[
+ {"id": "hook", "text": "Do you sell clothes, and post every single item on your status, one by one?", "cap": "Selling clothes? <mark>Posting every item one by one?</mark>"},
+ {"id": "pain", "text": "Then the questions start. How much? Do you have my size? Is this still available? The same answers, all day.", "cap": "\"How much?\" · \"My size?\" · <mark>all day long</mark>"},
+ {"id": "intro", "text": "Here's a simple online catalogue. Every item, with its price and sizes, in one link you share once.", "cap": "Every item, price and size in <mark>one link</mark>"},
+ {"id": "order", "text": "Customers pick an item, choose their size, and send the order. No back and forth.", "cap": "Pick it, choose a size, <mark>order</mark>"},
+ {"id": "soldout", "text": "Sold out? Tap once, and customers can see it's gone.", "cap": "Sold out? <mark>One tap</mark>"},
+ {"id": "orders", "text": "And every order lands in one list, ready to pack.", "cap": "Every order in <mark>one list</mark>"},
+ {"id": "cta", "text": "Want an app like this for your business? I'm R M R Dev Works. Send me a message, or email me. It's in my bio.", "cap": ""}
+]

@@ -46,7 +46,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 ## Video plan
 0. ✅ Announcement for the personal account (`videos/00-announcement`)
 1. ✅ Shipping / freight: chasing payments, "where's my parcel?" (`videos/01-shipping`)
-2. Clothing brand / tailor: re-posting every item; an online catalogue customers order from with their size
+2. ✅ Clothing brand / tailor (`videos/02-clothing`): re-posting every item; an online catalogue customers order from with their size
 3. Restaurant / food vendor: orders by voice note; menu link and neat orders, sold-out items hidden
 4. Salon / barber: everyone arrives at once, no-shows; booking page with time slots and reminders
 5. Landlord / rentals: forgetting who paid rent; tenant list, due dates, reminders, receipts
