@@ -1,0 +1,8 @@
+[
+ {"id": "hook", "text": "This one link ends order chaos for food businesses. Watch.", "cap": "One link that ends <mark>order chaos</mark>"},
+ {"id": "pain", "text": "Orders by voice note. Two burgers, no onions. Wait, was that one order or two? Mixed-up orders, and hungry customers waiting.", "cap": "Voice notes · mixed-up orders · <mark>waiting customers</mark>"},
+ {"id": "intro", "text": "Instead, customers open your menu, tap what they want, and add a note, like no onions.", "cap": "Tap the food, <mark>add a note</mark>"},
+ {"id": "send", "text": "The order arrives neat and clear, with the total already worked out.", "cap": "Neat orders, <mark>total worked out</mark>"},
+ {"id": "soldout", "text": "Run out of something? Hide it in one tap, so nobody orders it.", "cap": "Sold out? <mark>Hidden in one tap</mark>"},
+ {"id": "cta", "text": "Want an app like this for your business? I'm R M R Dev Works. Send me a message, or email me. It's in my bio.", "cap": ""}
+]

@@ -8,6 +8,8 @@ demo app that fixes it. The demo apps are for made-up businesses with sample dat
   and Nunito, no country or nationality. Customers contact Prince by TikTok messages or email only, so
   never show WhatsApp or a phone number. Demo apps send "messages" or "texts".
 - Never use real clients, AFM HUB, Church Care or real people in the videos.
+- Hooks are broad, from video 3 on: open with the result ("This one link ends order chaos for food
+  businesses") rather than a narrow question ("Run a shipping business?"), so more people stop scrolling.
 - Prince doesn't appear on camera: use the AI voice-over or captions and music, never a face-to-camera script.
 
 ## Making a video
@@ -47,7 +49,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 0. ✅ Announcement for the personal account (`videos/00-announcement`)
 1. ✅ Shipping / freight: chasing payments, "where's my parcel?" (`videos/01-shipping`)
 2. ✅ Clothing brand / tailor (`videos/02-clothing`): re-posting every item; an online catalogue customers order from with their size
-3. Restaurant / food vendor: orders by voice note; menu link and neat orders, sold-out items hidden
+3. ✅ Restaurant / food vendor (`videos/03-food`): orders by voice note; menu link and neat orders, sold-out items hidden
 4. Salon / barber: everyone arrives at once, no-shows; booking page with time slots and reminders
 5. Landlord / rentals: forgetting who paid rent; tenant list, due dates, reminders, receipts
 6. School / lesson teacher: fees owed, results sent one by one; a parents' page
