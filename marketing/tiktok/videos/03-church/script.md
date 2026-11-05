@@ -1,7 +1,7 @@
 # Video 3: Church app (RMR Dev Works)
 
 Length: 67 seconds, vertical 1080×1920. A longer, slower walkthrough that ends by adding up what the church gets back.
-The demo app is "New Dawn Chapel", a made-up church with sample data, marked DEMO on every screen. The "This week" numbers are an example week.
+The demo app is "New Dawn Chapel", a made-up church with sample data, marked DEMO on every screen. Its screens follow the design style of the AFM HUB (church blue and gold on cream, Newsreader serif headings, white tiles with gold line icons), without its name, logo or photos. The "This week" numbers are an example week.
 
 ## Files
 - `rmr-video-3-church.mp4`: finished video with the AI voice-over. Ready to post.

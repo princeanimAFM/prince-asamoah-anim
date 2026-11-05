@@ -153,51 +153,90 @@
   #cta .logo { display: flex; }
 
 
-  /* Church demo app */
-  :root { --ch: #5b21b6; --ch2: #7c3aed; --gold: #f59e0b; }
+  /* Church demo app: church blue and gold on cream, serif headings */
+  @font-face { font-family: Newsreader; src: url(../../../../fonts/newsreader-latin.woff2); font-weight: 200 800; }
+  @font-face { font-family: Newsreader; font-style: italic; src: url(../../../../fonts/newsreader-italic-latin.woff2); font-weight: 200 800; }
+  :root { --navy: #0d2b5e; --blue: #1d4f9f; --gold: #c9a227; --gold-l: #e8cf7a; --cream: #f6f3ec; --card: #ffffff; --ink2: #24324a; }
   #hook .big.small { font-size: 38px; }
-  .ch .bar, .bar.ch { background: linear-gradient(135deg, var(--ch), #312e81); }
-  .hero { margin: 12px; border-radius: 16px; padding: 16px; color: #fff; background: linear-gradient(135deg, #312e81, var(--ch2)); }
-  .hero small { opacity: .85; font-size: 11px; letter-spacing: .5px; text-transform: uppercase; }
-  .hero b { display: block; font-size: 19px; margin: 4px 0; }
-  .hero .live { display: inline-block; background: #ef4444; border-radius: 99px; padding: 3px 10px; font-size: 11px; font-weight: 800; margin-top: 6px; }
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 12px; }
-  .tile { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px; text-align: center; font-size: 12px; font-weight: 700; }
-  .tile span { display: block; font-size: 26px; margin-bottom: 4px; }
-  .compose { margin: 12px; background: #fff; border: 2px solid var(--ch2); border-radius: 12px; padding: 12px; font-size: 14px; min-height: 92px; }
-  .compose small { display: block; color: var(--muted); font-size: 11px; margin-bottom: 6px; }
+  .screen, .view { background: var(--cream); }
+  .screen { font-family: Nunito, sans-serif; color: var(--ink2); }
+  .serif { font-family: Newsreader, Georgia, serif; }
+  .hero2 { position: relative; height: 270px; color: #fff; overflow: hidden;
+    background: radial-gradient(120% 80% at 80% 15%, rgba(232,207,122,.55) 0%, rgba(232,207,122,0) 45%), linear-gradient(170deg, #2a63c0 0%, var(--navy) 75%); }
+  .hero2::after { content: ""; position: absolute; inset: auto 0 0 0; height: 120px; background: linear-gradient(transparent, rgba(13,43,94,.85)); }
+  .hero2 .art { position: absolute; right: -6px; top: 26px; width: 190px; opacity: .95; }
+  .hero2 .inner { position: absolute; left: 18px; right: 18px; bottom: 44px; z-index: 2; }
+  .badge { width: 46px; height: 46px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(0,0,0,.25); margin-bottom: 10px; }
+  .yr { display: inline-block; border: 1.5px solid var(--gold-l); color: var(--gold-l); border-radius: 99px; padding: 3px 10px; font: 800 9px Nunito; letter-spacing: 1.2px; text-transform: uppercase; }
+  .welcome { display: block; color: var(--gold-l); font: 800 10px Nunito; letter-spacing: 2px; margin-top: 8px; }
+  .hero2 h2 { font: 600 30px/1.05 Newsreader, serif; margin-top: 2px; }
+  .hero2 p { font: italic 13px Newsreader, serif; opacity: .9; margin-top: 2px; }
+  .demo2 { position: absolute; top: 34px; left: 18px; z-index: 3; background: #fde047; color: #713f12; font: 800 9px/1 Nunito; padding: 4px 6px; border-radius: 4px; letter-spacing: .5px; }
+  .tiles2 { position: relative; z-index: 3; margin: -30px 12px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile2 { background: var(--card); border-radius: 16px; padding: 12px 4px 10px; text-align: center; font: 800 12px Nunito; color: var(--ink2); box-shadow: 0 6px 16px rgba(13,43,94,.10); }
+  .tile2 svg { display: block; margin: 0 auto 5px; width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .votd { margin: 12px 12px 0; background: var(--card); border-radius: 16px; padding: 12px 14px; box-shadow: 0 6px 16px rgba(13,43,94,.08); }
+  .votd small { font: 800 9px Nunito; letter-spacing: 1.5px; color: var(--gold); }
+  .votd p { font: 15px/1.35 Newsreader, serif; color: var(--ink2); margin-top: 4px; }
+  .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 58px; background: #fff; border-top: 1px solid #e7e2d6; display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; z-index: 4; }
+  .tabbar span { text-align: center; font: 700 9px Nunito; color: #8a93a6; }
+  .tabbar span svg { display: block; margin: 0 auto 2px; width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tabbar span.on { color: var(--gold); }
+  .head2 { background: linear-gradient(160deg, #2a63c0, var(--navy)); color: #fff; padding: 34px 16px 14px; }
+  .head2 .back { font: 700 12px Nunito; color: var(--gold-l); }
+  .head2 h1 { font: 600 24px/1.1 Newsreader, serif; display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .head2 h1 .demo { font-family: Nunito; }
+  .head2 p { font: 12px Nunito; opacity: .85; }
+  .c2 { margin: 12px; background: var(--card); border-radius: 16px; padding: 14px; box-shadow: 0 6px 16px rgba(13,43,94,.08); }
+  .lbl2 { font: 800 10px Nunito; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; }
+  .compose { font: 16px/1.4 Newsreader, serif; min-height: 70px; margin-top: 6px; color: var(--ink2); }
   .opts { display: flex; gap: 6px; padding: 0 12px; flex-wrap: wrap; }
-  .opt { font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 99px; background: #ede9fe; color: var(--ch); }
-  .notif { position: absolute; left: 10px; right: 10px; background: rgba(255,255,255,.97); color: var(--ink); border-radius: 14px; padding: 10px 12px; box-shadow: 0 10px 24px rgba(0,0,0,.25); font-size: 12px;
-    display: grid; grid-template-columns: 32px 1fr; gap: 0 10px; align-items: center; opacity: 0; transform: translateY(-20px); transition: all .35s; z-index: 6; }
+  .opt { font: 800 11px Nunito; padding: 6px 10px; border-radius: 99px; background: #fff; color: var(--blue); border: 1.5px solid #d7e1f3; }
+  .btn2 { display: block; width: calc(100% - 24px); margin: 12px 12px 0; padding: 13px; border-radius: 14px; border: 0; font: 800 14px Nunito; color: #fff; background: var(--navy); text-align: center; transition: transform .1s, background .3s; }
+  .btn2.goldb { background: var(--gold); color: #2b2205; }
+  .notif { position: absolute; left: 10px; right: 10px; top: 30px; background: rgba(255,255,255,.97); color: var(--ink); border-radius: 16px; padding: 10px 12px; box-shadow: 0 10px 24px rgba(0,0,0,.25); font: 12px Nunito;
+    display: grid; grid-template-columns: 34px 1fr; gap: 0 10px; align-items: center; opacity: 0; transform: translateY(-20px); transition: all .35s; z-index: 6; }
   .notif.show { opacity: 1; transform: none; }
-  .notif .ap { width: 32px; height: 32px; border-radius: 8px; background: var(--ch); color: #fff; display: grid; place-items: center; font-size: 16px; grid-row: span 2; }
+  .notif .ap { width: 34px; height: 34px; border-radius: 9px; background: var(--navy); display: grid; place-items: center; grid-row: span 2; }
   .notif b { font-size: 12px; }
-  .sermon { display: grid; grid-template-columns: 48px 1fr auto; gap: 0 10px; align-items: center; }
-  .sermon .art { width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, #312e81, var(--ch2)); display: grid; place-items: center; font-size: 22px; grid-row: span 2; }
-  .playb { width: 34px; height: 34px; border-radius: 50%; background: var(--ch); color: #fff; display: grid; place-items: center; grid-row: span 2; font-size: 13px; }
-  .bar-p { margin: 0 12px; height: 4px; border-radius: 4px; background: #e2e8f0; overflow: hidden; } .bar-p i { display: block; height: 100%; width: 0; background: var(--ch2); transition: width 3s linear; }
-  .pr { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; }
-  .pr small { display: block; color: var(--muted); font-size: 11px; margin-bottom: 3px; }
-  .pr .who { display: flex; justify-content: space-between; align-items: center; }
-  .lock { font-size: 10px; font-weight: 800; color: var(--ch); background: #ede9fe; border-radius: 99px; padding: 2px 8px; }
-  .pray { margin-top: 8px; font-size: 12px; font-weight: 800; color: var(--ch); border: 2px solid var(--ch); border-radius: 99px; padding: 5px 10px; display: inline-block; transition: all .2s; }
-  .pray.done { background: var(--ch); color: #fff; }
-  .care-row { display: grid; grid-template-columns: 38px 1fr auto; gap: 0 10px; align-items: center; }
-  .avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; grid-row: span 2; }
-  .reach { font-size: 11px; font-weight: 800; color: #fff; background: var(--ch); border-radius: 99px; padding: 6px 10px; grid-row: span 2; transition: all .2s; }
-  .reach.done { background: var(--ok); }
+  .srow { display: grid; grid-template-columns: 54px 1fr 36px; gap: 0 12px; align-items: center; background: var(--card); border-radius: 16px; padding: 10px; box-shadow: 0 4px 12px rgba(13,43,94,.07); }
+  .srow .art2 { width: 54px; height: 54px; border-radius: 12px; grid-row: span 2; background: linear-gradient(150deg, #2a63c0, var(--navy)); display: grid; place-items: center; }
+  .srow .art2 svg { width: 24px; height: 24px; stroke: var(--gold-l); fill: none; stroke-width: 1.8; }
+  .srow b { font: 600 16px/1.15 Newsreader, serif; color: var(--ink2); }
+  .srow small { font: 11px Nunito; color: #7b8496; }
+  .srow .pl { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); color: #2b2205; display: grid; place-items: center; grid-row: span 2; font-size: 13px; font-weight: 900; }
+  .srow.new { outline: 2px solid var(--gold-l); }
+  .sl { display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+  .bar-p { margin: 0 12px; height: 4px; border-radius: 4px; background: #e7e2d6; overflow: hidden; } .bar-p i { display: block; height: 100%; width: 0; background: var(--gold); transition: width 3s linear; }
+  .pr { background: var(--card); border-radius: 16px; padding: 12px 14px; box-shadow: 0 4px 12px rgba(13,43,94,.07); }
+  .pr .who { display: flex; justify-content: space-between; align-items: center; font: 700 11px Nunito; color: #7b8496; }
+  .pr q { display: block; font: 16px/1.35 Newsreader, serif; color: var(--ink2); margin: 4px 0 8px; quotes: none; }
+  .lock { font: 800 9px Nunito; color: var(--blue); background: #e8eefa; border-radius: 99px; padding: 3px 8px; }
+  .pray { font: 800 12px Nunito; color: var(--navy); border: 1.5px solid var(--navy); border-radius: 99px; padding: 6px 12px; display: inline-block; transition: all .2s; }
+  .pray.done { background: var(--navy); color: #fff; }
+  .crow { display: grid; grid-template-columns: 42px 1fr auto; gap: 0 12px; align-items: center; background: var(--card); border-radius: 16px; padding: 10px 12px; box-shadow: 0 4px 12px rgba(13,43,94,.07); }
+  .avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font: 800 16px Nunito; color: #fff; grid-row: span 2; }
+  .crow b { font: 600 17px Newsreader, serif; } .crow small { font: 11px Nunito; color: #7b8496; }
+  .reach { font: 800 11px Nunito; color: #2b2205; background: var(--gold); border-radius: 99px; padding: 7px 12px; grid-row: span 2; transition: all .2s; }
+  .reach.done { background: #16a34a; color: #fff; }
+  .tip { margin: 4px 12px; font: italic 14px Newsreader, serif; color: #5b6476; text-align: center; }
+  .evhero { margin: 12px; height: 120px; border-radius: 18px; color: #fff; padding: 14px 16px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: radial-gradient(90% 90% at 85% 10%, rgba(232,207,122,.6), transparent 55%), linear-gradient(160deg, #2a63c0, var(--navy)); }
+  .evhero small { font: 800 9px Nunito; letter-spacing: 1.5px; color: var(--gold-l); text-transform: uppercase; }
+  .evhero b { font: 600 26px Newsreader, serif; }
   .rsvp { display: flex; gap: 8px; padding: 0 12px; }
-  .rsvp div { flex: 1; text-align: center; border-radius: 12px; padding: 10px 4px; font-weight: 800; font-size: 20px; }
-  .rsvp small { display: block; font-size: 11px; font-weight: 700; }
-  .wk { padding: 0 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .wk div { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px; opacity: 0; transform: scale(.8); transition: all .35s cubic-bezier(.3,1.6,.6,1); }
+  .rsvp div { flex: 1; text-align: center; border-radius: 14px; padding: 10px 4px; background: var(--card); box-shadow: 0 4px 12px rgba(13,43,94,.07); font: 600 26px Newsreader, serif; color: var(--navy); }
+  .rsvp small { display: block; font: 800 10px Nunito; color: #7b8496; }
+  .plan { margin: 12px; font: 12px Nunito; color: #5b6476; display: flex; justify-content: space-around; }
+  .wk { padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .wk div { background: var(--card); border-radius: 16px; padding: 12px; box-shadow: 0 4px 12px rgba(13,43,94,.07); opacity: 0; transform: scale(.85); transition: all .35s cubic-bezier(.3,1.6,.6,1); }
   .wk div.show { opacity: 1; transform: none; }
-  .wk b { display: block; font-size: 24px; color: var(--ch); } .wk small { font-size: 11px; color: var(--muted); font-weight: 700; }
-  .heart { margin: 14px 12px 0; text-align: center; font-size: 15px; font-weight: 800; color: var(--ch); opacity: 0; transition: opacity .6s; }
+  .wk b { display: block; font: 600 32px/1 Newsreader, serif; color: var(--navy); } .wk small { font: 700 11px Nunito; color: #7b8496; }
+  .heart { margin: 6px 12px 0; text-align: center; font: italic 18px Newsreader, serif; color: var(--navy); opacity: 0; transition: opacity .6s; }
   .heart.show { opacity: 1; }
   .gc { display: flex; gap: 6px; padding: 0 22px; position: absolute; top: 160px; left: 0; right: 0; }
   .gc span { flex: 1; background: #fff; border-radius: 10px; padding: 6px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #475569; border: 1px solid #cbd5e1; }
+  .toast { background: var(--navy); font-family: Nunito; border-left: 4px solid var(--gold); }
 </style>
 </head>
 <body>
@@ -228,66 +267,79 @@
 <section id="app" class="scene">
   <div class="phone"><div class="screen">
 
-    <div class="view ch" id="v-home">
-      <div class="bar"><h1>⛪ New Dawn Chapel <span class="demo">DEMO</span></h1><p>Welcome, Ruth · sample data</p></div>
-      <div class="hero"><small>This Sunday · 10:00</small><b>Faith for Every Day</b><span class="live">● Watch live</span></div>
-      <div class="tiles">
-        <div class="tile"><span>🎧</span>Sermons</div><div class="tile"><span>📖</span>Bible</div><div class="tile"><span>📅</span>Events</div>
-        <div class="tile"><span>🙏</span>Prayer</div><div class="tile"><span>📢</span>News</div><div class="tile"><span>💜</span>Give</div>
+    <div class="view" id="v-home">
+      <div class="hero2">
+        <span class="demo2">DEMO</span>
+        <svg class="art" viewBox="0 0 200 200" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linejoin="round"><circle cx="128" cy="78" r="34" fill="rgba(232,207,122,.35)" stroke="none"/><path d="M60 190V112l40-32 40 32v78"/><path d="M100 80V40M86 54h28"/><path d="M84 190v-34a16 16 0 0 1 32 0v34"/><path d="M40 190h130"/><path d="M68 128h14v16H68zM118 128h14v16h-14z"/></svg>
+        <div class="inner">
+          <div class="badge"><svg viewBox="0 0 40 40" width="28" height="28"><circle cx="20" cy="24" r="8" fill="#c9a227"/><path d="M6 30h28" stroke="#0d2b5e" stroke-width="3" stroke-linecap="round"/><path d="M20 8v5M9 13l3 3M31 13l-3 3" stroke="#c9a227" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+          <span class="yr">2026 · Year of New Beginnings</span>
+          <span class="welcome">WELCOME TO</span>
+          <h2>New Dawn Chapel</h2>
+          <p>A home for every family · sample data</p>
+        </div>
       </div>
-      <div class="notif" id="n-ann" style="top:30px"><span class="ap">⛪</span><b>New Dawn Chapel</b><span>📢 Youth night moved to Friday, 7pm</span></div>
+      <div class="tiles2">
+        <div class="tile2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>Sermons</div><div class="tile2"><svg viewBox="0 0 24 24"><path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/></svg>Bible</div><div class="tile2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>Live</div>
+        <div class="tile2"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Events</div><div class="tile2"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg>Prayer</div><div class="tile2"><svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M3 9h18M12 9v11M12 9c-1.5-3-5-3.5-5-1.5S10 9 12 9zm0 0c1.5-3 5-3.5 5-1.5S14 9 12 9z"/></svg>Give</div>
+      </div>
+      <div class="votd"><small>📖 VERSE OF THE DAY</small><p>“This is the day the Lord has made; we will rejoice and be glad in it.”</p></div>
+      <div class="tabbar"><span class="on"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>Home</span><span class=""><svg viewBox="0 0 24 24"><path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/></svg>Bible</span><span class=""><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>Sermons</span><span class=""><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Events</span><span class=""><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg>More</span></div>
+      <div class="notif" id="n-ann"><span class="ap"><svg viewBox="0 0 40 40" width="28" height="28"><circle cx="20" cy="24" r="8" fill="#c9a227"/><path d="M6 30h28" stroke="#0d2b5e" stroke-width="3" stroke-linecap="round"/><path d="M20 8v5M9 13l3 3M31 13l-3 3" stroke="#c9a227" stroke-width="2.5" stroke-linecap="round"/></svg></span><b>New Dawn Chapel</b><span>📢 Youth night moved to Friday, 7pm</span></div>
     </div>
 
-    <div class="view ch off" id="v-post">
-      <div class="bar"><p class="back">‹ Leaders</p><h1>New announcement <span class="demo">DEMO</span></h1><p>Goes to every member</p></div>
-      <div class="compose"><small>Message</small><span id="ann-text"></span></div>
+    <div class="view off" id="v-post">
+      <div class="head2"><p class="back">‹ Leaders</p><h1>New announcement <span class="demo">DEMO</span></h1><p>Goes to every member</p></div>
+      <div class="c2"><span class="lbl2">Message</span><div class="compose" id="ann-text"></div></div>
       <div class="opts"><span class="opt">✓ Notify everyone</span><span class="opt">✓ Local times</span><span class="opt">248 members</span></div>
-      <button class="btn" id="b-ann" style="background:var(--ch);margin-top:14px">Send to all members</button>
+      <button class="btn2" id="b-ann">Send to all members</button>
     </div>
 
-    <div class="view ch off" id="v-sermons">
-      <div class="bar"><h1>🎧 Sermons <span class="demo">DEMO</span></h1><p>Added automatically after every service</p></div>
-      <div class="list" style="padding-top:12px">
-        <div class="row sermon" style="border-color:#c4b5fd;background:#f5f3ff"><span class="art">✝️</span><b>Faith for Every Day</b><span class="playb" id="b-play">▶</span><small>NEW · Sunday · 42 min</small></div>
+    <div class="view off" id="v-sermons">
+      <div class="head2"><h1>Sermons <span class="demo">DEMO</span></h1><p>Added automatically after every service</p></div>
+      <div class="sl">
+        <div class="srow new"><span class="art2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg></span><b>Faith for Every Day</b><span class="pl" id="b-play">▶</span><small>NEW · Sunday · 42 min</small></div>
       </div>
-      <div class="bar-p" style="margin-top:8px"><i id="prog"></i></div>
-      <div class="list" style="padding-top:10px">
-        <div class="row sermon"><span class="art">🕊️</span><b>Peace in the Storm</b><span class="playb">▶</span><small>Last Sunday · 38 min</small></div>
-        <div class="row sermon"><span class="art">🌅</span><b>A New Dawn</b><span class="playb">▶</span><small>2 weeks ago · 45 min</small></div>
-        <div class="row sermon"><span class="art">🙌</span><b>Grateful Hearts</b><span class="playb">▶</span><small>3 weeks ago · 40 min</small></div>
+      <div class="bar-p"><i id="prog"></i></div>
+      <div class="sl">
+        <div class="srow"><span class="art2"><svg viewBox="0 0 24 24"><path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/></svg></span><b>Peace in the Storm</b><span class="pl">▶</span><small>Last Sunday · 38 min</small></div>
+        <div class="srow"><span class="art2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg></span><b>A New Dawn</b><span class="pl">▶</span><small>2 weeks ago · 45 min</small></div>
+        <div class="srow"><span class="art2"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg></span><b>Grateful Hearts</b><span class="pl">▶</span><small>3 weeks ago · 40 min</small></div>
+      </div>
+      <div class="tabbar"><span class=""><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>Home</span><span class=""><svg viewBox="0 0 24 24"><path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/></svg>Bible</span><span class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>Sermons</span><span class=""><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Events</span><span class=""><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg>More</span></div>
+    </div>
+
+    <div class="view off" id="v-prayer">
+      <div class="head2"><h1>Prayer requests <span class="demo">DEMO</span></h1><p>Prayer team · private</p></div>
+      <div class="sl">
+        <div class="pr"><div class="who"><span>Joy E. · today</span><span class="lock">🔒 Private</span></div><q>Please pray for my job interview on Thursday.</q><span class="pray" id="pray-1">🙏 We're praying</span></div>
+        <div class="pr"><div class="who"><span>Anonymous · today</span><span class="lock">🔒 Private</span></div><q>My mum has surgery next week.</q><span class="pray" id="pray-2">🙏 We're praying</span></div>
+        <div class="pr"><div class="who"><span>Kwesi D. · yesterday</span><span class="lock">🔒 Private</span></div><q>Thanksgiving: my exams went well!</q><span class="pray done">✓ Prayed · 6 of the team</span></div>
       </div>
     </div>
 
-    <div class="view ch off" id="v-prayer">
-      <div class="bar"><h1>🙏 Prayer requests <span class="demo">DEMO</span></h1><p>Prayer team · private</p></div>
-      <div class="list" style="padding-top:12px">
-        <div class="pr"><div class="who"><small>Joy E. · today</small><span class="lock">🔒 Private</span></div>Please pray for my job interview on Thursday.<br><span class="pray" id="pray-1">🙏 We're praying</span></div>
-        <div class="pr"><div class="who"><small>Anonymous · today</small><span class="lock">🔒 Private</span></div>My mum has surgery next week.<br><span class="pray" id="pray-2">🙏 We're praying</span></div>
-        <div class="pr"><div class="who"><small>Kwesi D. · yesterday</small><span class="lock">🔒 Private</span></div>Thanksgiving: my exams went well!<br><span class="pray done">✓ Prayed · 6 of the team</span></div>
+    <div class="view off" id="v-care">
+      <div class="head2"><h1>Care <span class="demo">DEMO</span></h1><p>Not seen for 3 weeks or more</p></div>
+      <div class="sl">
+        <div class="crow"><span class="avatar" style="background:#1d4f9f">D</span><b>David O.</b><span class="reach" id="reach-1">Reach out</span><small>Last seen 4 weeks ago</small></div>
+        <div class="crow"><span class="avatar" style="background:#b8860b">G</span><b>Grace L.</b><span class="reach">Reach out</span><small>Last seen 3 weeks ago</small></div>
+        <div class="crow"><span class="avatar" style="background:#7c2d55">S</span><b>Samuel P.</b><span class="reach">Reach out</span><small>Last seen 3 weeks ago</small></div>
       </div>
+      <div class="tip">Leaders are reminded every Monday, so nobody slips through.</div>
     </div>
 
-    <div class="view ch off" id="v-care">
-      <div class="bar"><h1>💜 Care <span class="demo">DEMO</span></h1><p>Not seen for 3 weeks or more</p></div>
-      <div class="list" style="padding-top:12px">
-        <div class="row care-row"><span class="avatar" style="background:#0e7490">D</span><b>David O.</b><span class="reach" id="reach-1">Reach out</span><small>Last seen 4 weeks ago</small></div>
-        <div class="row care-row"><span class="avatar" style="background:#b45309">G</span><b>Grace L.</b><span class="reach">Reach out</span><small>Last seen 3 weeks ago</small></div>
-        <div class="row care-row"><span class="avatar" style="background:#be185d">S</span><b>Samuel P.</b><span class="reach">Reach out</span><small>Last seen 3 weeks ago</small></div>
-      </div>
-      <div class="card" style="font-size:12px;color:var(--muted)">💡 Leaders are reminded every Monday, so nobody slips through.</div>
+    <div class="view off" id="v-events">
+      <div class="head2"><h1>Events <span class="demo">DEMO</span></h1><p>Coming up</p></div>
+      <div class="evhero"><small>Saturday · 1pm · The park</small><b>Family picnic</b></div>
+      <div class="rsvp"><div><span id="rsvp-n">86</span><small>COMING</small></div><div>12<small>MAYBE</small></div><div>150<small>NO REPLY</small></div></div>
+      <button class="btn2 goldb" id="b-rsvp">I'm coming 🙌</button>
+      <div class="plan"><span>🪑 100 chairs</span><span>🍗 Food for 100</span><span>🚗 4 lifts</span></div>
+      <div class="tabbar"><span class=""><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>Home</span><span class=""><svg viewBox="0 0 24 24"><path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/></svg>Bible</span><span class=""><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></svg>Sermons</span><span class="on"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Events</span><span class=""><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg>More</span></div>
     </div>
 
-    <div class="view ch off" id="v-events">
-      <div class="bar"><h1>📅 Events <span class="demo">DEMO</span></h1><p>Saturday · Family picnic</p></div>
-      <div class="hero"><small>Saturday · 1pm · Park</small><b>Family picnic 🧺</b></div>
-      <div class="rsvp"><div style="background:#dcfce7;color:#166534"><span id="rsvp-n">86</span><small>Coming</small></div><div style="background:#fef3c7;color:#92400e">12<small>Maybe</small></div><div style="background:#f1f5f9;color:#475569">150<small>No reply yet</small></div></div>
-      <button class="btn" id="b-rsvp" style="background:var(--ch);margin-top:12px">I'm coming 🙌</button>
-      <div class="card" style="font-size:12px">🪑 Chairs: 100 · 🍗 Food for 100 · 🚗 Lifts needed: 4</div>
-    </div>
-
-    <div class="view ch off" id="v-week">
-      <div class="bar"><h1>⛪ This week <span class="demo">DEMO</span></h1><p>Example week · sample data</p></div>
-      <div class="wk" style="padding-top:12px">
+    <div class="view off" id="v-week">
+      <div class="head2"><h1>This week <span class="demo">DEMO</span></h1><p>Example week · sample data</p></div>
+      <div class="wk">
         <div><b>0</b><small>messages copied into group chats</small></div>
         <div><b>248</b><small>members told in one post</small></div>
         <div><b>14</b><small>prayer requests, all seen</small></div>
@@ -295,7 +347,7 @@
         <div><b>61</b><small>listened to Sunday's sermon</small></div>
         <div><b>86</b><small>coming to the picnic</small></div>
       </div>
-      <div class="heart" id="heart">Time back for people, not a phone 💜</div>
+      <div class="heart" id="heart">Time back for people, not a phone.</div>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -335,7 +387,7 @@
   window.play = () => { $("#b-play").textContent = "❚❚"; $("#prog").style.width = "35%"; };
   window.pray = (id) => { const p = $(id); p.classList.add("done"); p.textContent = "✓ Praying · 4 of the team"; };
   window.reach = (id) => { const r = $(id); r.classList.add("done"); r.textContent = "✓ Elder Mark"; };
-  window.rsvp = () => { $("#rsvp-n").textContent = "87"; const b = $("#b-rsvp"); b.textContent = "✓ See you there!"; b.style.background = "var(--ok)"; };
+  window.rsvp = () => { $("#rsvp-n").textContent = "87"; const b = $("#b-rsvp"); b.textContent = "✓ See you there!"; b.style.background = "#16a34a"; b.style.color = "#fff"; };
   window.week = async (gap) => { for (const d of document.querySelectorAll(".wk div")) { d.classList.add("show"); await sleep(gap); } $("#heart").classList.add("show"); };
 </script>
 </body>
