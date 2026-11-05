@@ -1,0 +1,52 @@
+[
+ {
+  "id": "hook",
+  "text": "Here's what one app gives back to a church, every single week.",
+  "cap": "What one app gives back to a <mark>church</mark>, every week"
+ },
+ {
+  "id": "pain",
+  "text": "Most churches today: announcements copied into five group chats. Prayer requests on scraps of paper. And nobody notices when a member quietly stops coming.",
+  "cap": "Group chats · paper notes · <mark>members slipping away</mark>"
+ },
+ {
+  "id": "intro",
+  "text": "Now picture one home for the whole church. Services, sermons, events and the Bible, on every phone.",
+  "cap": "One home for the <mark>whole church</mark>"
+ },
+ {
+  "id": "announce",
+  "text": "Post an announcement once, and every member is notified. No more copy and paste.",
+  "cap": "Post once. <mark>Everyone is told.</mark>"
+ },
+ {
+  "id": "sermons",
+  "text": "Sermons land in the app by themselves, so anyone who missed Sunday can catch up.",
+  "cap": "Missed Sunday? <mark>Catch up</mark>"
+ },
+ {
+  "id": "prayer",
+  "text": "Prayer requests come in privately, and the prayer team sees every one.",
+  "cap": "Every prayer request <mark>seen</mark>"
+ },
+ {
+  "id": "care",
+  "text": "And the part that matters most. It shows who hasn't been seen in three weeks, so a leader can reach out before they drift away.",
+  "cap": "Reach members <mark>before they drift away</mark>"
+ },
+ {
+  "id": "events",
+  "text": "Members tap to say they're coming, so you know how many to expect.",
+  "cap": "Know <mark>how many to expect</mark>"
+ },
+ {
+  "id": "week",
+  "text": "Add it up. Hours of typing given back every week. Members who feel seen. And a pastor with time for people, not a phone.",
+  "cap": "Time back for <mark>what matters</mark>"
+ },
+ {
+  "id": "cta",
+  "text": "Want this for your church, or your business? I'm R M R Dev Works. Send me a message, or email me. It's in my bio.",
+  "cap": ""
+ }
+]

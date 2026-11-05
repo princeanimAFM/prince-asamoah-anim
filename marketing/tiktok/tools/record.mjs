@@ -15,7 +15,7 @@ const segs = JSON.parse(fs.readFileSync(`${build}/segments.json`, "utf8"));
 const scenes = (await import(pathToFileURL(`${dir}/scenes.mjs`).href)).default;
 const GAP = 0.35;
 // A tiny corner marker changes colour at each segment start, so sync.py can find it in the recording.
-const COLORS = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff", "#ffffff", "#ff8000", "#8000ff"];
+const COLORS = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff", "#ffffff", "#ff8000", "#8000ff", "#00ff80", "#ff0080", "#0080ff"];
 
 const rawDir = `${build}/raw-${Date.now()}`;
 const browser = await chromium.launch();

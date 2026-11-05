@@ -49,15 +49,16 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 0. ✅ Announcement for the personal account (`videos/00-announcement`)
 1. ✅ Shipping / freight: chasing payments, "where's my parcel?" (`videos/01-shipping`)
 2. ✅ Clothing brand / tailor (`videos/02-clothing`): re-posting every item; an online catalogue customers order from with their size
-3. ✅ Restaurant / food vendor (`videos/03-food`): orders by voice note; menu link and neat orders, sold-out items hidden
-4. Salon / barber: everyone arrives at once, no-shows; booking page with time slots and reminders
-5. Landlord / rentals: forgetting who paid rent; tenant list, due dates, reminders, receipts
-6. School / lesson teacher: fees owed, results sent one by one; a parents' page
-7. Perfume / cosmetics: "how much?" for every item; catalogue with prices and an order button
-8. Event planner: guest lists on paper; RSVP page with QR check-in
-9. Car rental: who has which car, deposits; bookings calendar and agreements
-10. Pharmacy / shop: running out of stock; stock list with low-stock alerts
-11. Photographer: sending photos one by one; a private gallery link per client
-12. Cleaning / delivery teams: not knowing who's where; job list and status updates
+3. ✅ Church app (`videos/03-church`): a longer, about one-minute walkthrough of what a church app gives back each week
+4. ✅ Restaurant / food vendor (`videos/04-food`): orders by voice note; menu link and neat orders, sold-out items hidden
+5. Salon / barber: everyone arrives at once, no-shows; booking page with time slots and reminders
+6. Landlord / rentals: forgetting who paid rent; tenant list, due dates, reminders, receipts
+7. School / lesson teacher: fees owed, results sent one by one; a parents' page
+8. Perfume / cosmetics: "how much?" for every item; catalogue with prices and an order button
+9. Event planner: guest lists on paper; RSVP page with QR check-in
+10. Car rental: who has which car, deposits; bookings calendar and agreements
+11. Pharmacy / shop: running out of stock; stock list with low-stock alerts
+12. Photographer: sending photos one by one; a private gallery link per client
+13. Cleaning / delivery teams: not knowing who's where; job list and status updates
 
 Every 4th post: "day in my life building an app". Post 3 a week, 7 to 9 pm.
