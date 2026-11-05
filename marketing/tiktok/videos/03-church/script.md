@@ -10,7 +10,16 @@ The demo app is "New Dawn Chapel", a made-up church with sample data, marked DEM
 ## Voice-over script
 | Starts at | What's on screen | Said |
 |---|---|---|
-| 0:00 | "What one app gives back to a church" | Here's what one app gives back to a church, every single week. |\n| 0:04 | Five group chats, a late-night pastor, paper prayer notes | Most churches today: announcements copied into five group chats. Prayer requests on scraps of paper. And nobody notices when a member quietly stops coming. |\n| 0:15 | The church app's home screen | Now picture one home for the whole church. Services, sermons, events and the Bible, on every phone. |\n| 0:21 | Posting one announcement; members get a notification | Post an announcement once, and every member is notified. No more copy and paste. |\n| 0:27 | Sermons added automatically | Sermons land in the app by themselves, so anyone who missed Sunday can catch up. |\n| 0:32 | Private prayer requests, marked as prayed for | Prayer requests come in privately, and the prayer team sees every one. |\n| 0:37 | Members not seen for 3 weeks; a leader reaches out | And the part that matters most. It shows who hasn't been seen in three weeks, so a leader can reach out before they drift away. |\n| 0:45 | Picnic RSVPs: who's coming | Members tap to say they're coming, so you know how many to expect. |\n| 0:49 | What the church got back this week | Add it up. Hours of typing given back every week. Members who feel seen. And a pastor with time for people, not a phone. |\n| 0:58 | "Want this for your church or business?" end screen | Want this for your church, or your business? I'm RMR Dev Works. Send me a message, or email me. It's in my bio. |
+| 0:00 | "What one app gives back to a church" | Here's what one app gives back to a church, every single week. |
+| 0:04 | Five group chats, a late-night pastor, paper prayer notes | Most churches today: announcements copied into five group chats. Prayer requests on scraps of paper. And nobody notices when a member quietly stops coming. |
+| 0:15 | The church app's home screen | Now picture one home for the whole church. Services, sermons, events and the Bible, on every phone. |
+| 0:21 | Posting one announcement; members get a notification | Post an announcement once, and every member is notified. No more copy and paste. |
+| 0:27 | Sermons added automatically | Sermons land in the app by themselves, so anyone who missed Sunday can catch up. |
+| 0:32 | Private prayer requests, marked as prayed for | Prayer requests come in privately, and the prayer team sees every one. |
+| 0:37 | Members not seen for 3 weeks; a leader reaches out | And the part that matters most. It shows who hasn't been seen in three weeks, so a leader can reach out before they drift away. |
+| 0:45 | Picnic RSVPs: who's coming | Members tap to say they're coming, so you know how many to expect. |
+| 0:49 | What the church got back this week | Add it up. Hours of typing given back every week. Members who feel seen. And a pastor with time for people, not a phone. |
+| 0:58 | "Want this for your church or business?" end screen | Want this for your church, or your business? I'm RMR Dev Works. Send me a message, or email me. It's in my bio. |
 
 ## Post caption
 > What would your church do with hours back every week? ⛪
