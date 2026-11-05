@@ -10,6 +10,10 @@ demo app that fixes it. The demo apps are for made-up businesses with sample dat
 - Never use real clients, AFM HUB, Church Care or real people in the videos.
 - Hooks are broad, from video 3 on: open with the result ("This one link ends order chaos for food
   businesses") rather than a narrow question ("Run a shipping business?"), so more people stop scrolling.
+- Demo app screens follow the polished style of video 3 (`videos/03-church`), modelled on the AFM HUB's
+  design: a big welcome banner, Newsreader serif headings, white rounded cards and tiles with thin line icons,
+  a warm off-white background, one strong colour plus a gold-style accent, and a bottom tab bar. Pick colours
+  that suit each made-up business, never AFM's green and gold, name, logo or photos.
 - Prince doesn't appear on camera: use the AI voice-over or captions and music, never a face-to-camera script.
 
 ## Making a video
