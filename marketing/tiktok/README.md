@@ -31,6 +31,12 @@ tools/make.sh videos/02-clothing rmr-video-2-clothing
 
 This writes `videos/<name>/build/<output>.mp4` and `<output>-no-voice.mp4`. `build/` is not committed.
 
+With someone's own voice-over (read in one take, 2-second pauses between sections):
+
+```
+RECORDING=/path/to/voice.m4a tools/make.sh videos/05-church-full rmr-church-full
+```
+
 A video folder has:
 - `segments.json`: the voice-over, one segment per scene: `id`, `text` (what's said) and `cap`
   (the on-screen caption; `<mark>` highlights words, empty for none).
@@ -50,6 +56,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 `am_michael`; pass another as the third argument to `make.sh`.
 
 ## Video plan
+- ✅ Church app, full version (`videos/05-church-full`): about 2½ minutes, made for a person's own voice-over
 0. ✅ Announcement for the personal account (`videos/00-announcement`)
 1. ✅ Shipping / freight: chasing payments, "where's my parcel?" (`videos/01-shipping`)
 2. ✅ Clothing brand / tailor (`videos/02-clothing`): re-posting every item; an online catalogue customers order from with their size
