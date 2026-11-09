@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mo's Kitchen full demo video</title>
+<style>
+
+
+
+  :root {
+    --ink: #0f172a; --muted: #64748b; --line: #e2e8f0; --bg: #f8fafc;
+    --brand: #0e7490; --brand-2: #155e75; --ok: #16a34a; --warn: #d97706; --bad: #dc2626;
+    --wa: #334155; --wa-bg: #eef2f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  #root { position: relative; width: 540px; height: 960px; overflow: hidden; transform: scale(2); transform-origin: 0 0; background: #0b1220; font-family: Inter, system-ui, sans-serif; color: var(--ink); }
+  .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+  .scene.on { opacity: 1; }
+
+  /* Captions: kept in the upper-middle, clear of TikTok's buttons on the right and text at the bottom */
+  #cap { position: absolute; left: 28px; right: 72px; top: 76px; z-index: 50; text-align: center;
+    font: 800 25px/1.25 Inter, sans-serif; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.6); min-height: 64px; }
+  #cap span { background: rgba(15,23,42,.78); padding: 6px 12px; border-radius: 10px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  #cap mark { background: none; color: #fde047; }
+
+  /* 1. Hook */
+  #hook { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 22px; padding: 40px; }
+  #hook .big { font: 900 54px/1.05 Inter, sans-serif; color: #fff; text-align: center; letter-spacing: -1px; }
+  #hook .big em { font-style: normal; color: #fde047; }
+  #hook .emoji { font-size: 88px; animation: bob 1.2s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-10px) rotate(-6deg); } }
+
+  /* 2. Pain: status posts and the same questions */
+  #pain { background: var(--wa-bg); }
+  .wa-top { background: var(--wa); color: #fff; padding: 52px 20px 14px; font-weight: 700; font-size: 19px; display: flex; gap: 12px; align-items: center; }
+  .wa-top .av { width: 38px; height: 38px; border-radius: 50%; background: #64748b; display: grid; place-items: center; font-size: 18px; }
+  .wa-top small { display: block; font-weight: 400; font-size: 13px; opacity: .85; }
+  .badge-count { position: absolute; top: 58px; right: 26px; background: #ef4444; color: #fff; font-weight: 800; border-radius: 99px; padding: 4px 12px; font-size: 18px; }
+  .status { position: absolute; top: 172px; left: 22px; right: 22px; display: flex; gap: 8px; }
+  .status div { flex: 1; aspect-ratio: 3/4; border-radius: 10px; display: grid; place-items: center; font-size: 30px; border: 3px solid #22c55e; }
+  .status-l { position: absolute; top: 152px; left: 22px; font-size: 12px; font-weight: 700; color: #475569; }
+  .chat { padding: 300px 22px 0; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 82%; background: #fff; border-radius: 12px; padding: 9px 14px; font-size: 18px; box-shadow: 0 1px 1px rgba(0,0,0,.15);
+    transform: scale(.6); opacity: 0; transition: all .25s cubic-bezier(.3,1.6,.6,1); }
+  .msg.show { transform: scale(1); opacity: 1; }
+  .msg b { display: block; font-size: 13px; color: #c2410c; }
+  .msg .t { font-size: 11px; color: var(--muted); text-align: right; }
+  .note { position: absolute; right: 22px; bottom: 70px; width: 220px; border-radius: 6px; padding: 12px 14px; transform: rotate(4deg) scale(.6);
+    box-shadow: 0 10px 25px rgba(0,0,0,.25); font: 19px/1.5 "Comic Sans MS", cursive; color: #1e3a8a; opacity: 0; transition: all .35s;
+    background: #fffbeb repeating-linear-gradient(#fffbeb 0 27px, #bfdbfe 27px 28px); }
+  .note.show { opacity: 1; transform: rotate(4deg) scale(1); }
+  .note s { color: #b91c1c; }
+
+  /* 3. The app, in a phone */
+  #app { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); }
+  .phone { position: absolute; left: 50%; top: 168px; width: 380px; height: 640px; margin-left: -190px; transform: scale(1.24); transform-origin: top center; background: #111; border-radius: 44px; padding: 12px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.5); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 34px; overflow: hidden; background: var(--bg); }
+  .view { position: absolute; inset: 0; transition: transform .35s ease, opacity .35s; background: var(--bg); overflow: hidden; }
+  .view.off { transform: translateX(100%); opacity: 0; }
+  .bar { background: var(--brand); color: #fff; padding: 34px 16px 12px; }
+  .bar h1 { font-size: 19px; display: flex; align-items: center; gap: 8px; }
+  .bar p { font-size: 12px; opacity: .85; }
+  .demo { background: #fde047; color: #713f12; font: 800 10px/1 Inter; padding: 4px 6px; border-radius: 4px; letter-spacing: .5px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .stat small { color: var(--muted); font-size: 11px; }
+  .stat div { font-size: 20px; font-weight: 800; }
+  .stat.bad div { color: var(--bad); }
+  .tabs { display: flex; gap: 6px; padding: 0 12px 8px; }
+  .tab { font-size: 12px; font-weight: 700; padding: 6px 10px; border-radius: 99px; background: #e2e8f0; color: #334155; }
+  .tab.on { background: var(--ink); color: #fff; }
+  .list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+  .row { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; transition: background .3s; }
+  .row b { font-size: 14px; }
+  .row small { color: var(--muted); font-size: 11px; }
+  .pill { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 99px; align-self: center; text-transform: uppercase; letter-spacing: .3px; }
+  .p-sea { background: #dbeafe; color: #1d4ed8; } .p-port { background: #fef3c7; color: #92400e; } .p-ready { background: #dcfce7; color: #166534; } .p-wh { background: #f1f5f9; color: #475569; }
+  .owe { color: var(--bad); font-weight: 700; } .paid { color: var(--ok); font-weight: 700; }
+  .back { font-size: 13px; opacity: .9; }
+  .card { margin: 12px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .card h2 { font-size: 16px; }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; margin-top: 8px; }
+  .kv span:nth-child(odd) { color: var(--muted); }
+  .steps { list-style: none; margin-top: 4px; }
+  .steps li { position: relative; padding: 0 0 14px 30px; font-size: 13px; color: var(--muted); }
+  .steps li::before { content: ""; position: absolute; left: 6px; top: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #cbd5e1; background: #fff; transition: all .3s; }
+  .steps li::after { content: ""; position: absolute; left: 12px; top: 18px; bottom: 0; width: 2px; background: #e2e8f0; }
+  .steps li:last-child::after { display: none; }
+  .steps li.done { color: var(--ink); font-weight: 600; }
+  .steps li.done::before { background: var(--ok); border-color: var(--ok); }
+  .steps li.now::before { box-shadow: 0 0 0 5px rgba(22,163,74,.25); }
+  .steps small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+  .btn { display: block; width: calc(100% - 24px); margin: 8px 12px 0; padding: 12px; border-radius: 12px; border: 0; font: 700 14px Inter; color: #fff; background: var(--brand); text-align: center; transition: transform .1s; }
+  .btn.alt { background: #fff; color: var(--brand); border: 2px solid var(--brand); }
+  .btn.wa { background: var(--brand); }
+  .btn.small { display: inline-block; width: auto; margin: 0; padding: 6px 10px; font-size: 11px; border-radius: 8px; grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .btn.sent { background: #94a3b8 !important; }
+  .press { transform: scale(.94); }
+  .toast { position: absolute; left: 12px; right: 12px; top: 40px; background: #14532d; color: #fff; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 700;
+    transform: translateY(calc(-100% - 60px)); transition: transform .35s cubic-bezier(.3,1.4,.6,1); z-index: 5; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+  .toast.show { transform: translateY(0); }
+  .toast small { display: block; font-weight: 400; opacity: .85; }
+  .cust .bar { background: #0f172a; }
+  .big-status { text-align: center; padding: 18px 0 6px; }
+  .big-status div { font-size: 44px; }
+  .big-status b { display: block; font-size: 20px; margin-top: 4px; }
+  .big-status small { color: var(--muted); font-size: 12px; }
+  .url { margin: 8px 12px 0; font: 12px ui-monospace, monospace; background: #e2e8f0; padding: 8px 10px; border-radius: 8px; color: #334155; }
+
+  /* Fake finger */
+  #finger { position: absolute; z-index: 60; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.45); border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35); transform: translate(-50%, -50%) scale(1); transition: left .5s ease, top .5s ease, transform .12s, opacity .3s; opacity: 0; left: 400px; top: 800px; }
+  #finger.down { transform: translate(-50%, -50%) scale(.75); background: rgba(255,255,255,.8); }
+
+  /* 4. Call to action */
+  #cta { background: linear-gradient(160deg, #2b6ce0 0%, #1e2a44 80%); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 50px; gap: 20px; color: #fff; }
+  #cta .q { font: 900 46px/1.08 Inter; letter-spacing: -1px; }
+  #cta .q em { font-style: normal; color: #fde047; }
+  #cta .logo { display: flex; align-items: center; gap: 14px; background: #fff; color: #1e2a44; padding: 14px 22px 14px 16px; border-radius: 20px; box-shadow: 0 12px 30px rgba(0,0,0,.3); text-align: left; }
+  #cta .logo b { display: block; font: 800 30px/1 'Baloo 2'; } #cta .logo b span { color: #2b6ce0; }
+  #cta .logo small { display: block; font: 600 14px Nunito, Inter; color: #4a5878; margin-top: 4px; }
+  @font-face { font-family: 'Baloo 2'; src: url(../../../../rmr-hub/src/app/fonts/baloo-800.woff2); font-weight: 800; }
+  @font-face { font-family: Nunito; src: url(../../../../rmr-hub/src/app/fonts/nunito.woff2); font-weight: 200 1000; }
+  #cta .sub { font: 600 21px/1.4 Inter; opacity: .92; }
+  #cta .wa-btn { background: #fff; color: #1e2a44; font: 800 22px Inter; padding: 14px 24px; border-radius: 99px; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { transform: scale(1.06); } }
+  #cta .fine { font-size: 13px; opacity: .6; }
+
+  /* Catalogue */
+  .shop .bar { background: #1e2a44; }
+  .url { margin: 8px 12px 0; }
+  .cats { display: flex; gap: 6px; padding: 10px 12px 8px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px; }
+  .item { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 12px; position: relative; transition: opacity .3s; }
+  .item .pic { aspect-ratio: 1/1; display: grid; place-items: center; font-size: 46px; }
+  .item div.t { padding: 6px 8px 8px; } .item b { display: block; font-size: 12px; } .item span { color: var(--muted); font-size: 11px; }
+  .item .price { position: absolute; top: 6px; right: 6px; background: #fff; border-radius: 99px; padding: 2px 8px; font-weight: 800; font-size: 11px; color: var(--ink); }
+  .item .gone { position: absolute; inset: 0 0 auto 0; aspect-ratio: 1/1; display: none; place-items: center; background: rgba(255,255,255,.65); font-weight: 800; color: #b91c1c; font-size: 13px; letter-spacing: .5px; }
+  .item.sold .gone { display: grid; } .item.sold .pic { filter: grayscale(1); }
+  .detail .pic { height: 230px; display: grid; place-items: center; font-size: 110px; }
+  .sizes { display: flex; gap: 8px; padding: 6px 12px; }
+  .size { width: 44px; height: 40px; border-radius: 10px; border: 2px solid var(--line); background: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px; transition: all .2s; }
+  .size.na { color: #cbd5e1; text-decoration: line-through; }
+  .size.sel { border-color: #2b6ce0; background: #2b6ce0; color: #fff; }
+  .lbl { padding: 10px 12px 0; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .switch { width: 42px; height: 24px; border-radius: 99px; background: var(--ok); position: relative; grid-column: 2; grid-row: 1 / span 2; align-self: center; transition: background .2s; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 21px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .2s; }
+  .switch.off { background: #cbd5e1; } .switch.off::after { left: 3px; }
+  .row .ic { font-size: 22px; }
+  .row.new { background: #eff6ff; border-color: #93c5fd; }
+  #cta .logo { display: flex; }
+
+
+  /* Church demo app: church blue and gold on cream, serif headings */
+  @font-face { font-family: Newsreader; src: url(../../../../fonts/newsreader-latin.woff2); font-weight: 200 800; }
+  @font-face { font-family: Newsreader; font-style: italic; src: url(../../../../fonts/newsreader-italic-latin.woff2); font-weight: 200 800; }
+  :root { --navy: #0d2b5e; --blue: #1d4f9f; --gold: #c9a227; --gold-l: #e8cf7a; --cream: #f6f3ec; --card: #ffffff; --ink2: #24324a; }
+  #hook .big.small { font-size: 38px; }
+  .screen, .view { background: var(--cream); }
+  .screen { font-family: Nunito, sans-serif; color: var(--ink2); }
+  .serif { font-family: Newsreader, Georgia, serif; }
+  .hero2 { position: relative; height: 270px; color: #fff; overflow: hidden;
+    background: radial-gradient(120% 80% at 80% 15%, rgba(232,207,122,.55) 0%, rgba(232,207,122,0) 45%), linear-gradient(170deg, #2a63c0 0%, var(--navy) 75%); }
+  .hero2::after { content: ""; position: absolute; inset: auto 0 0 0; height: 120px; background: linear-gradient(transparent, rgba(13,43,94,.85)); }
+  .hero2 .art { position: absolute; right: -6px; top: 26px; width: 190px; opacity: .95; }
+  .hero2 .inner { position: absolute; left: 18px; right: 18px; bottom: 44px; z-index: 2; }
+  .badge { width: 46px; height: 46px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(0,0,0,.25); margin-bottom: 10px; }
+  .yr { display: inline-block; border: 1.5px solid var(--gold-l); color: var(--gold-l); border-radius: 99px; padding: 3px 10px; font: 800 9px Nunito; letter-spacing: 1.2px; text-transform: uppercase; }
+  .welcome { display: block; color: var(--gold-l); font: 800 10px Nunito; letter-spacing: 2px; margin-top: 8px; }
+  .hero2 h2 { font: 600 30px/1.05 Newsreader, serif; margin-top: 2px; }
+  .hero2 p { font: italic 13px Newsreader, serif; opacity: .9; margin-top: 2px; }
+  .demo2 { position: absolute; top: 34px; left: 18px; z-index: 3; background: #fde047; color: #713f12; font: 800 9px/1 Nunito; padding: 4px 6px; border-radius: 4px; letter-spacing: .5px; }
+  .tiles2 { position: relative; z-index: 3; margin: -30px 12px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile2 { background: var(--card); border-radius: 16px; padding: 12px 4px 10px; text-align: center; font: 800 12px Nunito; color: var(--ink2); box-shadow: 0 6px 16px rgba(13,43,94,.10); }
+  .tile2 svg { display: block; margin: 0 auto 5px; width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .votd { margin: 12px 12px 0; background: var(--card); border-radius: 16px; padding: 12px 14px; box-shadow: 0 6px 16px rgba(13,43,94,.08); }
+  .votd small { font: 800 9px Nunito; letter-spacing: 1.5px; color: var(--gold); }
+  .votd p { font: 15px/1.35 Newsreader, serif; color: var(--ink2); margin-top: 4px; }
+  .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 58px; background: #fff; border-top: 1px solid #e7e2d6; display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; z-index: 4; }
+  .tabbar span { text-align: center; font: 700 9px Nunito; color: #8a93a6; }
+  .tabbar span svg { display: block; margin: 0 auto 2px; width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tabbar span.on { color: var(--gold); }
+  .head2 { background: linear-gradient(160deg, #2a63c0, var(--navy)); color: #fff; padding: 34px 16px 14px; }
+  .head2 .back { font: 700 12px Nunito; color: var(--gold-l); }
+  .head2 h1 { font: 600 24px/1.1 Newsreader, serif; display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .head2 h1 .demo { font-family: Nunito; }
+  .head2 p { font: 12px Nunito; opacity: .85; }
+  .c2 { margin: 12px; background: var(--card); border-radius: 16px; padding: 14px; box-shadow: 0 6px 16px rgba(13,43,94,.08); }
+  .lbl2 { font: 800 10px Nunito; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; }
+  .compose { font: 16px/1.4 Newsreader, serif; min-height: 70px; margin-top: 6px; color: var(--ink2); }
+  .opts { display: flex; gap: 6px; padding: 0 12px; flex-wrap: wrap; }
+  .opt { font: 800 11px Nunito; padding: 6px 10px; border-radius: 99px; background: #fff; color: var(--blue); border: 1.5px solid #d7e1f3; }
+  .btn2 { display: block; width: calc(100% - 24px); margin: 12px 12px 0; padding: 13px; border-radius: 14px; border: 0; font: 800 14px Nunito; color: #fff; background: var(--navy); text-align: center; transition: transform .1s, background .3s; }
+  .btn2.goldb { background: var(--gold); color: #2b2205; }
+  .notif { position: absolute; left: 10px; right: 10px; top: 30px; background: rgba(255,255,255,.97); color: var(--ink); border-radius: 16px; padding: 10px 12px; box-shadow: 0 10px 24px rgba(0,0,0,.25); font: 12px Nunito;
+    display: grid; grid-template-columns: 34px 1fr; gap: 0 10px; align-items: center; opacity: 0; transform: translateY(-20px); transition: all .35s; z-index: 6; }
+  .notif.show { opacity: 1; transform: none; }
+  .notif .ap { width: 34px; height: 34px; border-radius: 9px; background: var(--navy); display: grid; place-items: center; grid-row: span 2; }
+  .notif b { font-size: 12px; }
+  .srow { display: grid; grid-template-columns: 54px 1fr 36px; gap: 0 12px; align-items: center; background: var(--card); border-radius: 16px; padding: 10px; box-shadow: 0 4px 12px rgba(13,43,94,.07); }
+  .srow .art2 { width: 54px; height: 54px; border-radius: 12px; grid-row: span 2; background: linear-gradient(150deg, #2a63c0, var(--navy)); display: grid; place-items: center; }
+  .srow .art2 svg { width: 24px; height: 24px; stroke: var(--gold-l); fill: none; stroke-width: 1.8; }
+  .srow b { font: 600 16px/1.15 Newsreader, serif; color: var(--ink2); }
+  .srow small { font: 11px Nunito; color: #7b8496; }
+  .srow .pl { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); color: #2b2205; display: grid; place-items: center; grid-row: span 2; font-size: 13px; font-weight: 900; }
+  .srow.new { outline: 2px solid var(--gold-l); }
+  .sl { display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+  .bar-p { margin: 0 12px; height: 4px; border-radius: 4px; background: #e7e2d6; overflow: hidden; } .bar-p i { display: block; height: 100%; width: 0; background: var(--gold); transition: width 3s linear; }
+  .pr { background: var(--card); border-radius: 16px; padding: 12px 14px; box-shadow: 0 4px 12px rgba(13,43,94,.07); }
+  .pr .who { display: flex; justify-content: space-between; align-items: center; font: 700 11px Nunito; color: #7b8496; }
+  .pr q { display: block; font: 16px/1.35 Newsreader, serif; color: var(--ink2); margin: 4px 0 8px; quotes: none; }
+  .lock { font: 800 9px Nunito; color: var(--blue); background: #e8eefa; border-radius: 99px; padding: 3px 8px; }
+  .pray { font: 800 12px Nunito; color: var(--navy); border: 1.5px solid var(--navy); border-radius: 99px; padding: 6px 12px; display: inline-block; transition: all .2s; }
+  .pray.done { background: var(--navy); color: #fff; }
+  .crow { display: grid; grid-template-columns: 42px 1fr auto; gap: 0 12px; align-items: center; background: var(--card); border-radius: 16px; padding: 10px 12px; box-shadow: 0 4px 12px rgba(13,43,94,.07); }
+  .avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font: 800 16px Nunito; color: #fff; grid-row: span 2; }
+  .crow b { font: 600 17px Newsreader, serif; } .crow small { font: 11px Nunito; color: #7b8496; }
+  .reach { font: 800 11px Nunito; color: #2b2205; background: var(--gold); border-radius: 99px; padding: 7px 12px; grid-row: span 2; transition: all .2s; }
+  .reach.done { background: #16a34a; color: #fff; }
+  .tip { margin: 4px 12px; font: italic 14px Newsreader, serif; color: #5b6476; text-align: center; }
+  .evhero { margin: 12px; height: 120px; border-radius: 18px; color: #fff; padding: 14px 16px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: radial-gradient(90% 90% at 85% 10%, rgba(232,207,122,.6), transparent 55%), linear-gradient(160deg, #2a63c0, var(--navy)); }
+  .evhero small { font: 800 9px Nunito; letter-spacing: 1.5px; color: var(--gold-l); text-transform: uppercase; }
+  .evhero b { font: 600 26px Newsreader, serif; }
+  .rsvp { display: flex; gap: 8px; padding: 0 12px; }
+  .rsvp div { flex: 1; text-align: center; border-radius: 14px; padding: 10px 4px; background: var(--card); box-shadow: 0 4px 12px rgba(13,43,94,.07); font: 600 26px Newsreader, serif; color: var(--navy); }
+  .rsvp small { display: block; font: 800 10px Nunito; color: #7b8496; }
+  .plan { margin: 12px; font: 12px Nunito; color: #5b6476; display: flex; justify-content: space-around; }
+  .wk { padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .wk div { background: var(--card); border-radius: 16px; padding: 12px; box-shadow: 0 4px 12px rgba(13,43,94,.07); opacity: 0; transform: scale(.85); transition: all .35s cubic-bezier(.3,1.6,.6,1); }
+  .wk div.show { opacity: 1; transform: none; }
+  .wk b { display: block; font: 600 32px/1 Newsreader, serif; color: var(--navy); } .wk small { font: 700 11px Nunito; color: #7b8496; }
+  .heart { margin: 6px 12px 0; text-align: center; font: italic 18px Newsreader, serif; color: var(--navy); opacity: 0; transition: opacity .6s; }
+  .heart.show { opacity: 1; }
+  .gc { display: flex; gap: 6px; padding: 0 22px; position: absolute; top: 160px; left: 0; right: 0; }
+  .gc span { flex: 1; background: #fff; border-radius: 10px; padding: 6px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #475569; border: 1px solid #cbd5e1; }
+  .toast { background: var(--navy); font-family: Nunito; border-left: 4px solid var(--gold); }
+
+  /* full-length extras */
+  .livecard { margin: 12px 12px 0; background: linear-gradient(135deg, #7f1d1d, #b91c1c); color: #fff; border-radius: 16px; padding: 12px 14px; display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: center; box-shadow: 0 6px 16px rgba(127,29,29,.3); }
+  .livecard .dot { width: 12px; height: 12px; border-radius: 50%; background: #fff; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .livecard b { font: 800 14px Nunito; display: block; } .livecard small { font: 11px Nunito; opacity: .85; }
+  .livecard .watch { background: #fff; color: #7f1d1d; font: 800 12px Nunito; border-radius: 99px; padding: 6px 12px; }
+  .lockscreen { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, #3b6fd1 0%, #0d2b5e 70%); color: #fff; text-align: center; padding-top: 80px; }
+  .lockscreen .time { font: 300 72px/1 Nunito; } .lockscreen .date { font: 700 16px Nunito; opacity: .85; margin-top: 6px; }
+  .lockscreen .notif { text-align: left; }
+  .field { margin-top: 6px; min-height: 30px; font: 17px/1.35 Newsreader, serif; color: var(--ink2); border-bottom: 1.5px solid #e7e2d6; padding-bottom: 6px; }
+  .task { opacity: 0; transform: translateY(14px); transition: all .4s; border-left: 4px solid var(--gold); }
+  .task.show { opacity: 1; transform: none; }
+  .task small { font: 12px Nunito; color: #7b8496; }
+  .wk { gap: 8px; } .wk div { padding: 10px 12px; } .wk b { font-size: 26px; }
+  #reflect { background: radial-gradient(120% 70% at 50% 20%, #2a63c0 0%, #0d2b5e 55%, #070f22 100%); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 44px; gap: 28px; }
+  #reflect .names { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 420px; }
+  #reflect .names span { font: 700 13px Nunito; border: 1.5px solid rgba(232,207,122,.6); color: #e8cf7a; border-radius: 99px; padding: 6px 12px; opacity: 0; transform: translateY(8px); transition: all .5s; }
+  #reflect .names span.show { opacity: 1; transform: none; }
+  #reflect .rq { font: 400 40px/1.15 Newsreader, serif; } #reflect .rq em { color: #e8cf7a; }
+  #reflect .rs { font: italic 22px/1.4 Newsreader, serif; color: #dbe6fb; opacity: 0; transition: opacity 1s; }
+  #reflect .rs.show { opacity: 1; }
+
+  /* Mo's Kitchen: deep green, tomato and mustard on cream */
+  :root { --navy: #173a2a; --blue: #2f6b47; --gold: #d97706; --gold-l: #fbbf24; --tom: #c2410c; }
+  .head2 { background: linear-gradient(160deg, #2f6b47, #173a2a); }
+  .hero2 { height: 190px; background: radial-gradient(110% 90% at 85% 10%, rgba(251,191,36,.55) 0%, rgba(251,191,36,0) 50%), linear-gradient(165deg, #2f6b47 0%, #173a2a 80%); }
+  .hero2::after { background: linear-gradient(transparent, rgba(23,58,42,.85)); height: 90px; }
+  .hero2 .inner { bottom: 18px; }
+  .hero2 h2 { font-size: 30px; }
+  .hero2 .plate { position: absolute; right: 14px; top: 34px; font-size: 76px; opacity: .95; z-index: 1; }
+  .open { display: inline-block; background: #16a34a; color: #fff; border-radius: 99px; padding: 3px 10px; font: 800 9px Nunito; letter-spacing: 1px; }
+  .urlbar { margin: 10px 12px 0; font: 12px ui-monospace, monospace; background: #ebe6da; padding: 7px 10px; border-radius: 8px; color: #4a4435; }
+  .cats2 { display: flex; gap: 6px; padding: 10px 12px 8px; }
+  .cat { font: 800 11px Nunito; padding: 6px 12px; border-radius: 99px; background: #fff; color: var(--navy); border: 1.5px solid #e7e2d6; }
+  .cat.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .menu { display: flex; flex-direction: column; gap: 8px; padding: 0 12px; }
+  .food { background: #fff; border-radius: 16px; padding: 8px 10px; display: grid; grid-template-columns: 56px 1fr auto auto; gap: 0 10px; align-items: center; box-shadow: 0 4px 12px rgba(23,58,42,.07); transition: opacity .3s; }
+  .food .ph { width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; font-size: 30px; }
+  .food b { display: block; font: 600 17px/1.1 Newsreader, serif; color: var(--ink2); }
+  .food small { font: 11px Nunito; color: #7b8496; }
+  .food .pr2 { font: 800 14px Nunito; color: var(--navy); }
+  .food .add2 { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: #2b2205; display: grid; place-items: center; font: 900 18px Nunito; transition: all .2s; }
+  .food .add2.q { background: var(--navy); color: #fff; font-size: 15px; }
+  .food.sold { opacity: .45; } .food.sold .add2 { background: #94a3b8; color: #fff; font-size: 8px; width: auto; padding: 0 8px; border-radius: 99px; }
+  .cart2 { position: absolute; left: 12px; right: 12px; bottom: 68px; background: var(--navy); color: #fff; border-radius: 16px; padding: 13px 16px; display: flex; justify-content: space-between; font: 800 14px Nunito; transform: translateY(24px); opacity: 0; transition: transform .35s, opacity .25s; z-index: 5; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+  .cart2.show { transform: none; opacity: 1; }
+  .line { display: flex; justify-content: space-between; font: 15px Nunito; padding: 5px 0; color: var(--ink2); }
+  .line.tot { font: 800 17px Nunito; border-top: 1.5px solid #e7e2d6; margin-top: 6px; padding-top: 9px; }
+  .times { display: flex; gap: 8px; padding: 6px 12px 0; }
+  .time2 { flex: 1; text-align: center; background: #fff; border: 1.5px solid #e7e2d6; border-radius: 12px; padding: 9px 2px; font: 800 13px Nunito; color: var(--ink2); transition: all .2s; }
+  .time2 small { display: block; font: 600 9px Nunito; color: #7b8496; }
+  .time2.sel { background: var(--navy); color: #fff; border-color: var(--navy); } .time2.sel small { color: #cfe3d6; }
+  .time2.full { opacity: .4; text-decoration: line-through; }
+  .tk { background: #fff; border-radius: 16px; padding: 11px 13px; box-shadow: 0 4px 12px rgba(23,58,42,.07); border-left: 5px solid #cbd5e1; transition: all .3s; }
+  .tk.new { border-left-color: var(--tom); } .tk.cook { border-left-color: var(--gold); } .tk.ready { border-left-color: #16a34a; }
+  .tk .top { display: flex; justify-content: space-between; align-items: center; }
+  .tk b { font: 600 17px Newsreader, serif; } .tk .when { font: 800 10px Nunito; color: #7b8496; letter-spacing: .5px; }
+  .tk p { font: 13px/1.35 Nunito; color: var(--ink2); margin-top: 3px; }
+  .tk .nt2 { display: inline-block; margin-top: 5px; background: #fef3c7; color: #92400e; border-radius: 8px; padding: 3px 8px; font: 800 11px Nunito; }
+  .st { font: 800 11px Nunito; border-radius: 99px; padding: 6px 12px; background: var(--tom); color: #fff; transition: all .2s; }
+  .st.cook { background: var(--gold); color: #2b2205; } .st.ready { background: #16a34a; }
+  .usual { margin: 12px; border-radius: 18px; padding: 16px; color: #fff; background: linear-gradient(150deg, #2f6b47, #173a2a); box-shadow: 0 8px 20px rgba(23,58,42,.25); }
+  .usual small { font: 800 9px Nunito; letter-spacing: 1.5px; color: var(--gold-l); text-transform: uppercase; }
+  .usual b { display: block; font: 600 22px/1.15 Newsreader, serif; margin: 4px 0 2px; }
+  .usual p { font: 13px Nunito; opacity: .9; }
+  .bars { padding: 2px 0 0; display: flex; flex-direction: column; gap: 9px; }
+  .bar2 { display: grid; grid-template-columns: 96px 1fr 26px; gap: 8px; align-items: center; font: 700 12px Nunito; color: var(--ink2); }
+  .bar2 i { display: block; height: 12px; border-radius: 99px; background: var(--gold); width: 0; transition: width 1s ease; }
+  .bar2 i.low { background: #cbd5e1; }
+  .day3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 12px 12px 0; }
+  .day3 div { background: #fff; border-radius: 14px; padding: 10px; box-shadow: 0 4px 12px rgba(23,58,42,.07); text-align: center; }
+  .day3 b { display: block; font: 600 26px/1 Newsreader, serif; color: var(--navy); } .day3 small { font: 700 10px Nunito; color: #7b8496; }
+  .lockscreen { background: radial-gradient(120% 80% at 50% 0%, #3f7d58 0%, #173a2a 70%); }
+  .notif .ap { background: var(--navy); font-size: 18px; }
+  .toast { background: var(--navy); }
+  .wk b { color: var(--navy); }
+  #reflect { background: radial-gradient(120% 70% at 50% 20%, #2f6b47 0%, #173a2a 55%, #08140e 100%); }
+  #reflect .rq em { color: var(--gold-l); }
+  #reflect .big { font-size: 84px; }
+  .vn { display: flex; align-items: center; gap: 10px; }
+  .vn .play { width: 30px; height: 30px; border-radius: 50%; background: #2b6ce0; color: #fff; display: grid; place-items: center; font-size: 13px; }
+  .vn .wave { flex: 1; height: 22px; width: 150px; border-radius: 4px; background: repeating-linear-gradient(90deg, #94a3b8 0 3px, transparent 3px 6px); }
+  .vn .len { font-size: 12px; color: var(--muted); }
+  .hero2 { height: 150px; } .hero2 .plate { font-size: 60px; top: 30px; } .hero2 h2 { font-size: 27px; }
+  .food { padding: 6px 10px; } .food .ph { width: 46px; height: 46px; font-size: 25px; }
+  .cats2 { padding: 8px 12px 6px; }
+  .qrcard { margin: 12px; background: #fff; border-radius: 18px; padding: 16px; text-align: center; box-shadow: 0 6px 16px rgba(23,58,42,.1); }
+  .qr { width: 150px; height: 150px; margin: 6px auto 10px; display: grid; grid-template-columns: repeat(15, 1fr); gap: 0; border: 8px solid #fff; outline: 2px solid var(--navy); border-radius: 6px; }
+  .qr i { background: var(--navy); } .qr i.o { background: #fff; }
+  .qrcard b { display: block; font: 600 19px Newsreader, serif; color: var(--ink2); } .qrcard small { font: 12px Nunito; color: #7b8496; }
+  .sharerow { display: flex; gap: 8px; padding: 0 12px; }
+  .sharerow span { flex: 1; text-align: center; background: #fff; border: 1.5px solid #e7e2d6; border-radius: 12px; padding: 10px 4px; font: 800 12px Nunito; color: var(--ink2); transition: all .2s; }
+  .sharerow span.done { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .pausebar { margin: 12px 12px 0; background: #fff; border-radius: 14px; padding: 10px 12px; display: grid; grid-template-columns: 1fr auto; align-items: center; box-shadow: 0 4px 12px rgba(23,58,42,.07); }
+  .pausebar b { font: 800 13px Nunito; color: var(--ink2); } .pausebar small { display: block; font: 11px Nunito; color: #7b8496; }
+  .busy { display: none; margin: 10px 12px 0; background: #fef3c7; color: #92400e; border-radius: 12px; padding: 10px 12px; font: 800 13px Nunito; text-align: center; }
+  .busy.show { display: block; }
+</style>
+</head>
+<body>
+<div id="root">
+<div id="cap"></div>
+<div id="finger"></div>
+<div id="mk" style="position:absolute;right:0;bottom:0;width:4px;height:4px;background:#000;z-index:99"></div>
+
+<section id="hook" class="scene">
+  <div class="emoji">🍔</div>
+  <div class="big">Selling food?</div>
+  <div class="big small">Watch what <em>one link</em> can do 👀</div>
+</section>
+
+<section id="pain" class="scene">
+  <div class="wa-top"><div class="av">💬</div><div>Messages<small>23 unread · 4 missed calls</small></div></div>
+  <div class="badge-count">41</div>
+  <div class="chat" style="padding-top:190px">
+    <div class="msg"><b>Ben T.</b><div class="vn"><span class="play">▶</span><span class="wave"></span><span class="len">0:48</span></div><div class="t">12:01</div></div>
+    <div class="msg"><b>Nora K.</b>2 burgers no onions!! and a fries<div class="t">12:03</div></div>
+    <div class="msg"><b>Ben T.</b><div class="vn"><span class="play">▶</span><span class="wave"></span><span class="len">1:12</span></div><div class="t">12:04</div></div>
+    <div class="msg"><b>Missed call</b>📞 Lena P. (3)<div class="t">12:10</div></div>
+    <div class="msg"><b>Sam W.</b>Is my food coming?? 40 mins 😤<div class="t">12:30</div></div>
+    <div class="msg"><b>Nora K.</b>This has onions 😩<div class="t">12:52</div></div>
+  </div>
+  <div class="note">Ben – wrap? or 2 wraps??<br>Nora – <s>onions</s><br>Sam – where??<br>Lena – call back</div>
+</section>
+
+<section id="app" class="scene">
+  <div class="phone"><div class="screen">
+
+    <div class="view" id="v-menu">
+      <div class="hero2">
+        <span class="demo2">DEMO</span>
+        <span class="plate">🍽️</span>
+        <div class="inner">
+          <span class="open">● OPEN NOW</span>
+          <span class="welcome">ORDER FROM</span>
+          <h2>Mo's Kitchen</h2>
+          <p>moskitchen.app · sample data</p>
+        </div>
+      </div>
+      <div class="busy" id="busy">⏸ Kitchen is full · ordering opens again at 13:15</div>
+      <div class="cats2"><span class="cat on">Popular</span><span class="cat">Mains</span><span class="cat">Sides</span><span class="cat">Drinks</span></div>
+      <div class="menu">
+        <div class="food" id="f-burger"><span class="ph" style="background:#fde9d2">🍔</span><div><b>Beef burger</b><small>Cheese, onions, pickles</small></div><span class="pr2">11</span><span class="add2" id="add-burger">+</span></div>
+        <div class="food" id="f-wrap"><span class="ph" style="background:#e3f1dc">🌯</span><div><b>Chicken wrap</b><small>Grilled, spicy mayo</small></div><span class="pr2">9</span><span class="add2">+</span></div>
+        <div class="food" id="f-bowl"><span class="ph" style="background:#dcefe6">🥗</span><div><b>Veggie bowl</b><small>Rice, beans, greens</small></div><span class="pr2">10</span><span class="add2">+</span></div>
+        <div class="food" id="f-fries"><span class="ph" style="background:#fdf0c4">🍟</span><div><b>Fries</b><small>Hand-cut, salted</small></div><span class="pr2">4</span><span class="add2" id="add-fries">+</span></div>
+      </div>
+      <div class="cart2" id="cart"><span id="cart-n">1 item</span><span id="cart-t">View order · 11</span></div>
+      <div class="tabbar"><span class="on"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 4v16M17 4c-2 2-3 5-3 8h3v8"/></svg>Menu</span><span class=""><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Orders</span><span class=""><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Today</span><span class=""><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg>More</span></div>
+    </div>
+
+    <div class="view off" id="v-share">
+      <div class="head2"><h1>Share your menu <span class="demo">DEMO</span></h1><p>One link, everywhere</p></div>
+      <div class="qrcard"><div class="qr"><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i class="o"></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i></i><i></i><i class="o"></i><i></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i></i></div><b>Scan to order</b><small>moskitchen.app/menu · print it for the counter</small></div>
+      <div class="sharerow"><span id="sh-1">Copy link</span><span id="sh-2">Share to status</span><span id="sh-3">Print QR</span></div>
+      <div class="tip" style="margin-top:14px">It always shows today's menu and prices.</div>
+    </div>
+
+    <div class="view off" id="v-cart">
+      <div class="head2"><p class="back">‹ Menu</p><h1>Your order <span class="demo">DEMO</span></h1><p>Mo's Kitchen</p></div>
+      <div class="c2">
+        <div class="line"><span>2 × Beef burger</span><span>22</span></div>
+        <div class="line"><span>1 × Fries</span><span>4</span></div>
+        <div class="line tot"><span>Total</span><span>26</span></div>
+        <span class="lbl2" style="display:block;margin-top:10px">Note for the kitchen</span><div class="field" id="note"></div>
+      </div>
+      <div class="lbl2" style="padding:0 14px">Pickup time</div>
+      <div class="times"><span class="time2 full">12:15<small>full</small></span><span class="time2" id="t-1230">12:30<small>2 left</small></span><span class="time2">12:45<small>free</small></span><span class="time2">13:00<small>free</small></span></div>
+      <button class="btn2" id="b-send">Send order · pay on pickup</button>
+    </div>
+
+    <div class="view off" id="v-kitchen">
+      <div class="head2"><h1>Orders <span class="demo">DEMO</span></h1><p>Kitchen screen · in the order they came in</p></div>
+      <div class="pausebar"><div><b id="pause-b">Taking orders</b><small id="pause-s">Customers can order now</small></div><span class="switch" id="sw-pause"></span></div>
+      <div class="sl">
+        <div class="tk ready"><div class="top"><b>#22 · Sam W.</b><span class="st ready">Ready ✓</span></div><p>1 × Veggie bowl</p><span class="when">PICKUP 12:15</span></div>
+        <div class="tk cook"><div class="top"><b>#23 · Ben T.</b><span class="st cook">Cooking</span></div><p>2 × Chicken wrap</p><span class="when">PICKUP 12:15</span></div>
+        <div class="tk new" id="tk-24"><div class="top"><b>#24 · Nora K.</b><span class="st" id="st-24">New · start</span></div><p>2 × Beef burger · 1 × Fries</p><span class="nt2">📝 No onions on the burgers</span><br><span class="when">PICKUP 12:30 · TOTAL 26</span></div>
+      </div>
+      <div class="tabbar"><span class=""><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 4v16M17 4c-2 2-3 5-3 8h3v8"/></svg>Menu</span><span class="on"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Orders</span><span class=""><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Today</span><span class=""><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg>More</span></div>
+    </div>
+
+    <div class="view off" id="v-ready">
+      <div class="lockscreen">
+        <div class="time">12:28</div><div class="date">Nora's phone</div>
+        <div class="notif show" style="position:relative;top:auto;left:auto;right:auto;margin:40px 14px 0"><span class="ap">🍔</span><b>Mo's Kitchen</b><span>Your order #24 is ready for pickup 🎉</span></div>
+      </div>
+    </div>
+
+    <div class="view off" id="v-stock">
+      <div class="head2"><h1>Today's menu <span class="demo">DEMO</span></h1><p>Switch off what has run out</p></div>
+      <div class="sl">
+        <div class="crow"><span class="avatar" style="background:#fde9d2;font-size:20px">🍔</span><b>Beef burger</b><span class="switch"></span><small>Available</small></div>
+        <div class="crow"><span class="avatar" style="background:#e3f1dc;font-size:20px">🌯</span><b>Chicken wrap</b><span class="switch"></span><small>Available</small></div>
+        <div class="crow"><span class="avatar" style="background:#dcefe6;font-size:20px">🥗</span><b>Veggie bowl</b><span class="switch" id="sw-bowl"></span><small id="bowl-s">Only 1 left</small></div>
+        <div class="crow"><span class="avatar" style="background:#fdf0c4;font-size:20px">🍟</span><b>Fries</b><span class="switch"></span><small>Available</small></div>
+      </div>
+      <div class="tip">Hidden items come back tomorrow, by themselves.</div>
+    </div>
+
+    <div class="view off" id="v-regular">
+      <div class="head2"><h1>Welcome back, Nora <span class="demo">DEMO</span></h1><p>Mo's Kitchen · your 6th order</p></div>
+      <div class="usual"><small>Your usual</small><b>2 × Beef burger, 1 × Fries</b><p>No onions · total 26</p></div>
+      <button class="btn2 goldb" id="b-again">Order again</button>
+      <div class="tip" style="margin-top:14px">Or browse the menu for something new.</div>
+    </div>
+
+    <div class="view off" id="v-day">
+      <div class="head2"><h1>Today <span class="demo">DEMO</span></h1><p>Example day · sample data</p></div>
+      <div class="day3"><div><b>46</b><small>orders</small></div><div><b>0</b><small>missed</small></div><div><b>612</b><small>taken today</small></div></div>
+      <div class="c2"><span class="lbl2">What sold</span>
+        <div class="bars" style="margin-top:10px">
+          <div class="bar2"><span>Beef burger</span><i data-w="100"></i><span>31</span></div>
+          <div class="bar2"><span>Fries</span><i data-w="84"></i><span>26</span></div>
+          <div class="bar2"><span>Chicken wrap</span><i data-w="58"></i><span>18</span></div>
+          <div class="bar2"><span>Veggie bowl</span><i data-w="39"></i><span>12</span></div>
+          <div class="bar2"><span>Fish pie</span><i class="low" data-w="6"></i><span>2</span></div>
+        </div>
+      </div>
+      <div class="tip">Cook more burgers tomorrow. Rethink the fish pie.</div>
+      <div class="tabbar"><span class=""><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 4v16M17 4c-2 2-3 5-3 8h3v8"/></svg>Menu</span><span class=""><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Orders</span><span class="on"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Today</span><span class=""><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg>More</span></div>
+    </div>
+
+    <div class="view off" id="v-add">
+      <div class="head2"><h1>This week <span class="demo">DEMO</span></h1><p>Example week · sample data</p></div>
+      <div class="wk">
+        <div><b>0</b><small>missed orders</small></div>
+        <div><b>0</b><small>wrong orders</small></div>
+        <div><b>0</b><small>voice notes to replay</small></div>
+        <div><b>214</b><small>orders, all clear</small></div>
+        <div><b>38</b><small>regulars ordered again</small></div>
+        <div><b>11 hrs</b><small>off the phone</small></div>
+      </div>
+      <div class="heart" id="heart">Back to the food.</div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div></div>
+</section>
+
+<section id="reflect" class="scene">
+  <div class="big">👩‍🍳</div>
+  <div class="rq">You started this because you love to <em>cook</em>,<br>not to answer messages.</div>
+  <div class="rs">Let the app take the orders.<br>You get back to the food.</div>
+</section>
+
+<section id="cta" class="scene">
+  <div class="q">Want this for <em>your</em> business?</div>
+  <div class="logo"><svg viewBox="0 0 100 100" width="64" height="64" aria-hidden="true"><rect x="31" y="8" width="38" height="38" rx="10" fill="#9DC0F7"/><rect x="10" y="52" width="38" height="38" rx="10" fill="#2B6CE0"/><rect x="52" y="52" width="38" height="38" rx="10" fill="#5A92EE"/></svg><div><b>RMR <span>Dev Works</span></b><small>Where ideas take shape</small></div></div>
+  <div class="sub">Apps &amp; websites for small businesses</div>
+  <div class="wa-btn">Message me · email in bio</div>
+  <div class="fine">Demo app with made-up data</div>
+</section>
+
+</div>
+<script>
+
+
+
+  const $ = (s) => document.querySelector(s);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  window.scene = (id) => { document.querySelectorAll(".scene").forEach((s) => s.classList.toggle("on", s.id === id)); };
+  window.caption = (html) => { $("#cap").innerHTML = html ? `<span>${html}</span>` : ""; };
+  window.view = (id) => { document.querySelectorAll(".view").forEach((v) => v.classList.toggle("off", v.id !== id)); };
+  window.toast = async (html, ms = 1800) => { const t = $("#toast"); t.innerHTML = html; t.classList.add("show"); await sleep(ms); t.classList.remove("show"); };
+  window.tap = async (sel) => {
+    const el = $(sel), f = $("#finger"), r = el.getBoundingClientRect();
+    f.style.opacity = 1; f.style.left = `${(r.left + r.width / 2) / 2}px`; f.style.top = `${(r.top + r.height / 2) / 2}px`;
+    await sleep(550); f.classList.add("down"); el.classList.add("press");
+    await sleep(160); f.classList.remove("down"); el.classList.remove("press");
+  };
+  window.mark = (c) => { $("#mk").style.background = c; };
+  window.hideFinger = () => { $("#finger").style.opacity = 0; };
+  window.painPop = async (gap) => { for (const m of document.querySelectorAll(".msg")) { m.classList.add("show"); await sleep(gap); } $(".note").classList.add("show"); };
+  window.typeIn = async (sel, text, ms = 40) => { const n = $(sel); n.textContent = ""; for (const c of text) { n.textContent += c; await sleep(ms); } };
+  window.notify = () => $("#n-ann").classList.add("show");
+  window.play = () => { $("#b-play").textContent = "❚❚"; $("#prog").style.width = "35%"; };
+  window.pray = (id) => { const p = $(id); p.classList.add("done"); p.textContent = "✓ Praying · 4 of the team"; };
+  window.reach = (id) => { const r = $(id); r.classList.add("done"); r.textContent = "✓ Elder Mark"; };
+  window.rsvp = () => { $("#rsvp-n").textContent = "87"; const b = $("#b-rsvp"); b.textContent = "✓ See you there!"; b.style.background = "#16a34a"; b.style.color = "#fff"; };
+  window.week = async (gap) => { for (const d of document.querySelectorAll(".wk div")) { d.classList.add("show"); await sleep(gap); } $("#heart").classList.add("show"); };
+  window.typeField = async (sel, text, ms = 30) => { const n = $(sel); n.textContent = ""; for (const c of text) { n.textContent += c; await sleep(ms); } };
+  window.showTask = () => $("#visit-task").classList.add("show");
+  window.fillGap = () => { const k = $("#serve-k"); k.classList.add("done"); k.textContent = "✓ 3/3"; };
+  window.names = async (gap) => { for (const n of document.querySelectorAll("#reflect .names span")) { n.classList.add("show"); await sleep(gap); } };
+  window.reflectLine = () => $("#reflect .rs").classList.add("show");
+
+  window.addFood = (id, n, t) => { const a = $(id); a.textContent = n; a.classList.add("q"); $("#cart").classList.add("show"); $("#cart-n").textContent = t[0]; $("#cart-t").textContent = t[1]; };
+  window.clearCart = () => { $("#cart").classList.remove("show"); for (const id of ["#add-burger", "#add-fries"]) { const b = $(id); b.textContent = "+"; b.classList.remove("q"); } };
+  window.pickTime = () => $("#t-1230").classList.add("sel");
+  window.setStatus = (cls, label) => { const s = $("#st-24"), t = $("#tk-24"); s.className = "st " + cls; s.textContent = label; t.className = "tk " + (cls || "new"); };
+  window.bowlOut = () => { $("#sw-bowl").classList.add("off"); $("#bowl-s").textContent = "Sold out today"; const f = $("#f-bowl"); f.classList.add("sold"); f.querySelector(".add2").textContent = "SOLD OUT"; $("#cart").classList.remove("show"); for (const id of ["#add-burger", "#add-fries"]) { const b = $(id); b.textContent = "+"; b.classList.remove("q"); } };
+  window.shared = (id, label) => { const b = $(id); b.classList.add("done"); b.textContent = label; };
+  window.pauseOrders = () => { $("#sw-pause").classList.add("off"); $("#pause-b").textContent = "Paused until 13:15"; $("#pause-s").textContent = "Customers see when you are back"; $("#busy").classList.add("show"); };
+  window.resumeOrders = () => { $("#sw-pause").classList.remove("off"); $("#pause-b").textContent = "Taking orders"; $("#pause-s").textContent = "Customers can order now"; $("#busy").classList.remove("show"); };
+  window.again = () => { const b = $("#b-again"); b.textContent = "✓ Ordered · pickup 12:45"; b.style.background = "#16a34a"; b.style.color = "#fff"; };
+  window.bars = () => document.querySelectorAll(".bar2 i").forEach((i) => { i.style.width = i.dataset.w + "%"; });
+</script>
+</body>
+</html>

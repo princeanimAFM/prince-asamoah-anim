@@ -56,6 +56,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 `am_michael`; pass another as the third argument to `make.sh`.
 
 ## Video plan
+- ✅ Food business, full version (`videos/06-food-full`): about 2 minutes, polished style; replaces the short `04-food`
 - ✅ Church app, full version (`videos/05-church-full`): about 2½ minutes, made for a person's own voice-over
 0. ✅ Announcement for the personal account (`videos/00-announcement`)
 1. ✅ Shipping / freight: chasing payments, "where's my parcel?" (`videos/01-shipping`)

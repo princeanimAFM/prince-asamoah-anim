@@ -1,0 +1,77 @@
+[
+ {
+  "id": "hook",
+  "text": "If you sell food, and your orders still come in by voice note and phone call, this is for you. Watch what one link can do.",
+  "cap": "Selling food? Watch what <mark>one link</mark> can do"
+ },
+ {
+  "id": "pain",
+  "text": "Think about a busy lunchtime. Voice notes you have to play three times. Two burgers, no onions. Or was it one? The phone rings while your hands are full. One customer waits forty minutes, and another gets the wrong order. You're cooking, answering, writing and apologising, all at once.",
+  "cap": "A busy lunchtime, <mark>without the app</mark>"
+ },
+ {
+  "id": "intro",
+  "text": "Now picture this. Your whole menu on one link, with prices and what's fresh today. Customers open it on their own phone, wherever they are.",
+  "cap": "Your whole menu on <mark>one link</mark>"
+ },
+ {
+  "id": "share",
+  "text": "Share that link once. On your status, on your page, or as a code on the counter that customers scan. It always shows today's menu and prices.",
+  "cap": "Share it once. <mark>Scan to order.</mark>"
+ },
+ {
+  "id": "order",
+  "text": "They tap what they want, choose how many, and add a note, like no onions. The total adds up by itself. No back and forth.",
+  "cap": "Tap, add a note, <mark>done</mark>"
+ },
+ {
+  "id": "pickup",
+  "text": "They choose a pickup time, so orders arrive spread out, not all at once.",
+  "cap": "Pickup times that <mark>spread the rush</mark>"
+ },
+ {
+  "id": "kitchen",
+  "text": "In your kitchen, every order appears on one screen, neat and clear, in the order it came in. Tap once when it's cooking. Tap again when it's ready.",
+  "cap": "Every order on <mark>one screen</mark>"
+ },
+ {
+  "id": "notify",
+  "text": "And the customer gets a message: your order is ready. No more, is my food coming?",
+  "cap": "\"Your order is <mark>ready</mark>\""
+ },
+ {
+  "id": "pause",
+  "text": "When the kitchen is full, pause new orders with one tap. The menu tells customers exactly when you're taking orders again.",
+  "cap": "Kitchen full? <mark>Pause in one tap</mark>"
+ },
+ {
+  "id": "soldout",
+  "text": "Run out of something? Hide it in one tap, so nobody orders what you can't serve.",
+  "cap": "Sold out? <mark>Hidden in one tap</mark>"
+ },
+ {
+  "id": "regulars",
+  "text": "The app remembers your regulars, and their usual order. One tap, and they've ordered again.",
+  "cap": "Regulars reorder in <mark>one tap</mark>"
+ },
+ {
+  "id": "day",
+  "text": "At the end of the day, you see what sold, what didn't, and how much you made. So tomorrow, you cook what people actually want.",
+  "cap": "Know <mark>what sells</mark>"
+ },
+ {
+  "id": "addup",
+  "text": "Now add it up. No missed orders. No wrong orders. No phone in your hand while you cook. And customers who come back, because ordering from you is easy.",
+  "cap": "No missed orders. <mark>No wrong orders.</mark>"
+ },
+ {
+  "id": "reflect",
+  "text": "You started this business because you love to cook, not to answer messages. Let the app take the orders, and you get back to the food.",
+  "cap": ""
+ },
+ {
+  "id": "cta",
+  "text": "If your business could use time back like this, I'm R M R Dev Works. Send me a message, or email me. It's in my bio.",
+  "cap": ""
+ }
+]
