@@ -14,6 +14,8 @@ demo app that fixes it. The demo apps are for made-up businesses with sample dat
   design: a big welcome banner, Newsreader serif headings, white rounded cards and tiles with thin line icons,
   a warm off-white background, one strong colour plus a gold-style accent, and a bottom tab bar. Pick colours
   that suit each made-up business, never AFM's green and gold, name, logo or photos.
+- Don't say "small business" or "small businesses" in videos, on screen or in the voice-over. Say "your business",
+  "businesses" or name the type (food sellers, churches).
 - Prince doesn't appear on camera: use the AI voice-over or captions and music, never a face-to-camera script.
 
 ## Making a video
