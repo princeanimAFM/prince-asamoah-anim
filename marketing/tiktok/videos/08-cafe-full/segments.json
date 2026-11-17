@@ -1,0 +1,18 @@
+[
+ {"id": "hook", "text": "This one link ends the morning coffee queue. Watch what it does.", "cap": "<mark>One link</mark> ends the coffee queue"},
+ {"id": "pain", "text": "Think about the morning rush. A queue out of the door. Oat milk, no sugar, extra shot, or was it decaf? Orders shouted over the machine, a paper stamp card nobody can find, and customers who give up and walk away.", "cap": "The morning rush, <mark>without the app</mark>"},
+ {"id": "intro", "text": "Now picture this. Your whole menu on one link. Customers open it in the queue, or on their way in, and order from their phone.", "cap": "Your menu on <mark>one link</mark>"},
+ {"id": "share", "text": "Put the code on the counter, on every table, and in your bio. They scan it, and they're ordering.", "cap": "Scan the code. <mark>Order.</mark>"},
+ {"id": "custom", "text": "They choose their drink, then make it theirs. Oat milk, an extra shot. It all goes on the order, written clearly, so nobody has to shout over the machine.", "cap": "Make it theirs: <mark>milk, shots, size</mark>"},
+ {"id": "cart", "text": "They add a cinnamon bun, give a name for the cup, and pick a pickup time. The total adds itself up. One tap, and the order is sent.", "cap": "Add a bun, pick a time, <mark>send</mark>"},
+ {"id": "board", "text": "In the café, every order lands on one screen, in the order it came in, with the milk and the extras clear. Tap once when it's brewing. Tap again when it's ready.", "cap": "Every order on <mark>one screen</mark>"},
+ {"id": "ready", "text": "And the customer is told the moment it's ready, so nobody stands at the counter wondering.", "cap": "\"Your coffee is <mark>ready</mark>\""},
+ {"id": "busy", "text": "Rush too heavy? Switch on busy mode. Every order now shows a ten minute wait, in one tap, so nobody waits longer than you promised.", "cap": "Too busy? <mark>Busy mode</mark> in one tap"},
+ {"id": "soldout", "text": "Out of oat milk, or down to the last cinnamon bun? Switch it off, and it disappears from the menu.", "cap": "Sold out? <mark>Hidden in one tap</mark>"},
+ {"id": "loyalty", "text": "And the stamp card that always gets lost? It lives in their phone now. Every coffee adds a stamp, and the tenth one is free.", "cap": "No more lost cards: <mark>stamps in the app</mark>"},
+ {"id": "regulars", "text": "Your regulars order their usual in one tap. Flat white, oat milk, extra shot. Done.", "cap": "Regulars order in <mark>one tap</mark>"},
+ {"id": "day", "text": "At the end of the day, you see what sold, and exactly when the rush hits. So you put more hands on in the busy hours, and bake what people actually want.", "cap": "See <mark>when the rush hits</mark>"},
+ {"id": "addup", "text": "Now add it up. A shorter queue. No wrong orders. No lost stamp cards. And customers who come back, because ordering from you is easy.", "cap": "A shorter queue. <mark>No wrong orders.</mark>"},
+ {"id": "reflect", "text": "You opened a café to bring people together over a good cup, not to shout orders over a machine. Let the app take the orders, and you get back to the coffee.", "cap": ""},
+ {"id": "cta", "text": "If your business could use time back like this, I'm R M R Dev Works. Send me a message, or email me. It's in my bio.", "cap": ""}
+]
