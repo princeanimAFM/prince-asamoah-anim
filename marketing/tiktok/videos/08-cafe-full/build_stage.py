@@ -45,6 +45,9 @@ css += """
   .crow { display: grid; grid-template-columns: 42px 1fr auto; gap: 0 12px; align-items: center; background: #fff; border-radius: 16px; padding: 10px 12px; box-shadow: 0 4px 12px rgba(46,26,20,.07); }
   .avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; grid-row: span 2; }
   .crow b { font: 600 17px Newsreader, serif; } .crow small { font: 11px Nunito; color: #7b8496; }
+  .crow .switch { grid-column: 3; grid-row: 1 / span 2; }
+  .crow b { grid-column: 2; grid-row: 1; align-self: end; } .crow small { grid-column: 2; grid-row: 2; align-self: start; }
+  #reflect .rq { font-size: 34px; }
   .stampcard { margin: 14px 12px 0; border-radius: 20px; padding: 18px 16px; color: #fff; background: linear-gradient(150deg, #7a4a36, #2e1a14); box-shadow: 0 8px 20px rgba(46,26,20,.3); }
   .stampcard small { font: 800 9px Nunito; letter-spacing: 1.5px; color: #e8c49a; text-transform: uppercase; }
   .stampcard b { display: block; font: 600 22px Newsreader, serif; margin: 4px 0 12px; }
