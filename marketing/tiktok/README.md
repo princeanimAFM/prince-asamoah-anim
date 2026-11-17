@@ -58,6 +58,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 `am_michael`; pass another as the third argument to `make.sh`.
 
 ## Video plan
+- ✅ Barber / salon, full version (`videos/07-barber-full`): about 2 minutes, polished style; booking page, slots, reminders, no-shows
 - ✅ Food business, full version (`videos/06-food-full`): about 2 minutes, polished style; replaces the short `04-food`
 - ✅ Church app, full version (`videos/05-church-full`): about 2½ minutes, made for a person's own voice-over
 0. ✅ Announcement for the personal account (`videos/00-announcement`)
@@ -65,7 +66,7 @@ The voice is Kokoro (Apache-2.0 model, MIT `kokoro-onnx`), which allows commerci
 2. ✅ Clothing brand / tailor (`videos/02-clothing`): re-posting every item; an online catalogue customers order from with their size
 3. ✅ Church app (`videos/03-church`): a longer, about one-minute walkthrough of what a church app gives back each week
 4. ✅ Restaurant / food vendor (`videos/04-food`): orders by voice note; menu link and neat orders, sold-out items hidden
-5. Salon / barber: everyone arrives at once, no-shows; booking page with time slots and reminders
+5. ✅ Salon / barber (`videos/07-barber-full`): everyone arrives at once, no-shows; booking page with time slots and reminders
 6. Landlord / rentals: forgetting who paid rent; tenant list, due dates, reminders, receipts
 7. School / lesson teacher: fees owed, results sent one by one; a parents' page
 8. Perfume / cosmetics: "how much?" for every item; catalogue with prices and an order button
