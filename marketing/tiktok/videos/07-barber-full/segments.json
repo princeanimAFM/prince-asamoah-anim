@@ -1,0 +1,77 @@
+[
+ {
+  "id": "hook",
+  "text": "This one link ends booking chaos for barbers and salons. Watch what it does.",
+  "cap": "<mark>One link</mark> ends booking chaos"
+ },
+ {
+  "id": "pain",
+  "text": "Think about a busy Saturday. Are you free at three? Can you fit me in? Two people turn up at the same time, and another never shows up at all. You're halfway through a cut, clippers in one hand and your phone buzzing in the other. Bookings in a notebook, in your messages, and in your head.",
+  "cap": "A busy Saturday, <mark>without the app</mark>"
+ },
+ {
+  "id": "intro",
+  "text": "Now picture this. A booking page with your name on it. Your services, your prices, and every free time, all on one link.",
+  "cap": "Your bookings on <mark>one link</mark>"
+ },
+ {
+  "id": "share",
+  "text": "Put that link in your bio, on your status, or as a code on a card at the chair. Customers book themselves, at any hour, even while you're asleep.",
+  "cap": "Customers book <mark>themselves</mark>, any hour"
+ },
+ {
+  "id": "pick",
+  "text": "They choose a service, and who they want to cut it. A skin fade, with Jo.",
+  "cap": "Pick a service and a <mark>barber</mark>"
+ },
+ {
+  "id": "time",
+  "text": "Then they only see the times you are really free. Taken slots are greyed out, so double bookings can't happen.",
+  "cap": "Only <mark>free times</mark> show. No double bookings"
+ },
+ {
+  "id": "confirm",
+  "text": "One tap, and it's booked. They get a confirmation with the time and the place, and a button to add it to their calendar.",
+  "cap": "One tap. <mark>Booked.</mark>"
+ },
+ {
+  "id": "remind",
+  "text": "The day before, and again an hour before, the app sends them a reminder. They can confirm, or move it with one tap. That alone means far fewer no-shows.",
+  "cap": "Automatic <mark>reminders</mark> mean fewer no-shows"
+ },
+ {
+  "id": "day",
+  "text": "Your day sits on one screen. Who is in the chair, who is next, and the gaps in between. Tap when they arrive. Tap again when you're done.",
+  "cap": "Your whole day on <mark>one screen</mark>"
+ },
+ {
+  "id": "cancel",
+  "text": "Someone cancels? That time opens up again straight away, and the next person can take it. No more empty chair.",
+  "cap": "Cancelled? <mark>The slot reopens</mark>"
+ },
+ {
+  "id": "regulars",
+  "text": "Your regulars rebook in one tap, because the app remembers their usual cut, and who they like to see.",
+  "cap": "Regulars rebook in <mark>one tap</mark>"
+ },
+ {
+  "id": "stats",
+  "text": "At the end of the week, you see how many cuts you did, how many people didn't show, and your busiest days. So you know when to open longer.",
+  "cap": "Know your <mark>busiest days</mark>"
+ },
+ {
+  "id": "addup",
+  "text": "Now add it up. No double bookings. No more, are you free, messages. Far fewer no-shows. And a full diary, even while you're busy cutting.",
+  "cap": "No double bookings. <mark>A full diary.</mark>"
+ },
+ {
+  "id": "reflect",
+  "text": "You became a barber to make people look and feel sharp, not to chase messages. Let the app run the diary, and you get back to the chair.",
+  "cap": ""
+ },
+ {
+  "id": "cta",
+  "text": "If your business could use time back like this, I'm R M R Dev Works. Send me a message, or email me. It's in my bio.",
+  "cap": ""
+ }
+]
